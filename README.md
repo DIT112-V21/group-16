@@ -1,9 +1,9 @@
 # group-16
 
-## What you we going to make.
+## What we are going to make.
 - What we are going to make is a vehicle which acts as a trash disposing machine. 
 
-## Why will you make it. 
+## Why we will make it. 
 - We will make it because it will keep streets tidy and neat while mitigating human labor.
 - We will make it so that it can improve/solve environmental problems.
 
