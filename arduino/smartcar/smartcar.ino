@@ -6,8 +6,6 @@ const int triggerDist = 200;
 
 const int lDegrees = -75; // degrees to turn left
 
-float distance;
-
 unsigned short TRIGGER_PIN = 6;
 unsigned short ECHO_PIN = 7;
 const unsigned int MAX_DISTANCE = 1000;
@@ -24,7 +22,7 @@ void setup() {
   car.setSpeed(cruiseSpeed);
 }
 void loop() {
-  distance = sensor.getDistance();
+  unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist){
       car.setSpeed(0);
     //car.setAngle(lDegrees);
