@@ -23,7 +23,6 @@ SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
  void stopVehicle(){
-  delay(1000);
   car.setSpeed(0);
  }
 
