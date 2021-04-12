@@ -22,13 +22,13 @@ DifferentialControl control{leftMotor, rightMotor};
 SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
+ void stopVehicle(){
   delay(1000);
   car.setSpeed(0);
  }
 
  void goForward(int speed){
   car.setSpeed(speed);
-  obstacleAvoid();
  }
 
  void goBackward(int speed){
