@@ -1,6 +1,5 @@
 #include <Smartcar.h>
 
-
 const int fSpeed   = 50;  // 50% of the full speed forward
 const int bSpeed   = -40; // 40% of the full speed backward
 const int changeSpeed = 10;
@@ -38,8 +37,8 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
  void decelerate(int curSpeed){ // start at 50 
    int targetSpeed = curSpeed - changeSpeed; // decelerate by 10 
    if (currentSpeed > minSpeed){
-    car.setSpeed(targetSpeed); // sets the speed to 10% less 
-   currentSpeed = targetSpeed; // sets currentSpeed to the new speed  
+    car.setSpeed(targetSpeed); // sets the speed to 40 
+   currentSpeed = targetSpeed; // sets the current 40  
    }  
  }
  void accelerate(int curSpeed){
@@ -50,13 +49,15 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
    }
  }
 
-
 void setup() {
   Serial.begin(9600);
- // car.setSpeed(cruiseSpeed);
+  //car.setSpeed(currentSpeed);
 }
 void loop() {
-  distance = sensor.getDistance();
+ 
+   handleInput();
+   
+  unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist){
       car.setSpeed(0);
     //car.setAngle(lDegrees);
