@@ -28,11 +28,25 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
  }
 
  void goForward(int speed){
-  car.setSpeed(speed);
+    car.setSpeed(speed);
+  currentSpeed = speed; 
  }
 
  void goBackward(int speed){
-  car.setSpeed(speed);
+    car.setSpeed(speed);
+  currentSpeed = speed;
+ }
+ 
+ void turnLeft(){
+    car.setAngle(lDegrees);
+		delay(2000);
+		car.setAngle(0);
+ }
+
+ void turnRight(){
+ car.setAngle(rDegrees);
+	delay(2000);
+	car.setAngle(0);
  }
  
  void decelerate(int curSpeed){ // start at 50 
@@ -49,18 +63,6 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
   currentSpeed = targetSpeed;
    }
  }
- 
- void turnLeft(){
-    car.setAngle(lDegrees);
-			 delay(2000);
-			 car.setAngle(0);
- }
- 
- void turnRight(){
- car.setAngle(rDegrees);
-			 delay(2000);
-			 car.setAngle(0);
- }
 
 void setup() {
   Serial.begin(9600);
@@ -71,7 +73,7 @@ void loop() {
    handleInput();
    
   unsigned int distance = sensor.getDistance();
-  if (distance > 0 && distance < triggerDist && currentSpeed >= 0){ //third condition added that checks if the car is moving forward
+  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
     //car.setAngle(lDegrees);
     //car.setSpeed(cruiseSpeed);
@@ -86,17 +88,8 @@ void handleInput(){ // handle serial input if there is any
                                     // the last entry
         switch (input)
         {
-		case 'l': // turn left
-		turnLeft();
-		  
-			 break;
-		case 'r': // turn right
-			turnRight();
-			 break;
-			
         case 'f': // go ahead in medium speed 
             goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-			
             break;
         case 'b': // go back 
             goBackward(bSpeed);
@@ -104,17 +97,20 @@ void handleInput(){ // handle serial input if there is any
         case 's': // stop 
             stopVehicle();
             break;
+            case 'l': // turn left
+		        turnLeft();
+			      break;
+		    case 'r': // turn right
+			      turnRight();
+			      break;
         case 'd': // the car decelerates
             decelerate(currentSpeed);
             break;
         case 'a': // the car accelerate  s
             accelerate(currentSpeed);
             break;
-        default: // if you receive something that you don't know, just stop
+        default: // if you receive something that           you don't know, just stop
             stopVehicle();
-
-        }
-
         } // test
     }
 }
