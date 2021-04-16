@@ -58,7 +58,7 @@ void loop() {
    handleInput();
    
   unsigned int distance = sensor.getDistance();
-  if (distance > 0 && distance < triggerDist){
+  if (distance > 0 && distance < triggerDist && currentSpeed >= 0){ //third condition added that checks if the car is moving forward
       car.setSpeed(0);
     //car.setAngle(lDegrees);
     //car.setSpeed(cruiseSpeed);
