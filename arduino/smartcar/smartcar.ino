@@ -7,7 +7,8 @@ const int maxSpeed = 100;
 const int minSpeed = 10;
 //const int cruiseSpeed = 40;
 const int triggerDist = 200;
-const int lDegrees = -75; // degrees to turn left
+const int lDegrees = -80; // degrees to turn left
+const int rDegrees = 80; // degrees to turn right
 
 int currentSpeed = fSpeed;
 
@@ -48,6 +49,18 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
   currentSpeed = targetSpeed;
    }
  }
+ 
+ void turnLeft(){
+    car.setAngle(lDegrees);
+			 delay(2000);
+			 car.setAngle(0);
+ }
+ 
+ void turnRight(){
+ car.setAngle(rDegrees);
+			 delay(2000);
+			 car.setAngle(0);
+ }
 
 void setup() {
   Serial.begin(9600);
@@ -73,8 +86,17 @@ void handleInput(){ // handle serial input if there is any
                                     // the last entry
         switch (input)
         {
+		case 'l': // turn left
+		turnLeft();
+		  
+			 break;
+		case 'r': // turn right
+			turnRight();
+			 break;
+			
         case 'f': // go ahead in medium speed 
             goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+			
             break;
         case 'b': // go back 
             goBackward(bSpeed);
@@ -90,6 +112,9 @@ void handleInput(){ // handle serial input if there is any
             break;
         default: // if you receive something that you don't know, just stop
             stopVehicle();
+
         }
+
+        } // test
     }
 }
