@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">firstapp</string>
+    <string name="start">START</string>
+    <string name="speed">Speed</string>
+    <string name="manual">Manual</string>
+    <string name="auto">Auto</string>
+</resources>
