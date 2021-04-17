@@ -5,7 +5,6 @@ const int bSpeed   = -10; // 10% of the full speed backward
 const int changeSpeed = 10;
 const int maxSpeed = 100;
 const int minSpeed = 10;
-//const int cruiseSpeed = 40;
 const int triggerDist = 200;
 const int lDegrees = -80; // degrees to turn left
 const int rDegrees = 80; // degrees to turn right
@@ -57,7 +56,6 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
    }  
  }
 
-
  void accelerate(int curSpeed){
   int targetSpeed = curSpeed + changeSpeed;
    if (currentSpeed < maxSpeed){
@@ -68,7 +66,6 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 void setup() {
   Serial.begin(9600);
-  //car.setSpeed(currentSpeed);
 }
 void loop() {
  
@@ -77,45 +74,37 @@ void loop() {
   unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
-    //car.setAngle(lDegrees);
-    //car.setSpeed(cruiseSpeed);
   }
-  //car.setAngle(0);
 } 
 
 void handleInput(){ // handle serial input if there is any
-    if (Serial.available())
-    {
+    if (Serial.available()){
         char input = Serial.read(); // read everything that has been received so far and log down
                                     // the last entry
-        switch (input)
-        {
+        switch (input) {
         case 'f': // go ahead in medium speed 
 			if (currentSpeed>0){
 				goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-			}
-			else{ // 
+			}else{ // 
 				goForward(fSpeed);
 			}
             break;
         case 'b': // go back 
 			if (currentSpeed<0){
 				goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-			}
-			else{
+			}else{
 				goBackward(bSpeed);
 			}
             break;
-          
         case 's': // stop 
             stopVehicle();
             break;
         case 'l': // turn left
-	    turnLeft();
-	    break;
-	case 'r': // turn right
-	    turnRight();
-	    break;
+		        turnLeft();
+			      break;
+		    case 'r': // turn right
+			      turnRight();
+			      break;
         case 'd': // the car decelerates
             decelerate(currentSpeed);
             break;
@@ -124,6 +113,6 @@ void handleInput(){ // handle serial input if there is any
             break;
         default: // if you receive something that           you don't know, just stop
             stopVehicle();
-        } // test
+        } 
     }
 }
