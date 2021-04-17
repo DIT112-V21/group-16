@@ -82,12 +82,10 @@ void loop() {
 } 
 
 void handleInput(){ // handle serial input if there is any
-    if (Serial.available())
-    {
+    if (Serial.available()){
         char input = Serial.read(); // read everything that has been received so far and log down
                                     // the last entry
-        switch (input)
-        {
+        switch (input) {
         case 'f': // go ahead in medium speed 
             goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
             break;
@@ -111,6 +109,7 @@ void handleInput(){ // handle serial input if there is any
             break;
         default: // if you receive something that           you don't know, just stop
             stopVehicle();
-        } // test
+
+        }
     }
 }
