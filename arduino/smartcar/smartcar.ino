@@ -1,11 +1,10 @@
 #include <Smartcar.h>
 
-const int fSpeed   = 50;  // 50% of the full speed forward
-const int bSpeed   = -40; // 40% of the full speed backward
+const int fSpeed   = 25;  // 25% of the full speed forward
+const int bSpeed   = -10; // 10% of the full speed backward
 const int changeSpeed = 10;
 const int maxSpeed = 100;
 const int minSpeed = 10;
-//const int cruiseSpeed = 40;
 const int triggerDist = 200;
 const int lDegrees = -80; // degrees to turn left
 const int rDegrees = 80; // degrees to turn right
@@ -56,6 +55,7 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
    currentSpeed = targetSpeed; // sets the current 40  
    }  
  }
+
  void accelerate(int curSpeed){
   int targetSpeed = curSpeed + changeSpeed;
    if (currentSpeed < maxSpeed){
@@ -66,7 +66,6 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 void setup() {
   Serial.begin(9600);
-  //car.setSpeed(currentSpeed);
 }
 void loop() {
  
@@ -75,10 +74,7 @@ void loop() {
   unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
-    //car.setAngle(lDegrees);
-    //car.setSpeed(cruiseSpeed);
   }
-  //car.setAngle(0);
 } 
 
 void handleInput(){ // handle serial input if there is any
@@ -87,15 +83,23 @@ void handleInput(){ // handle serial input if there is any
                                     // the last entry
         switch (input) {
         case 'f': // go ahead in medium speed 
-            goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+			if (currentSpeed>0){
+				goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+			}else{ // 
+				goForward(fSpeed);
+			}
             break;
         case 'b': // go back 
-            goBackward(bSpeed);
+			if (currentSpeed<0){
+				goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+			}else{
+				goBackward(bSpeed);
+			}
             break;
         case 's': // stop 
             stopVehicle();
             break;
-            case 'l': // turn left
+        case 'l': // turn left
 		        turnLeft();
 			      break;
 		    case 'r': // turn right
@@ -104,12 +108,11 @@ void handleInput(){ // handle serial input if there is any
         case 'd': // the car decelerates
             decelerate(currentSpeed);
             break;
-        case 'a': // the car accelerate  s
+        case 'a': // the car accelerate  
             accelerate(currentSpeed);
             break;
         default: // if you receive something that           you don't know, just stop
             stopVehicle();
-
-        }
+        } 
     }
 }
