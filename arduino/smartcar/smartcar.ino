@@ -7,7 +7,8 @@ const int maxSpeed = 100;
 const int minSpeed = 10;
 //const int cruiseSpeed = 40;
 const int triggerDist = 200;
-const int lDegrees = -75; // degrees to turn left
+const int lDegrees = -80; // degrees to turn left
+const int rDegrees = 80; // degrees to turn right
 
 int currentSpeed = fSpeed;
 
@@ -27,13 +28,25 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
  }
 
  void goForward(int speed){
-  	car.setSpeed(speed);
-	currentSpeed = speed; 
+    car.setSpeed(speed);
+  currentSpeed = speed; 
  }
 
  void goBackward(int speed){
-  	car.setSpeed(speed);
-	currentSpeed = speed;
+    car.setSpeed(speed);
+  currentSpeed = speed;
+ }
+ 
+ void turnLeft(){
+    car.setAngle(lDegrees);
+		delay(2000);
+		car.setAngle(0);
+ }
+
+ void turnRight(){
+ car.setAngle(rDegrees);
+	delay(2000);
+	car.setAngle(0);
  }
  
  void decelerate(int curSpeed){ // start at 50 
@@ -69,12 +82,10 @@ void loop() {
 } 
 
 void handleInput(){ // handle serial input if there is any
-    if (Serial.available())
-    {
+    if (Serial.available()){
         char input = Serial.read(); // read everything that has been received so far and log down
                                     // the last entry
-        switch (input)
-        {
+        switch (input) {
         case 'f': // go ahead in medium speed 
             goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
             break;
@@ -84,14 +95,21 @@ void handleInput(){ // handle serial input if there is any
         case 's': // stop 
             stopVehicle();
             break;
+            case 'l': // turn left
+		        turnLeft();
+			      break;
+		    case 'r': // turn right
+			      turnRight();
+			      break;
         case 'd': // the car decelerates
             decelerate(currentSpeed);
             break;
         case 'a': // the car accelerate  s
             accelerate(currentSpeed);
             break;
-        default: // if you receive something that you don't know, just stop
+        default: // if you receive something that           you don't know, just stop
             stopVehicle();
-        } 
+
+        }
     }
 }
