@@ -4,4 +4,7 @@
     <string name="speed">Speed</string>
     <string name="manual">Manual</string>
     <string name="auto">Auto</string>
+    <string name="left">left</string>
+    <string name="right">right</string>
+    <string name="backward">Backward</string>
 </resources>
