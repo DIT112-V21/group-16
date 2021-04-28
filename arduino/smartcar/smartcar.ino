@@ -2,16 +2,14 @@
 #include <vector>
 #include <MQTT.h>
 #include <WiFi.h>
-
 #ifdef __SMCE__
 #include <OV767X.h>
 #endif
 
-#ifndef  __SMCE__
+#ifndef __SMCE__
 WiFiClient net;
 #endif
 MQTTClient mqtt;
-
 
 
 const int fSpeed   = 25;  // 25% of the full speed forward
@@ -19,20 +17,15 @@ const int bSpeed   = -10; // 10% of the full speed backward
 const int changeSpeed = 10;
 const int maxSpeed = 100;
 const int minSpeed = 10;
-const int triggerDist = 100;
+const int triggerDist = 200;
 const int lDegrees = -80; // degrees to turn left
 const int rDegrees = 80; // degrees to turn right
+
 const int SERVO_PIN = 8;
 const int ESC_PIN = 9;
 const int BACK_IR_PIN =3;
 const int FRONT_IR_PIN =3;
 
-
- 
-//ServoMotor steering (SERVO_PIN);
-//ServoMotor throttling (ESC_PIN);
-//AckermanControl control(steering, throttling);
- 
 int currentSpeed = fSpeed;
 
 unsigned short TRIGGER_PIN = 6;
@@ -40,49 +33,16 @@ unsigned short ECHO_PIN = 7;
 const unsigned int MAX_DISTANCE = 1000;
 
 ArduinoRuntime arduinoRuntime;
-BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
-BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
-DifferentialControl control(leftMotor, rightMotor);
-SimpleCar car(control);
-SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); 
+BrushedMotor leftMotor{arduinoRuntime, smartcarlib::pins::v2::leftMotorPins};
+BrushedMotor rightMotor{arduinoRuntime, smartcarlib::pins::v2::rightMotorPins};
+DifferentialControl control{leftMotor, rightMotor};
+SimpleCar car{control};
+SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 GP2D120 backIRSensor(arduinoRuntime,BACK_IR_PIN);  //measure in short distances
 GP2D120 frontIRSensor(arduinoRuntime,FRONT_IR_PIN);
 
 
-
-void setup() {
-  Serial.begin(9600);
-#ifndef __SMCE__ 
-  mqtt.begin("aerostun.dev", 1883, WiFi);  // Will connect to TA server
-  //mqtt.begin(WiFi); // to localhost
-#else
-  mqtt.begin(net);
-#endif
-  if (mqtt.connect("arduino", "public", "public")) {
-    mqtt.subscribe("/smartcar/control/#", 1);
-    mqtt.onMessage([](String topic, String message) {
-      if (topic == "/smartcar/control/throttle") {
-        car.setSpeed(message.toInt());
-      } else if (topic == "/smartcar/control/steering") {
-        car.setAngle(message.toInt());
-      } else {
-        Serial.println(topic + " " + message);
-      }
-    });
-  }
-}
-
-
- void loop() {
-   if (mqtt.connected()) {
-     mqtt.loop();}
-    
-    handleInput();
-   obstacleAvoidance();
-   ObstacleAvoidanceBack();
-
-   }
-
+std::vector<char> frameBuffer;
 
  void stopVehicle(){
   car.setSpeed(0);
@@ -126,16 +86,39 @@ void setup() {
    }
  }
 
-//void setup() {
-  //Serial.begin(9600);
-//}
+void setup() {
+  Serial.begin(9600);
+ #ifdef __SMCE__
+  mqtt.begin("aerostun.dev", 1883, WiFi);
+ #else
+  mqtt.begin(net);
+  #endif
+  if (mqtt.connect("arduino", "public", "public")) {
+    mqtt.subscribe("/smartcar/group16/control/#", 1);
+    mqtt.onMessage([](String topic, String message) {
+      if (topic == "/smartcar/group16/control/throttle") {
+        car.setSpeed(message.toInt());
+      } else if (topic == "/smartcar/group16/control/steering") {
+        car.setAngle(message.toInt());
+      } else {
+        Serial.println(topic + " " + message);
+      }
+    });
+  }
+}
 
-/* void loop() {
-   handleInput();
-  // setSpeedAndAngle();
-   obstacleAvoidance();
-   ObstacleAvoidanceBack();
-} */
+void loop() {
+  if (mqtt.connected()) {
+    mqtt.loop();
+  }
+
+  handleInput();
+
+    unsigned int distance = sensor.getDistance();
+  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
+      car.setSpeed(0);
+  }
+} 
 
 void handleInput(){ // handle serial input if there is any
     if (Serial.available()){
@@ -174,38 +157,5 @@ void handleInput(){ // handle serial input if there is any
         default: // if you receive something that           you don't know, just stop
             stopVehicle();
         } 
-    }
-}
-
-void obstacleAvoidance(){
-   int distance = sensor.getDistance();
-  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
-      car.setSpeed(0);
-  }
-
-}
-void ObstacleAvoidanceBack(){
-    int backDistance=backIRSensor.getDistance();
-    if(backDistance >0 && backDistance <triggerDist){
-      car.setSpeed(0);
-    }
-
-}
-
-void setSpeedAndAngle()
-{
-    // handle serial input if there is any
-    if (Serial.available())
-    {
-        String input = Serial.readStringUntil('\n');
-        if (input.startsWith("m"))
-        {  int throttle = input.substring(1).toInt();
-            car.setSpeed(throttle);
-        }
-        else if (input.startsWith("t"))
-        {
-            int deg = input.substring(1).toInt();
-            car.setAngle(deg);
-        }
     }
 }
