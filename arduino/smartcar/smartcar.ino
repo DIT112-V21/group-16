@@ -21,11 +21,6 @@ const int triggerDist = 200;
 const int lDegrees = -80; // degrees to turn left
 const int rDegrees = 80; // degrees to turn right
 
-const int SERVO_PIN = 8;
-const int ESC_PIN = 9;
-const int BACK_IR_PIN =3;
-const int FRONT_IR_PIN =3;
-
 int currentSpeed = fSpeed;
 
 unsigned short TRIGGER_PIN = 6;
@@ -38,9 +33,6 @@ BrushedMotor rightMotor{arduinoRuntime, smartcarlib::pins::v2::rightMotorPins};
 DifferentialControl control{leftMotor, rightMotor};
 SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
-GP2D120 backIRSensor(arduinoRuntime,BACK_IR_PIN);  //measure in short distances
-GP2D120 frontIRSensor(arduinoRuntime,FRONT_IR_PIN);
-
 
 std::vector<char> frameBuffer;
 
