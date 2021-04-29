@@ -72,9 +72,11 @@
         android:layout_marginTop="80dp"
         android:text="start"
         android:textSize="18sp"
+        android:onClick="forward"
         app:backgroundTint="#009688"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/backward" />
+
 
     <Button
         android:id="@+id/stop"
@@ -85,6 +87,7 @@
         android:layout_marginEnd="70dp"
         android:text="Stop"
         android:textSize="18sp"
+        android:onClick="stop"
         app:backgroundTint="#F44336"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -101,6 +104,7 @@
         android:shadowColor="#5A4848"
         android:text="@string/left"
         android:textColor="#040404"
+        android:onClick="forwardLeft"
         app:backgroundTint="#FAF8F8"
         app:iconTint="#F8F6F6"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -117,6 +121,7 @@
         android:layout_marginBottom="444dp"
         android:shadowColor="#3C3333"
         android:text="@string/right"
+        android:onClick="forwardRight"
         android:textColor="#020202"
         app:backgroundTint="#FAF6F6"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -132,6 +137,7 @@
         android:layout_marginEnd="9dp"
         android:shadowColor="#2E2424"
         android:text="@string/backward"
+        android:onClick="backward"
         android:textColor="#040303"
         app:backgroundTint="#FAF7F7"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -150,6 +156,7 @@
         android:layout_marginEnd="158dp"
         android:shadowColor="#332B2B"
         android:text="forward"
+        android:onClick="forward"
         android:textColor="#090000"
         app:backgroundTint="#FAF8F8"
         app:layout_constraintEnd_toEndOf="parent"

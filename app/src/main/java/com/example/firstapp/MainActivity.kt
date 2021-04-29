@@ -28,8 +28,8 @@ class MainActivity : AppCompatActivity() {
         binding.startCleaning.setOnClickListener {
             binding.startCleaning.text = "start"
             startActivity(Intent(this, CleaningOptionActivity::class.java))
-
-            val clientId = MqttClient.generateClientId()
+        }
+           /* val clientId = MqttClient.generateClientId()
             val client = MqttAndroidClient(
                 this.applicationContext, "tcp://aerostun.dev:1883",
                 clientId
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: MqttException) {
                 e.printStackTrace()
             }
-        }
+        }*/
 
 
     }
