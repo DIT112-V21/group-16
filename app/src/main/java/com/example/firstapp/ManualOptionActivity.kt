@@ -18,8 +18,8 @@ class ManualOptionActivity : AppCompatActivity() {
     private val TAG = "app"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
     private val MQTT_SERVER = "tcp://$EXTERNAL_MQTT_BROKER:1883"
-    private val THROTTLE_CONTROL = "/smartcar/control/throttle"
-    private val STEERING_CONTROL = "/smartcar/control/steering"
+    private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
+    private val STEERING_CONTROL = "/smartcar/group16/control/steering"
     private val MOVEMENT_SPEED = 70
     private val IDLE_SPEED = 0
     private val STRAIGHT_ANGLE = 0
