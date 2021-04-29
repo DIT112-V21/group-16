@@ -9,18 +9,33 @@ const int triggerDist = 200;
 const int lDegrees = -80; // degrees to turn left
 const int rDegrees = 80; // degrees to turn right
 
+
 int currentSpeed = fSpeed;
 
 unsigned short TRIGGER_PIN = 6;
 unsigned short ECHO_PIN = 7;
 const unsigned int MAX_DISTANCE = 1000;
 
+const auto pulsePerMeter = 600;
+
+
 ArduinoRuntime arduinoRuntime;
+DirectionalOdometer leftOdometer{
+    arduinoRuntime,
+    smartcarlib::pins::v2::leftOdometerPins,
+    []() { leftOdometer.update(); },
+pulsePerMeter};
+DirectionalOdometer rightOdometer{
+    arduinoRuntime,
+    smartcarlib::pins::v2::rightOdometerPins,
+    []() { rightOdometer.update(); },
+    pulsePerMeter};
 BrushedMotor leftMotor{arduinoRuntime, smartcarlib::pins::v2::leftMotorPins};
 BrushedMotor rightMotor{arduinoRuntime, smartcarlib::pins::v2::rightMotorPins};
 DifferentialControl control{leftMotor, rightMotor};
 SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
 
  void stopVehicle(){
   car.setSpeed(0);
@@ -68,13 +83,19 @@ void setup() {
   Serial.begin(9600);
 }
 void loop() {
- 
    handleInput();
+ {
+    Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
+
+	delay(5000);
+}
+ 
    
   unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
   }
+ 
 } 
 
 void handleInput(){ // handle serial input if there is any
