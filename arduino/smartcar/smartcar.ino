@@ -1,4 +1,16 @@
 #include <Smartcar.h>
+#include <vector>
+#include <MQTT.h>
+#include <WiFi.h>
+#ifdef __SMCE__
+#include <OV767X.h>
+#endif
+
+#ifndef __SMCE__
+WiFiClient net;
+#endif
+MQTTClient mqtt;
+
 
 const int fSpeed   = 25;  // 25% of the full speed forward
 const int bSpeed   = -10; // 10% of the full speed backward
@@ -22,6 +34,8 @@ DifferentialControl control{leftMotor, rightMotor};
 SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
+std::vector<char> frameBuffer;
+
  void stopVehicle(){
   car.setSpeed(0);
  }
@@ -38,14 +52,14 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
  
  void turnLeft(){
     car.setAngle(lDegrees);
-		delay(2000);
-		car.setAngle(0);
+    delay(2000);
+    car.setAngle(0);
  }
 
  void turnRight(){
  car.setAngle(rDegrees);
-	delay(2000);
-	car.setAngle(0);
+  delay(2000);
+  car.setAngle(0);
  }
  
  void decelerate(int curSpeed){ // start at 50 
@@ -66,12 +80,33 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 void setup() {
   Serial.begin(9600);
+ #ifdef __SMCE__
+  mqtt.begin("aerostun.dev", 1883, WiFi);
+ #else
+  mqtt.begin(net);
+  #endif
+  if (mqtt.connect("arduino", "public", "public")) {
+    mqtt.subscribe("/smartcar/group16/control/#", 1);
+    mqtt.onMessage([](String topic, String message) {
+      if (topic == "/smartcar/group16/control/throttle") {
+        car.setSpeed(message.toInt());
+      } else if (topic == "/smartcar/group16/control/steering") {
+        car.setAngle(message.toInt());
+      } else {
+        Serial.println(topic + " " + message);
+      }
+    });
+  }
 }
+
 void loop() {
- 
-   handleInput();
-   
-  unsigned int distance = sensor.getDistance();
+  if (mqtt.connected()) {
+    mqtt.loop();
+  }
+
+  handleInput();
+
+    unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
   }
@@ -83,28 +118,28 @@ void handleInput(){ // handle serial input if there is any
                                     // the last entry
         switch (input) {
         case 'f': // go ahead in medium speed 
-			if (currentSpeed>0){
-				goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-			}else{ // 
-				goForward(fSpeed);
-			}
+      if (currentSpeed>0){
+        goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+      }else{ // 
+        goForward(fSpeed);
+      }
             break;
         case 'b': // go back 
-			if (currentSpeed<0){
-				goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-			}else{
-				goBackward(bSpeed);
-			}
+      if (currentSpeed<0){
+        goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+      }else{
+        goBackward(bSpeed);
+      }
             break;
         case 's': // stop 
             stopVehicle();
             break;
         case 'l': // turn left
-		        turnLeft();
-			      break;
-		    case 'r': // turn right
-			      turnRight();
-			      break;
+            turnLeft();
+            break;
+        case 'r': // turn right
+            turnRight();
+            break;
         case 'd': // the car decelerates
             decelerate(currentSpeed);
             break;
