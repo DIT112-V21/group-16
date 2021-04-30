@@ -36,11 +36,7 @@ DifferentialControl control{leftMotor, rightMotor};
 SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
-<<<<<<< HEAD
-
-=======
 std::vector<char> frameBuffer;
->>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
 
  void stopVehicle(){
   car.setSpeed(0);
@@ -128,14 +124,6 @@ void setup() {
 }
 
 void loop() {
-<<<<<<< HEAD
- 
-   handleInput();
-   
-  unsigned int distance = sensor.getDistance();
-  
-  if (distance > 0 && distance < triggerDist && currentSpeed >= 0  ){ //third condition added that checks if the car is moving forward.
-=======
   if (mqtt.connected()) {
     mqtt.loop();
   }
@@ -144,7 +132,6 @@ void loop() {
 
     unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
->>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
       car.setSpeed(0);
   }
 } 
@@ -153,17 +140,6 @@ void handleInput(){ // handle serial input if there is any
     if (Serial.available()){
         char input = Serial.read(); // read everything that has been received so far and log down
                                     // the last entry
-<<<<<<< HEAD
-        switch (input)
-         {
-            case 'f': // go ahead in medium speed 
-		    	    if (currentSpeed>0){
-				        goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-		    	    }else{ // 
-				        goForward(fSpeed);
-			        }
-          break;
-=======
         switch (input) {
         case 'f': // go ahead in medium speed 
       if (currentSpeed>0){
@@ -172,7 +148,6 @@ void handleInput(){ // handle serial input if there is any
         goForward(fSpeed);
       }
             break;
->>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
         case 'b': // go back 
       if (currentSpeed<0){
         goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
@@ -184,8 +159,7 @@ void handleInput(){ // handle serial input if there is any
             stopVehicle();
             break;
         case 'l': // turn left
-<<<<<<< HEAD
-		        if(currentSpeed>0)
+             if(currentSpeed>0)
             {
               turnLeft();
             }
@@ -193,10 +167,9 @@ void handleInput(){ // handle serial input if there is any
             {
               turnLeftWhenStoped();
             }
-            
-			      break;
-		    case 'r': // turn right
-			      if(currentSpeed>0)
+            break;
+        case 'r': // turn right
+             if(currentSpeed>0)
             {
               turnRight();
             }
@@ -204,14 +177,7 @@ void handleInput(){ // handle serial input if there is any
             {
               turnRightWhenStoped();
             }
-			      break;
-=======
-            turnLeft();
             break;
-        case 'r': // turn right
-            turnRight();
-            break;
->>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
         case 'd': // the car decelerates
             decelerate(currentSpeed);
             break;
