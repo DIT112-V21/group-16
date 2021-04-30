@@ -41,17 +41,17 @@ DirectionalOdometer rightOdometer{
     arduinoRuntime,
     smartcarlib::pins::v2::rightOdometerPins,
     []() { rightOdometer.update(); },
-    pulsePerMeter};
+    pulsePerMeter}; // odometer constructor
+	
 BrushedMotor leftMotor{arduinoRuntime, smartcarlib::pins::v2::leftMotorPins};
 BrushedMotor rightMotor{arduinoRuntime, smartcarlib::pins::v2::rightMotorPins};
 DifferentialControl control{leftMotor, rightMotor};
 SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
-<<<<<<< HEAD
-=======
+
 std::vector<char> frameBuffer;
->>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
+
 
  void stopVehicle(){
   car.setSpeed(0);
@@ -117,7 +117,6 @@ void setup() {
 }
 
 void loop() {
-<<<<<<< HEAD
    handleInput();
  {
     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
@@ -126,8 +125,7 @@ void loop() {
 }
  
    
-  unsigned int distance = sensor.getDistance();
-=======
+  //unsigned int distance = sensor.getDistance();
   if (mqtt.connected()) {
     mqtt.loop();
   }
@@ -135,7 +133,6 @@ void loop() {
   handleInput();
 
     unsigned int distance = sensor.getDistance();
->>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
   }
