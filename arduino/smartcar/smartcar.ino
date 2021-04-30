@@ -1,4 +1,16 @@
 #include <Smartcar.h>
+#include <vector>
+#include <MQTT.h>
+#include <WiFi.h>
+#ifdef __SMCE__
+#include <OV767X.h>
+#endif
+
+#ifndef __SMCE__
+WiFiClient net;
+#endif
+MQTTClient mqtt;
+
 
 const int fSpeed   = 25;  // 25% of the full speed forward
 const int bSpeed   = -10; // 10% of the full speed backward
@@ -24,7 +36,11 @@ DifferentialControl control{leftMotor, rightMotor};
 SimpleCar car{control};
 SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
+<<<<<<< HEAD
 
+=======
+std::vector<char> frameBuffer;
+>>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
 
  void stopVehicle(){
   car.setSpeed(0);
@@ -43,15 +59,15 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
  
  void turnLeft(){
     car.setAngle(lDegrees);
-		delay(2000);
-		car.setAngle(0);
+    delay(2000);
+    car.setAngle(0);
  }
 
  void turnRight()
  {
  car.setAngle(rDegrees);
-	delay(2000);
-	car.setAngle(0);
+  delay(2000);
+  car.setAngle(0);
  }
  
  void turnLeftWhenStoped()  // when car doesn't move it will turn on spot to left
@@ -92,14 +108,43 @@ SR04 sensor(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 void setup() {
   Serial.begin(9600);
+ #ifdef __SMCE__
+  mqtt.begin("aerostun.dev", 1883, WiFi);
+ #else
+  mqtt.begin(net);
+  #endif
+  if (mqtt.connect("arduino", "public", "public")) {
+    mqtt.subscribe("/smartcar/group16/control/#", 1);
+    mqtt.onMessage([](String topic, String message) {
+      if (topic == "/smartcar/group16/control/throttle") {
+        car.setSpeed(message.toInt());
+      } else if (topic == "/smartcar/group16/control/steering") {
+        car.setAngle(message.toInt());
+      } else {
+        Serial.println(topic + " " + message);
+      }
+    });
+  }
 }
+
 void loop() {
+<<<<<<< HEAD
  
    handleInput();
    
   unsigned int distance = sensor.getDistance();
   
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0  ){ //third condition added that checks if the car is moving forward.
+=======
+  if (mqtt.connected()) {
+    mqtt.loop();
+  }
+
+  handleInput();
+
+    unsigned int distance = sensor.getDistance();
+  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
+>>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
       car.setSpeed(0);
   }
 } 
@@ -108,6 +153,7 @@ void handleInput(){ // handle serial input if there is any
     if (Serial.available()){
         char input = Serial.read(); // read everything that has been received so far and log down
                                     // the last entry
+<<<<<<< HEAD
         switch (input)
          {
             case 'f': // go ahead in medium speed 
@@ -117,17 +163,28 @@ void handleInput(){ // handle serial input if there is any
 				        goForward(fSpeed);
 			        }
           break;
+=======
+        switch (input) {
+        case 'f': // go ahead in medium speed 
+      if (currentSpeed>0){
+        goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+      }else{ // 
+        goForward(fSpeed);
+      }
+            break;
+>>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
         case 'b': // go back 
-			if (currentSpeed<0){
-				goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-			}else{
-				goBackward(bSpeed);
-			}
+      if (currentSpeed<0){
+        goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+      }else{
+        goBackward(bSpeed);
+      }
             break;
         case 's': // stop 
             stopVehicle();
             break;
         case 'l': // turn left
+<<<<<<< HEAD
 		        if(currentSpeed>0)
             {
               turnLeft();
@@ -148,6 +205,13 @@ void handleInput(){ // handle serial input if there is any
               turnRightWhenStoped();
             }
 			      break;
+=======
+            turnLeft();
+            break;
+        case 'r': // turn right
+            turnRight();
+            break;
+>>>>>>> f947d54664065efd7f2697a9f427bbecf101e523
         case 'd': // the car decelerates
             decelerate(currentSpeed);
             break;
