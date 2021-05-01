@@ -128,8 +128,6 @@ void loop() {
     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
 }
   }
-
-    unsigned int distance = sensor.getDistance();
   if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
   }
