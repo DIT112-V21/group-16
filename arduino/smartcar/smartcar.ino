@@ -17,12 +17,12 @@ const int bSpeed   = -10; // 10% of the full speed backward
 const int changeSpeed = 10;
 const int maxSpeed = 100;
 const int minSpeed = 10;
-const int triggerDist = 200;
-const int lDegrees = -80; // degrees to turn left
-const int rDegrees = 80; // degrees to turn right
+const int triggerDist = 0;
+const int lDegrees = -90; // degrees to turn left
+const int rDegrees = 90; // degrees to turn right
 
+int currentSpeed = 0;
 
-int currentSpeed = fSpeed;
 
 unsigned short TRIGGER_PIN = 6;
 unsigned short ECHO_PIN = 7;
@@ -55,6 +55,7 @@ std::vector<char> frameBuffer;
 
  void stopVehicle(){
   car.setSpeed(0);
+  currentSpeed = 0; 
  }
 
  void goForward(int speed){
@@ -73,12 +74,33 @@ std::vector<char> frameBuffer;
     car.setAngle(0);
  }
 
- void turnRight(){
+ void turnRight()
+ {
  car.setAngle(rDegrees);
   delay(2000);
   car.setAngle(0);
  }
  
+ void turnLeftWhenStoped()  // when car doesn't move it will turn on spot to left
+ {
+    car.setSpeed(fSpeed);
+    currentSpeed = fSpeed;
+    car.setAngle(lDegrees);
+		delay(6000);
+		car.setAngle(0);
+    stopVehicle();
+ }
+
+  void turnRightWhenStoped() // when car doesn't move it will turn on spot to right
+ {
+    car.setSpeed(fSpeed);
+    currentSpeed = fSpeed;
+    car.setAngle(rDegrees);
+		delay(6000);
+		car.setAngle(0);
+    stopVehicle();
+ }
+
  void decelerate(int curSpeed){ // start at 50 
    int targetSpeed = curSpeed - changeSpeed; // decelerate by 10 
    if (currentSpeed > minSpeed){
@@ -157,10 +179,24 @@ void handleInput(){ // handle serial input if there is any
             stopVehicle();
             break;
         case 'l': // turn left
-            turnLeft();
+             if(currentSpeed>0)
+            {
+              turnLeft();
+            }
+            else
+            {
+              turnLeftWhenStoped();
+            }
             break;
         case 'r': // turn right
-            turnRight();
+             if(currentSpeed>0)
+            {
+              turnRight();
+            }
+            else
+            {
+              turnRightWhenStoped();
+            }
             break;
         case 'd': // the car decelerates
             decelerate(currentSpeed);
