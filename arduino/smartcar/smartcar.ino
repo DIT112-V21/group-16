@@ -118,16 +118,15 @@ void setup() {
 
 void loop() {
    handleInput();
- {
-    Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
-
-	delay(5000);
-}
+ 
  
    
-  //unsigned int distance = sensor.getDistance();
+  unsigned int distance = sensor.getDistance();
   if (mqtt.connected()) {
     mqtt.loop();
+	{
+    Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
+}
   }
 
     unsigned int distance = sensor.getDistance();
