@@ -27,6 +27,5 @@ class CleaningOptionActivity : AppCompatActivity() {
             binding.manual.text = ""
             startActivity(Intent(this,ManualOptionActivity::class.java))
         }
-
     }
 }
