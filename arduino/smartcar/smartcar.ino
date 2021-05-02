@@ -165,7 +165,8 @@ void setup() {
     mqtt.subscribe("/smartcar/group16/control/#", 1);
     mqtt.onMessage([](String topic, String message) {
       if (topic == "/smartcar/group16/control/throttle") {
-        car.setSpeed(message.toInt());
+        currentSpeed = message.toInt();
+        car.setSpeed(currentSpeed);
       } else if (topic == "/smartcar/group16/control/steering") {
         car.setAngle(message.toInt());
       } else {
@@ -209,71 +210,18 @@ void obstacleAvoidance(){
     unsigned int leftInfra = leftSensor.getDistance();
     unsigned int rightInfra = rightSensor.getDistance();
     unsigned int backInfra = backSensor.getDistance();
-  if (distance > 0 && distance <= triggerDist){ //third condition added that checks if the car is moving forward.
-      car.setSpeed(0);
-      delay(50);
-      car.setSpeed(-70);
-      delay(50);
-      car.setSpeed(0);
-  }
-  else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist ){ //third condition added that checks if the car is moving forward.
+  
+
+ 
+ if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist ){ //third condition added that checks if the car is moving forward.
       autoTurnRight();
   }
-  else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist){
+ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist){
      autoTurnLeft();
+  }
+else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) { 
+      autoTurnLeft();
   }
 } 
 
-/*void handleInput(){ // handle serial input if there is any
-    if (Serial.available()){
-        char input = Serial.read(); // read everything that has been received so far and log down
-                                    // the last entry
-        switch (input) {
-        case 'f': // go ahead in medium speed 
-      if (currentSpeed>0){
-        goForward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-      }else{ // 
-        goForward(fSpeed);
-      }
-            break;
-        case 'b': // go back 
-      if (currentSpeed<0){
-        goBackward(currentSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-      }else{
-        goBackward(bSpeed);
-      }
-            break;
-        case 's': // stop 
-            stopVehicle();
-            break;
-        case 'l': // turn left
-             if(currentSpeed>0)
-            {
-              turnLeft();
-            }
-            else
-            {
-              turnLeftWhenStoped();
-            }
-            break;
-        case 'r': // turn right
-             if(currentSpeed>0)
-            {
-              turnRight();
-            }
-            else
-            {
-              turnRightWhenStoped();
-            }
-            break;
-        case 'd': // the car decelerates
-            decelerate(currentSpeed);
-            break;
-        case 'a': // the car accelerate  
-            accelerate(currentSpeed);
-            break;
-        default: // if you receive something that           you don't know, just stop
-            stopVehicle();
-        } 
-    }
-}*/
+
