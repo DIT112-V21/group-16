@@ -19,8 +19,10 @@ const int maxSpeed = 100;
 const int minSpeed = 10;
 
 const int triggerDist = 0;
-const int lDegrees = -90; // degrees to turn left
-const int rDegrees = 90; // degrees to turn right
+const int lDegrees = -10; // degrees to turn left
+const int rDegrees = 10; // degrees to turn right
+const int lDe = -90; // degrees to turn left on spot
+const int rDe = 90; // degrees to turn right on spot
 
 int currentSpeed = 0;
 
@@ -56,7 +58,15 @@ DifferentialControl control{leftMotor, rightMotor};
 SR04 front(arduinoRuntime, triggerPin, echoPin, maxDistance);
 SR04 sensor(arduinoRuntime, triggerPin, echoPin);
 
+//Infrared sensors
+typedef GP2Y0A02 infrared;
+infrared frontSensor(arduinoRuntime,0);
+infrared rightSensor(arduinoRuntime,2);
+infrared leftSensor(arduinoRuntime,1);
+infrared backSensor(arduinoRuntime,3);
+
 SimpleCar car{control};
+
 
 
 // different options used when serial input is being executed
@@ -94,7 +104,7 @@ std::vector<char> frameBuffer;
  {
     car.setSpeed(fSpeed);
     currentSpeed = fSpeed;
-    car.setAngle(lDegrees);
+    car.setAngle(lDe);
 		delay(6000);
 		car.setAngle(0);
     stopVehicle();
@@ -104,10 +114,28 @@ std::vector<char> frameBuffer;
  {
     car.setSpeed(fSpeed);
     currentSpeed = fSpeed;
-    car.setAngle(rDegrees);
+    car.setAngle(rDe);
 		delay(6000);
 		car.setAngle(0);
     stopVehicle();
+ }
+
+  void autoTurnLeft()
+ {
+    car.setSpeed(fSpeed);
+    currentSpeed = fSpeed;
+    car.setAngle(lDe);
+		delay(6000);
+		car.setAngle(0);
+ }
+
+  void autoTurnRight()
+ {
+    car.setSpeed(fSpeed);
+    currentSpeed = fSpeed;
+    car.setAngle(rDe);
+		delay(6000);
+		car.setAngle(0);
  }
 
  void decelerate(int curSpeed){ // start at 50 
@@ -176,12 +204,23 @@ void loop() {
 void obstacleAvoidance(){
     unsigned int distance = front.getDistance();
     unsigned int triggerDist = 100;
+    const int sideTriggerDist = 30;
+    unsigned int frontInfra = frontSensor.getDistance();
+    unsigned int leftInfra = leftSensor.getDistance();
+    unsigned int rightInfra = rightSensor.getDistance();
+    unsigned int backInfra = backSensor.getDistance();
   if (distance > 0 && distance <= triggerDist){ //third condition added that checks if the car is moving forward.
       car.setSpeed(0);
       delay(50);
       car.setSpeed(-70);
       delay(50);
       car.setSpeed(0);
+  }
+  else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist ){ //third condition added that checks if the car is moving forward.
+      autoTurnRight();
+  }
+  else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist){
+     autoTurnLeft();
   }
 } 
 
