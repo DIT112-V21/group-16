@@ -11,7 +11,6 @@ WiFiClient net;
 MQTTClient mqtt;
 
 const int fSpeed   = 25;  // 25% of the full speed forward
-const int bSpeed   = -10; // 10% of the full speed backward
 const int lDe = -90; // degrees to turn left on spot
 const int rDe = 90; // degrees to turn right on spot
 const auto oneSecond = 1000UL;
@@ -93,28 +92,6 @@ std::vector<char> frameBuffer;
     car.setAngle(0);
  }
  
- void obstacleAvoidance(){
-    unsigned int distance = front.getDistance();
-    unsigned int triggerDist = 100;
-    const int sideTriggerDist = 30;
-    unsigned int frontInfra = frontSensor.getDistance();
-    unsigned int leftInfra = leftSensor.getDistance();
-    unsigned int rightInfra = rightSensor.getDistance();
-    unsigned int backInfra = backSensor.getDistance();
-  
-  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist ){ //third condition added that checks if the car is moving forward.
-      autoTurnRight();
-  }
-  else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist){
-     autoTurnLeft();
-  } else if (distance > 0 && distance <= triggerDist && currentSpeed >= 0){ //third condition added that checks if the car is moving forward.
-      car.setSpeed(0);
-      delay(50);
-      car.setSpeed(-70);
-      delay(50);
-      car.setSpeed(0);
-  }
-} 
 void setup() {
   Serial.begin(9600);
  #ifdef __SMCE__
@@ -128,8 +105,8 @@ void setup() {
     mqtt.subscribe("/smartcar/group16/control/#", 1);
     mqtt.onMessage([](String topic, String message) {
       if (topic == "/smartcar/group16/control/throttle") {
-       currentSpeed = message.toInt();
-       car.setSpeed(currentSpeed);
+        currentSpeed = message.toInt();
+        car.setSpeed(currentSpeed);
       } else if (topic == "/smartcar/group16/control/steering") {
         car.setAngle(message.toInt());
       } else {
@@ -138,6 +115,7 @@ void setup() {
     });
   }
 }
+
 void loop() {
     obstacleAvoidance();
   {
@@ -170,4 +148,25 @@ void loop() {
   // Avoid over-using the CPU if we are running in the emulator
   delay(35);
 #endif
-}
+}  
+
+//obstacle avoidance 
+void obstacleAvoidance(){
+    unsigned int distance = front.getDistance();
+    unsigned int triggerDist = 100;
+    const int sideTriggerDist = 30;
+    unsigned int frontInfra = frontSensor.getDistance();
+    unsigned int leftInfra = leftSensor.getDistance();
+    unsigned int rightInfra = rightSensor.getDistance();
+    unsigned int backInfra = backSensor.getDistance();
+
+  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist ){ //third condition added that checks if the car is moving forward.
+      autoTurnRight();
+  }
+  else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist){
+     autoTurnLeft();
+  }
+ else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) { 
+      autoTurnLeft();
+  } 
+} 
