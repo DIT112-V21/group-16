@@ -210,18 +210,16 @@ void obstacleAvoidance(){
     unsigned int leftInfra = leftSensor.getDistance();
     unsigned int rightInfra = rightSensor.getDistance();
     unsigned int backInfra = backSensor.getDistance();
-  
 
- 
- if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist ){ //third condition added that checks if the car is moving forward.
+  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist ){ //third condition added that checks if the car is moving forward.
       autoTurnRight();
   }
- else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist){
+  else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist){
      autoTurnLeft();
   }
-else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) { 
+ else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) { 
       autoTurnLeft();
-  }
+  } 
 } 
 
 
