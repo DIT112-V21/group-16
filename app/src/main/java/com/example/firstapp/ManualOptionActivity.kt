@@ -17,7 +17,7 @@ class ManualOptionActivity : AppCompatActivity() {
     private val MQTT_SERVER = "tcp://$EXTERNAL_MQTT_BROKER:1883"
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
     private val STEERING_CONTROL = "/smartcar/group16/control/steering"
-    private val MOVEMENT_SPEED = 50
+    private val MOVEMENT_SPEED = 40
     private val IDLE_SPEED = 0
     private val STRAIGHT_ANGLE = 0
     private val STEERING_ANGLE = 10
