@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.eclipse.paho.client.mqttv3.*
-
+import android.widget.TextView;
 
 class ManualOptionActivity : AppCompatActivity() {
     private val TAG = "app"
