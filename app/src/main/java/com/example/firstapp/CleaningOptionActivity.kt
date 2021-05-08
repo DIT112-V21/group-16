@@ -14,7 +14,7 @@ class CleaningOptionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_cleaning_option)
+        setContentView(R.layout.activity_cleaning_option)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
@@ -27,5 +27,11 @@ class CleaningOptionActivity : AppCompatActivity() {
             binding.manual.text = ""
             startActivity(Intent(this,ManualOptionActivity::class.java))
         }
+
+        binding.auto.setOnClickListener{
+            binding.auto.text = ""
+            startActivity(Intent(this,AutoOptionActivity::class.java))
+        }
+
     }
 }
