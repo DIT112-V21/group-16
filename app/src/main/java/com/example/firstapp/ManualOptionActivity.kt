@@ -6,10 +6,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.eclipse.paho.client.mqttv3.*
-import android.widget.TextView;
 
 class ManualOptionActivity : AppCompatActivity() {
     private val TAG = "app"
@@ -17,6 +17,7 @@ class ManualOptionActivity : AppCompatActivity() {
     private val MQTT_SERVER = "tcp://$EXTERNAL_MQTT_BROKER:1883"
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
     private val STEERING_CONTROL = "/smartcar/group16/control/steering"
+    private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val MOVEMENT_SPEED = 40
     private val IDLE_SPEED = 0
     private val STRAIGHT_ANGLE = 0
@@ -28,12 +29,13 @@ class ManualOptionActivity : AppCompatActivity() {
     private var mMqttClient: MqttClient? = null
     private var isConnected = false
     private var mCameraView: ImageView? = null
+    private var mTraveledDistance: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
         mCameraView = findViewById(R.id.imageView)
-
+        mTraveledDistance=findViewById(R.id.textView6)
         mMqttClient = MqttClient(applicationContext, MQTT_SERVER, TAG)
         //context: Context?, serverUrl: String?, clientId: String?
 
@@ -74,6 +76,7 @@ class ManualOptionActivity : AppCompatActivity() {
                         ?.show()
                     mMqttClient?.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient?.subscribe("/smartcar/group16/camera", QOS, null);
+                    mMqttClient?.subscribe("/smartcar/group16/distance", QOS, null);
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
@@ -93,9 +96,9 @@ class ManualOptionActivity : AppCompatActivity() {
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     if (topic == "/smartcar/group16/camera") {
                         val bm = Bitmap.createBitmap(
-                            IMAGE_WIDTH,
-                            IMAGE_HEIGHT,
-                            Bitmap.Config.ARGB_8888
+                                IMAGE_WIDTH,
+                                IMAGE_HEIGHT,
+                                Bitmap.Config.ARGB_8888
                         )
 
                         val payload = message.payload
@@ -108,8 +111,13 @@ class ManualOptionActivity : AppCompatActivity() {
                         }
                         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
                         mCameraView?.setImageBitmap(bm)
+                    }
 
-                    } else {
+                       if (topic == "/smartcar/group16/distance"){
+                           val distance = 0
+                           mTraveledDistance?.setText(distance.toString())
+                        }
+                     else {
                         Log.i(TAG, "[MQTT] Topic: $topic | Message: $message")
                     }
                 }
@@ -121,7 +129,7 @@ class ManualOptionActivity : AppCompatActivity() {
         }
     }
 
-    private fun drive(throttleSpeed: Int?, steeringAngle: Int?, actionDescription: String) {
+    private fun drive(throttleSpeed: Int?, steeringAngle: Int?,  actionDescription: String) {
         if (!isConnected) {
             val notConnected = "Not connected (yet)";
             Log.e(TAG, notConnected)
@@ -131,6 +139,7 @@ class ManualOptionActivity : AppCompatActivity() {
         Log.i(TAG, actionDescription);
         mMqttClient?.publish(THROTTLE_CONTROL, throttleSpeed.toString(), QOS, null)
         mMqttClient?.publish(STEERING_CONTROL, steeringAngle.toString(), QOS, null)
+
     }
 
     fun forward(view: View) {
@@ -153,5 +162,6 @@ class ManualOptionActivity : AppCompatActivity() {
     fun backward(view: View) {
         drive(-MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving backwards")
     }
+
 }
 

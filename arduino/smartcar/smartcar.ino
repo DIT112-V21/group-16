@@ -118,9 +118,11 @@ void setup() {
 
 void loop() {
     obstacleAvoidance();
-  {
-    Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
-}
+     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
+
+    //traveledDistance();
+    //bagFilledProgress();
+   }
     
     if (mqtt.connected()) {
     mqtt.loop();
@@ -142,6 +144,7 @@ void loop() {
       mqtt.publish("/smartcar/ultrasound/front", distance);
       mqtt.publish("/smartcar/group16/distance", String(car.getDistance()));
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
+
     }
   }
 #ifdef __SMCE__
@@ -169,4 +172,46 @@ void obstacleAvoidance(){
  else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) { 
       autoTurnLeft();
   } 
-} 
+ //Method to publish sensor data
+
+   // float traveled_Dis=(leftOdometer.getDistance() + rightOdometer.getDistance())/2
+      float traveledDistance=car.getDistance();
+
+
+  }
+
+
+  /* float bagFilledProgress(){
+    long bag_status;
+    if(traveledDistance>0 &&traveledDistance<250 ) {
+     int bag_status
+      set.bag_status=25
+       Serial.println("Bag is  25% full");
+      } else if (traveledDistance>=250 &traveledDistance<=500)
+      {set.bag_status=50
+
+    // when it is 100% , press the button 'Empty the bag'
+    //  setDistance=0;
+    }
+    else if (traveledDistance>=500 &traveledDistance<=750)
+          {set.bag_status=75
+            Serial.println("Bag is  50% full")
+              }
+   else (traveledDistance>=500 &traveledDistance<=1000)
+                        {set.bag_status=100;
+
+                 Serial.println("Bag is full");
+              }
+    }
+
+    // initialize distance when emptyBag() is invoked
+     void emptyBag() {
+     bool isBagFull=false;
+     while(isBagFull{
+        bagFilledProgress();
+        if(!isBagFull) //break;
+        set. car.getDistance()=0
+                isBagFull=true;
+             }
+     } */
+

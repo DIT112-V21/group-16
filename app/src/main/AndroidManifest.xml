@@ -16,16 +16,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Firstapp">
-        <activity android:name=".AutoOptionActivity"/>
+
+        <activity android:name=".AutoOptionActivity"
+           android:parentActivityName=".CleaningOptionActivity"/>
 
         <activity
             android:name=".ManualOptionActivity"
             android:parentActivityName=".CleaningOptionActivity" />
         <activity
-            android:name=".CleaningOptionActivity"
-            android:parentActivityName=".MainActivity" />
+        android:name=".CleaningOptionActivity"
+        android:parentActivityName=".CleaningOptionActivity" />
 
-        <activity android:name=".MainActivity">
+
+        <activity android:name=".MainActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

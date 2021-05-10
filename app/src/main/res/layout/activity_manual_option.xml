@@ -104,7 +104,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/backward"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.352" />
+        app:layout_constraintVertical_bias="0.353" />
 
     <Button
         android:id="@+id/backward"
@@ -187,5 +187,13 @@
         android:text="Manual Mode"
         tools:layout_editor_absoluteX="10dp"
         tools:layout_editor_absoluteY="11dp" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="169dp"
+        android:layout_height="12dp"
+        android:contentDescription="traveled distance"
+        tools:layout_editor_absoluteX="47dp"
+        tools:layout_editor_absoluteY="622dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
