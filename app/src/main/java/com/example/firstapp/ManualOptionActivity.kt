@@ -115,8 +115,8 @@ class ManualOptionActivity : AppCompatActivity() {
                     }
 
                        if (topic == "/smartcar/group16/distance"){
-                           val distance = message.payload
-                           mTraveledDistance?.setText(distance.toString())
+                           val distance = message.toString()
+                           mTraveledDistance?.setText(distance+"m")
                         }
                      else {
                         Log.i(TAG, "[MQTT] Topic: $topic | Message: $message")
