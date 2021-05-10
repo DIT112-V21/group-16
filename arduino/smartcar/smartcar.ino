@@ -122,7 +122,7 @@ void loop() {
 
     //traveledDistance();
     //bagFilledProgress();
-   }
+   
     
     if (mqtt.connected()) {
     mqtt.loop();
