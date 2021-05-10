@@ -10,6 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.eclipse.paho.client.mqttv3.*
+import kotlin.jvm.Throws
 
 class ManualOptionActivity : AppCompatActivity() {
     private val TAG = "app"
@@ -114,7 +115,7 @@ class ManualOptionActivity : AppCompatActivity() {
                     }
 
                        if (topic == "/smartcar/group16/distance"){
-                           val distance = 0
+                           val distance = message.payload
                            mTraveledDistance?.setText(distance.toString())
                         }
                      else {
