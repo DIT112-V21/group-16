@@ -1,15 +1,15 @@
 package com.example.firstapp
 
+import android.R
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import org.eclipse.paho.client.mqttv3.*
-import android.widget.TextView;
+
 
 class ManualOptionActivity : AppCompatActivity() {
     private val TAG = "app"
@@ -22,17 +22,21 @@ class ManualOptionActivity : AppCompatActivity() {
     private val STRAIGHT_ANGLE = 0
     private val STEERING_ANGLE = 10
     private val QOS = 1
-    private val IMAGE_WIDTH = 320
-    private val IMAGE_HEIGHT = 240
+
 
     private var mMqttClient: MqttClient? = null
     private var isConnected = false
-    private var mCameraView: ImageView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_manual_option)
-        mCameraView = findViewById(R.id.imageView)
+       setContentView(com.example.firstapp.R.layout.activity_manual_option)
+
+        val mCameraButton: ImageButton = findViewById(com.example.firstapp.R.id.camera)
+        mCameraButton.setOnClickListener { v ->
+            val popUpClass = PopUpClass()
+            popUpClass.showPopupWindow(v)
+        }
+
 
         mMqttClient = MqttClient(applicationContext, MQTT_SERVER, TAG)
         //context: Context?, serverUrl: String?, clientId: String?
@@ -41,8 +45,8 @@ class ManualOptionActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
-
         actionBar.setDisplayHomeAsUpEnabled(true)
+
     }
 
     override fun onResume() {
@@ -92,22 +96,9 @@ class ManualOptionActivity : AppCompatActivity() {
                 @Throws(Exception::class)
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     if (topic == "/smartcar/group16/camera") {
-                        val bm = Bitmap.createBitmap(
-                            IMAGE_WIDTH,
-                            IMAGE_HEIGHT,
-                            Bitmap.Config.ARGB_8888
-                        )
 
-                        val payload = message.payload
-                        val colors = IntArray(IMAGE_WIDTH * IMAGE_HEIGHT)
-                        for (ci in colors.indices) {
-                            val r = payload[3 * ci]
-                            val g = payload[3 * ci + 1]
-                            val b = payload[3 * ci + 2]
-                            colors[ci] = Color.rgb(r.toInt(), g.toInt(), b.toInt())
-                        }
-                        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-                        mCameraView?.setImageBitmap(bm)
+                    }
+                    if (topic == "/smartcar/group16/distance") {
 
                     } else {
                         Log.i(TAG, "[MQTT] Topic: $topic | Message: $message")
