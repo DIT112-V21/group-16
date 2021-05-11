@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     android:background="#A1F6F5F4">
 
+
     <ImageView
         android:id="@+id/imageView8"
         android:layout_width="897dp"
         android:layout_height="473dp"
-        android:layout_marginBottom="424dp"
+        android:layout_marginBottom="368dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/drawing_sketchpad" />
 
@@ -21,13 +21,11 @@
         android:id="@+id/imageView9"
         android:layout_width="795dp"
         android:layout_height="353dp"
-        android:layout_marginTop="610dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.317"
+        app:layout_constraintHorizontal_bias="0.338"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/drawing_sketchpad" />
-
 
     <ImageView
         android:id="@+id/accelerate"
@@ -38,7 +36,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.959"
         app:srcCompat="@drawable/drawing_sketchpad__9_" />
 
     <Button
@@ -146,8 +144,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="75dp"
-        android:text="accelerate"
         android:onClick="accelerate"
+        android:text="accelerate"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.223"
@@ -191,9 +189,24 @@
     <TextView
         android:id="@+id/textView6"
         android:layout_width="169dp"
-        android:layout_height="12dp"
+        android:layout_height="70dp"
         android:contentDescription="traveled distance"
-        tools:layout_editor_absoluteX="47dp"
-        tools:layout_editor_absoluteY="622dp" />
+        app:layout_constraintBottom_toBottomOf="@+id/accelerate"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editTextTextPersonName"
+        app:layout_constraintTop_toBottomOf="@id/decelerate"
+        app:layout_constraintVertical_bias="0.564" />
+
+    <EditText
+        android:id="@+id/editTextTextPersonName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="202dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Traveld distance"
+        app:layout_constraintEnd_toEndOf="@+id/accelerate"
+        app:layout_constraintTop_toBottomOf="@+id/accelarate" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
