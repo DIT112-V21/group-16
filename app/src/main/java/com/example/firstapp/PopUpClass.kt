@@ -58,7 +58,6 @@ class PopUpClass : AppCompatActivity() {
                     Log.i(TAG, successfulConnection);
                     Toast.makeText(applicationContext, successfulConnection, Toast.LENGTH_SHORT)
                         ?.show()
-                    mMqttClient?.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient?.subscribe("/smartcar/group16/camera", QOS, null);
                 }
 
@@ -108,7 +107,6 @@ class PopUpClass : AppCompatActivity() {
 
     fun showPopupWindow(view: View) {
         mMqttClient = MqttClient(getApplicationContext(), MQTT_SERVER, TAG)
-        mCameraView = findViewById<ImageView>(R.id.imageView)
         connectToMqttBroker()
 
         //Create a View object yourself through inflater
@@ -130,8 +128,10 @@ class PopUpClass : AppCompatActivity() {
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0)
 
         //Initialize the elements of our window, install the handler
-        val test2 = popupView.findViewById<TextView>(R.id.titleText)
-        test2.text = ""
+
+
+        var test1 = popupView.findViewById<ImageView>(R.id.imageView)
+        test1 = mCameraView
         val buttonEdit = popupView.findViewById<Button>(R.id.messageButton)
         buttonEdit.setOnClickListener { //As an example, display the message
             Toast.makeText(view.context, "Wow, popup action button", Toast.LENGTH_SHORT).show()
