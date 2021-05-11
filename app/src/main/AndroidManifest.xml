@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Firstapp">
-        <activity android:name=".PopUpClass"></activity>
+        <activity android:name=".PopUpWindow"></activity>
         <activity
             android:name=".AutoOptionActivity"
             android:parentActivityName=".CleaningOptionActivity" />

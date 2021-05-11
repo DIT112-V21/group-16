@@ -1,8 +1,5 @@
 package com.example.firstapp
 
-import android.R
-import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -31,9 +28,9 @@ class ManualOptionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
        setContentView(com.example.firstapp.R.layout.activity_manual_option)
 
-        val mCameraButton: ImageButton = findViewById(com.example.firstapp.R.id.camera)
-        mCameraButton.setOnClickListener { v ->
-            val popUpClass = PopUpClass()
+            val mCameraButton: ImageButton = findViewById(com.example.firstapp.R.id.camera)
+            mCameraButton.setOnClickListener { v ->
+            val popUpClass = PopUpWindow()
             popUpClass.showPopupWindow(v)
         }
 

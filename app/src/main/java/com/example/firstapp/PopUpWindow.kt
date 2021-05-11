@@ -12,7 +12,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import org.eclipse.paho.client.mqttv3.*
 
-class PopUpClass : AppCompatActivity() {
+class PopUpWindow : AppCompatActivity() {
     private val TAG = "firstapp"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
     private val LOCALHOST = "10.0.2.2"
@@ -28,6 +28,8 @@ class PopUpClass : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.pop_up_window)
+        mMqttClient = MqttClient(getApplicationContext(), MQTT_SERVER, TAG)
+        connectToMqttBroker()
     }
 
 
@@ -105,10 +107,8 @@ class PopUpClass : AppCompatActivity() {
         }
     }
 
-    fun showPopupWindow(view: View) {
-        mMqttClient = MqttClient(getApplicationContext(), MQTT_SERVER, TAG)
-        connectToMqttBroker()
 
+    fun showPopupWindow(view: View) {
         //Create a View object yourself through inflater
         val inflater =
             view.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -129,9 +129,9 @@ class PopUpClass : AppCompatActivity() {
 
         //Initialize the elements of our window, install the handler
 
-
-        var test1 = popupView.findViewById<ImageView>(R.id.imageView)
-        test1 = mCameraView
+        mCameraView = findViewById(R.id.camera);
+        //var test1 = popupView.findViewById<ImageView>(R.id.camera)
+        //mCameraView = test1
         val buttonEdit = popupView.findViewById<Button>(R.id.messageButton)
         buttonEdit.setOnClickListener { //As an example, display the message
             Toast.makeText(view.context, "Wow, popup action button", Toast.LENGTH_SHORT).show()
