@@ -2,11 +2,11 @@ package com.example.firstapp
 
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.MQTT.MqttHandler
 import com.example.firstapp.MQTT.MqttClient
@@ -15,7 +15,7 @@ import com.example.firstapp.MQTT.MqttClient
 class ManualOptionActivity : AppCompatActivity() {
 
     private var mqttHandler: MqttHandler? = null
-    private var mCamera : ImageButton? = null
+    private var mCameraButton : ImageButton? = null
 
     private var forwardBtn: Button? = null
     private var backwardBtn: Button? = null
@@ -33,24 +33,22 @@ class ManualOptionActivity : AppCompatActivity() {
         mqttHandler = MqttHandler(this.applicationContext)
         mqttHandler!!.connectToMqttBroker()
 
-
-
-        mCamera = findViewById<ImageButton>(R.id.camera)
-        mCamera?.setOnClickListener{
-           val intent = Intent(this,PopUpWindow::class.java)
-            startActivity(intent)
+        // Pop up window
+        mCameraButton = findViewById(R.id.camera)
+        mCameraButton?.setOnClickListener {
+            val window = PopupWindow(this.applicationContext)
+            val view = layoutInflater.inflate(R.layout.pop_up_window, null)
+            window.contentView = view
+            val imageView = view.findViewById<ImageView>(R.id.camera)
+            imageView.setOnClickListener{
+                window.dismiss()
+            }
+            window.showAsDropDown(mCameraButton)
         }
-
-
-
-
-       /* ImageButton cameraButton = findViewById(R.id.camera)
-        cameraButton.setOnClickListener { v ->
-            popUpWindow = PopUpWindow()
-        popUpWindow.showPopupWindow(v)
-
-        }*/
     }
+
+
+
     fun forward(view: View) {
         forwardBtn = findViewById(R.id.forward)
         mqttHandler!!.forward(forwardBtn)

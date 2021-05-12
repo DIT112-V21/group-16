@@ -7,9 +7,9 @@ import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.firstapp.PopUpWindow
 import org.eclipse.paho.client.mqttv3.*
 
 class MqttHandler : AppCompatActivity {
@@ -107,7 +107,17 @@ class MqttHandler : AppCompatActivity {
                 @Throws(Exception::class)
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     if (topic == CAMERA_SUB) {
-                        setUpCamera(message)
+                            val bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888)
+                            val payload = message.payload
+                            val colors = IntArray(IMAGE_WIDTH * IMAGE_HEIGHT)
+                            for (ci in colors.indices) {
+                                val r = payload[3 * ci]
+                                val g = payload[3 * ci + 1]
+                                val b = payload[3 * ci + 2]
+                                colors[ci] = Color.rgb(r.toInt(), g.toInt(), b.toInt())
+                            }
+                            bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT)
+                            mCameraView!!.setImageBitmap(bm)
                     } else {
                         Log.i(
                             TAG,
@@ -123,19 +133,7 @@ class MqttHandler : AppCompatActivity {
         }
     }
 
-    fun setUpCamera(message: MqttMessage) {
-        val bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888)
-        val payload = message.payload
-        val colors = IntArray(IMAGE_WIDTH * IMAGE_HEIGHT)
-        for (ci in colors.indices) {
-            val r = payload[3 * ci]
-            val g = payload[3 * ci + 1]
-            val b = payload[3 * ci + 2]
-            colors[ci] = Color.rgb(r.toInt(), g.toInt(), b.toInt())
-        }
-        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT)
-        mCameraView!!.setImageBitmap(bm)
-    }
+
 
     fun message(message: String?) {
         val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)

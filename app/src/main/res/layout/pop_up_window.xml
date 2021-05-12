@@ -39,39 +39,24 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/popup_window_background_container"
-                android:layout_width="250dp"
-                android:minHeight="170dp"
-                android:background="#bc214b"
+                android:layout_width="400dp"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true">
+                android:layout_centerInParent="true"
+                android:background="#83FF9800"
+                android:minHeight="250dp">
 
 
                 <ImageView
                     android:id="@+id/camera"
-                    android:layout_width="248dp"
-                    android:layout_height="108dp"
+                    android:layout_width="305dp"
+                    android:layout_height="177dp"
+                    android:layout_marginTop="36dp"
                     android:layout_weight="0.3"
                     android:contentDescription="cameraView"
-                    app:layout_constraintBottom_toBottomOf="@+id/messageButton"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintHorizontal_bias="0.505"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.08" />
-
-                <Button
-                    android:id="@+id/messageButton"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="#851635"
-                    android:text="ok"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
