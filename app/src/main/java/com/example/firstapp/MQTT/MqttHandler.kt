@@ -9,16 +9,18 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.firstapp.PopUpWindow
 import org.eclipse.paho.client.mqttv3.*
 
 class MqttHandler : AppCompatActivity {
+
     //connection to Mqtt
     private val TAG = "app"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
     private val LOCALHOST = "10.0.2.2"
     private val MQTT_SERVER = "tcp://" + EXTERNAL_MQTT_BROKER + ":1883"
     private val QOS = 1
+    private var isConnected = false
+    private var context: Context? = null
 
     //Topics
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
@@ -42,9 +44,6 @@ class MqttHandler : AppCompatActivity {
     private val LOST_CONNECTION = "Connection to MQTT broker lost"
     private val DISCONNECTED = "Disconnected from broker"
 
-
-    private var isConnected = false
-    private var context: Context? = null
     private var mCameraView: ImageView? = null
     private var mMqttClient: MqttClient? = null
 
@@ -71,7 +70,6 @@ class MqttHandler : AppCompatActivity {
             override fun onSuccess(asyncActionToken: IMqttToken) {
                 Log.i(TAG, DISCONNECTED)
             }
-
             override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {}
         })
     }

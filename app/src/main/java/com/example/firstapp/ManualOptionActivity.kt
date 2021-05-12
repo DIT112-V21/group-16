@@ -1,15 +1,10 @@
 package com.example.firstapp
-
-import android.app.Dialog
-import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.MQTT.MqttHandler
-import com.example.firstapp.MQTT.MqttClient
+
 
 
 class ManualOptionActivity : AppCompatActivity() {
@@ -26,14 +21,13 @@ class ManualOptionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val message = findViewById<TextView>(R.id.message)
         setContentView(R.layout.activity_manual_option)
 
         //mqtt car handler
         mqttHandler = MqttHandler(this.applicationContext)
         mqttHandler!!.connectToMqttBroker()
 
-        // Pop up window
+        // transition to popup window when clicking on camera button
         mCameraButton = findViewById(R.id.camera)
         mCameraButton?.setOnClickListener {
             val window = PopupWindow(this.applicationContext)
@@ -46,8 +40,6 @@ class ManualOptionActivity : AppCompatActivity() {
             window.showAsDropDown(mCameraButton)
         }
     }
-
-
 
     fun forward(view: View) {
         forwardBtn = findViewById(R.id.forward)
@@ -69,5 +61,4 @@ class ManualOptionActivity : AppCompatActivity() {
         stopBtn = findViewById(R.id.stop)
         mqttHandler!!.stop(stopBtn)
     }
-
 }
