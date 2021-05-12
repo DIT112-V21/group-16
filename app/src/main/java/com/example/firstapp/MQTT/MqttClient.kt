@@ -6,7 +6,10 @@ import org.eclipse.paho.client.mqttv3.*
 
 // Adapted from: https://medium.com/swlh/android-and-mqtt-a-simple-guide-cb0cbba1931c
 class MqttClient(context: Context?, serverUrl: String?, clientId: String?) {
-    private val mMqttAndroidClient: MqttAndroidClient
+
+    private val mMqttAndroidClient: MqttAndroidClient =
+        MqttAndroidClient(context, serverUrl, clientId)
+
     fun connect(
         username: String?,
         password: String,
@@ -61,7 +64,4 @@ class MqttClient(context: Context?, serverUrl: String?, clientId: String?) {
         }
     }
 
-    init {
-        mMqttAndroidClient = MqttAndroidClient(context, serverUrl, clientId)
-    }
 }

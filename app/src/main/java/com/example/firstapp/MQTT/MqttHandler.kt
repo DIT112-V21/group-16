@@ -44,27 +44,30 @@ class MqttHandler : AppCompatActivity {
 
 
     private var isConnected = false
-    var context: Context? = null
-    private var cameraView: ImageView? = null
-    private var mqttClient: MqttClient
+    private var context: Context? = null
+    private var mCameraView: ImageView? = null
+    private var mMqttClient: MqttClient? = null
 
     //Constructors
     constructor(context: Context?, cameraView: ImageView?) {
-        mqttClient = MqttClient(context, MQTT_SERVER, TAG)
-        this.cameraView = cameraView
+        mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
+        this.mCameraView = cameraView
+        this.context = context
     }
 
     constructor(context: Context?) {
-        mqttClient = MqttClient(context, MQTT_SERVER, TAG)
+        mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
+        this.context = context
     }
 
     override fun onResume() {
+        connectToMqttBroker()
         super.onResume()
     }
 
     override fun onPause() {
         super.onPause()
-        mqttClient.disconnect(object : IMqttActionListener {
+        mMqttClient?.disconnect(object : IMqttActionListener {
             override fun onSuccess(asyncActionToken: IMqttToken) {
                 Log.i(TAG, DISCONNECTED)
             }
@@ -73,23 +76,23 @@ class MqttHandler : AppCompatActivity {
         })
     }
 
-    fun connectToMqttBroker(message: TextView) {
+    fun connectToMqttBroker() {
         if (!isConnected) {
-            mqttClient.connect(TAG, "", object : IMqttActionListener {
+            mMqttClient?.connect(TAG, "", object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken) {
                     isConnected = true
                     Log.i(TAG, SUCCESSFUL_CONNECTION)
                     // Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-                    message.text = SUCCESSFUL_CONNECTION
+                    //message.text = SUCCESSFUL_CONNECTION
                     message(SUCCESSFUL_CONNECTION)
-                    mqttClient.subscribe(ULTRASOUND_SUB, QOS, null)
-                    mqttClient.subscribe(CAMERA_SUB, QOS, null)
+                    mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
+                    mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     Log.e(TAG, FAILED_CONNECTION)
                     //Toast.makeText(getApplicationContext(), failedConnection, Toast.LENGTH_SHORT).show();
-                    message.text = FAILED_CONNECTION
+                    //message.text = FAILED_CONNECTION
                     message(FAILED_CONNECTION)
                 }
             }, object : MqttCallback {
@@ -97,7 +100,7 @@ class MqttHandler : AppCompatActivity {
                     isConnected = false
                     Log.w(TAG, LOST_CONNECTION)
                     //Toast.makeText(getApplicationContext(), connectionLost, Toast.LENGTH_SHORT).show();
-                    message.text = LOST_CONNECTION
+                    //message.text = LOST_CONNECTION
                     message(LOST_CONNECTION)
                 }
 
@@ -131,7 +134,7 @@ class MqttHandler : AppCompatActivity {
             colors[ci] = Color.rgb(r.toInt(), g.toInt(), b.toInt())
         }
         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT)
-        cameraView!!.setImageBitmap(bm)
+        mCameraView!!.setImageBitmap(bm)
     }
 
     fun message(message: String?) {
@@ -142,20 +145,20 @@ class MqttHandler : AppCompatActivity {
 
     fun publish(topic: String?, message: String?, qos: Int, publishCallback: IMqttActionListener?) {
         if (message != null) {
-            mqttClient.publish(topic, message, qos, publishCallback)
+            mMqttClient?.publish(topic, message, qos, publishCallback)
         }
     }
 
     fun disconnect(disconnectionCallback: IMqttActionListener?) {
-        mqttClient.disconnect(disconnectionCallback)
+        mMqttClient?.disconnect(disconnectionCallback)
     }
 
     fun subscribe(topic: String?, qos: Int, subscriptionCallback: IMqttActionListener?) {
-        mqttClient.subscribe(topic, qos, subscriptionCallback)
+        mMqttClient?.subscribe(topic, qos, subscriptionCallback)
     }
 
     fun unsubscribe(topic: String?, unsubscriptionCallback: IMqttActionListener?) {
-        mqttClient.unsubscribe(topic, unsubscriptionCallback)
+        mMqttClient?.unsubscribe(topic, unsubscriptionCallback)
     }
 
     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
@@ -166,8 +169,8 @@ class MqttHandler : AppCompatActivity {
             return
         }
         Log.i(TAG, actionDescription!!)
-        mqttClient.publish(THROTTLE_CONTROL, Integer.toString(throttleSpeed), QOS, null)
-        mqttClient.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
+        mMqttClient?.publish(THROTTLE_CONTROL, Integer.toString(throttleSpeed), QOS, null)
+        mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
     }
 
     fun forward(view: View?) {
