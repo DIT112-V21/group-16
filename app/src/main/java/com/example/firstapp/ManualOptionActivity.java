@@ -16,19 +16,17 @@ import com.example.firstapp.MQTT.CarHandler;
 public class ManualOptionActivity extends AppCompatActivity {
 
     private CarHandler carHandler;
-
-private Button forwardButton, backwardButton, stopButton, leftButton, rightButton;
+   //private Button forwardButton, backwardButton, stopButton, leftButton, rightButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //TextView message = findViewById(R.id.message);
-
+        TextView message = findViewById(R.id.message);
         setContentView(R.layout.activity_manual_option);
 
         //mqtt car handler
         carHandler = new CarHandler(this.getApplicationContext());
-        carHandler.connectToMqttBroker();
+        carHandler.connectToMqttBroker(message);
 
        // setButtons();
 
@@ -39,20 +37,6 @@ private Button forwardButton, backwardButton, stopButton, leftButton, rightButto
         }*/
 
         }
-
-       /* public void setButtons(){
-        forwardButton = findViewById(R.id.forward);
-        carHandler.forward(forwardButton);
-        backwardButton = findViewById(R.id.backward);
-        carHandler.forward(backwardButton);
-        stopButton = findViewById(R.id.stopCar);
-        carHandler.stop(stopButton);
-        leftButton = findViewById(R.id.leftForward);
-        carHandler.forwardLeft(leftButton);
-        rightButton = findViewById(R.id.rightForward);
-        carHandler.forwardRight(rightButton);
-        }*/
-
 
 }
 

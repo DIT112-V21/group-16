@@ -60,7 +60,7 @@ public class CarHandler extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        connectToMqttBroker();
+
         super.onResume();
     }
 
@@ -79,7 +79,7 @@ public class CarHandler extends AppCompatActivity {
         });
     }
 
-    public void connectToMqttBroker() {
+    public void connectToMqttBroker(TextView message) {
         if (!isConnected) {
             mqttClient.connect(TAG, "", new IMqttActionListener() {
                 @Override
@@ -87,10 +87,10 @@ public class CarHandler extends AppCompatActivity {
                     isConnected = true;
                     Log.i(TAG, SUCCESSFUL_CONNECTION);
                     // Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-                    //message.setText(SUCCESSFUL_CONNECTION);
+                    message.setText(SUCCESSFUL_CONNECTION);
                     message(SUCCESSFUL_CONNECTION);
 
-                    // mqttClient.subscribe(ULTRASOUND_SUB, QOS, null);
+                    mqttClient.subscribe(ULTRASOUND_SUB, QOS, null);
                     mqttClient.subscribe(CAMERA_SUB, QOS, null);
                 }
 
@@ -98,7 +98,7 @@ public class CarHandler extends AppCompatActivity {
                 public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                     Log.e(TAG, FAILED_CONNECTION);
                     //Toast.makeText(getApplicationContext(), failedConnection, Toast.LENGTH_SHORT).show();
-                   // message.setText(FAILED_CONNECTION);
+                    message.setText(FAILED_CONNECTION);
                     message(FAILED_CONNECTION);
                 }
             }, new MqttCallback() {
@@ -107,7 +107,7 @@ public class CarHandler extends AppCompatActivity {
                     isConnected = false;
                     Log.w(TAG, LOST_CONNECTION);
                     //Toast.makeText(getApplicationContext(), connectionLost, Toast.LENGTH_SHORT).show();
-                   // message.setText(LOST_CONNECTION);
+                    message.setText(LOST_CONNECTION);
                     message(LOST_CONNECTION);
                 }
 
@@ -128,9 +128,6 @@ public class CarHandler extends AppCompatActivity {
         }
     }
 
-    public void start(){
-        connectToMqttBroker();
-    }
 
     public void setUpCamera(MqttMessage message) {
         final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
