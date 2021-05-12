@@ -16,7 +16,6 @@ import com.example.firstapp.MQTT.CarHandler;
 public class ManualOptionActivity extends AppCompatActivity {
 
     private CarHandler carHandler;
-   //private Button forwardButton, backwardButton, stopButton, leftButton, rightButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +27,6 @@ public class ManualOptionActivity extends AppCompatActivity {
         carHandler = new CarHandler(this.getApplicationContext());
         carHandler.connectToMqttBroker(message);
 
-       // setButtons();
-
        /* ImageButton cameraButton = findViewById(R.id.camera);
         cameraButton.setOnClickListener { v ->
             popUpWindow = PopUpWindow()
@@ -37,6 +34,5 @@ public class ManualOptionActivity extends AppCompatActivity {
         }*/
 
         }
-
 }
 

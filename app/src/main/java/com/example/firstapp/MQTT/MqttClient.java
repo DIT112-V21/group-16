@@ -1,7 +1,5 @@
 package com.example.firstapp.MQTT;
-
 import android.content.Context;
-
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.*;
 

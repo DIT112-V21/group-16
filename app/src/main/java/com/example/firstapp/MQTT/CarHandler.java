@@ -57,10 +57,8 @@ public class CarHandler extends AppCompatActivity {
         mqttClient = new MqttClient(context, MQTT_SERVER, TAG);
     }
 
-
     @Override
     protected void onResume() {
-
         super.onResume();
     }
 
@@ -127,7 +125,6 @@ public class CarHandler extends AppCompatActivity {
             });
         }
     }
-
 
     public void setUpCamera(MqttMessage message) {
         final Bitmap bm = Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888);
