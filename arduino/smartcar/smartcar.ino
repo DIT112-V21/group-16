@@ -196,7 +196,7 @@ void setup() {
 
 void loop() {
     obstacleAvoidance();
-    handleInput();
+    //handleInput();
 //   {
 //     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
 // }
