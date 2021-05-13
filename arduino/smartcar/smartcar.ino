@@ -323,41 +323,42 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      
      }
 } 
-void handleInput(){ // handle serial input if there is any
-    if (Serial.available())
-    {
-        char input = Serial.read(); // read everything that has been received so far and log down
-                                    // the last entry
-        switch (input)
-        {
-        case 'f': // go ahead in medium speed 
-            goForward(fSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
-            break;
-        case 'b': // go back 
-            goBackward(bSpeed);
-            break;
-        case 's': // stop 
-            stopVehicle();
-            break;
-        case 'l' :
-            rotateOnSpot(lDeg,fSpeed);
-            break;   
-         case 'r':
-            rotateOnSpot(rDe,fSpeed);
-            break;
-        case 'd': // the car decelerates
-            decelerate(currentSpeed);
-            break;
-        case 'n':
-            turnLeftWhenStoped();
-            break;
-        case 'm' :
-            turnRightWhenStoped();
-        case 'a': // the car accelerate  s
-            accelerate(currentSpeed);
-            break;
-        default: // if you receive something that you don't know, just stop
-            stopVehicle();
-        } 
-    }
-} 
+// !! uncomment this part for testing in serial !!
+// void handleInput(){ // handle serial input if there is any
+//     if (Serial.available())
+//     {
+//         char input = Serial.read(); // read everything that has been received so far and log down
+//                                     // the last entry
+//         switch (input)
+//         {
+//         case 'f': // go ahead in medium speed 
+//             goForward(fSpeed); // starts on 50 %, contiunes based on the speed before it stopped.
+//             break;
+//         case 'b': // go back 
+//             goBackward(bSpeed);
+//             break;
+//         case 's': // stop 
+//             stopVehicle();
+//             break;
+//         case 'l' :
+//             rotateOnSpot(lDeg,fSpeed);
+//             break;   
+//          case 'r':
+//             rotateOnSpot(rDe,fSpeed);
+//             break;
+//         case 'd': // the car decelerates
+//             decelerate(currentSpeed);
+//             break;
+//         case 'n':
+//             turnLeftWhenStoped();
+//             break;
+//         case 'm' :
+//             turnRightWhenStoped();
+//         case 'a': // the car accelerate  s
+//             accelerate(currentSpeed);
+//             break;
+//         default: // if you receive something that you don't know, just stop
+//             stopVehicle();
+//         } 
+//     }
+// } 
