@@ -6,90 +6,45 @@
     android:layout_height="match_parent"
     android:background="#A1F6F5F4">
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="897dp"
-        android:layout_height="473dp"
-        android:layout_marginBottom="424dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="169dp"
+        android:layout_height="70dp"
+        android:contentDescription="traveled distance"
+        android:textColor="#070000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.541"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/drawing_sketchpad" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="795dp"
-        android:layout_height="353dp"
-        android:layout_marginTop="610dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.317"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/drawing_sketchpad" />
-
-
-    <ImageView
-        android:id="@+id/accelerate"
+    <ImageButton
+        android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:background="@null"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.954"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_camera" />
+
+
+    <io.github.controlwear.virtual.joystick.android.JoystickView
+        android:id="@+id/joystickView_left"
+        android:layout_width="316dp"
+        android:layout_height="0dp"
+        android:background="@drawable/joystick_background"
+        app:JV_buttonImage="@drawable/pink_ball"
+        app:JV_fixedCenter="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        app:srcCompat="@drawable/drawing_sketchpad__9_" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/Start"
-        android:layout_width="108dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="56dp"
-        android:onClick="forward"
-        android:text="start"
-        android:textSize="18sp"
-        app:backgroundTint="#009688"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.574" />
-
-    <Button
-        android:id="@+id/stop"
-        android:layout_width="108dp"
-        android:layout_height="63dp"
-        android:layout_marginStart="49dp"
-        android:layout_marginEnd="70dp"
-        android:onClick="stop"
-        android:text="Stop"
-        android:textSize="18sp"
-        app:backgroundTint="#F44336"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/Start"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.574" />
-
-    <Button
-        android:id="@+id/left"
-        android:layout_width="86dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="60dp"
-        android:onClick="forwardLeft"
-        android:shadowColor="#5A4848"
-        android:text="@string/left"
-        android:textColor="#040404"
-        app:backgroundTint="#FAF8F8"
-        app:iconTint="#F8F6F6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.353" />
-
-    <Button
-        android:id="@+id/right"
+        android:id="@+id/rightForward"
         android:layout_width="87dp"
         android:layout_height="53dp"
         android:layout_marginStart="8dp"
@@ -101,10 +56,26 @@
         app:backgroundTint="#FAF6F6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/backward"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.352" />
+        app:layout_constraintVertical_bias="0.905" />
+
+    <Button
+        android:id="@+id/stopCar"
+        android:layout_width="111dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="49dp"
+        android:onClick="stop"
+        android:text="Stop"
+        android:textSize="18sp"
+        app:backgroundTint="#F44336"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.338"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.907" />
 
     <Button
         android:id="@+id/backward"
@@ -112,24 +83,24 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="9dp"
+        android:onClick="backward"
         android:shadowColor="#2E2424"
         android:text="@string/backward"
-        android:onClick="backward"
         android:textColor="#040303"
         app:backgroundTint="#FAF7F7"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintHorizontal_bias="0.478"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.419" />
+        app:layout_constraintVertical_bias="0.976" />
 
     <Button
         android:id="@+id/forward"
         android:layout_width="114dp"
         android:layout_height="50dp"
         android:layout_marginStart="160dp"
-        android:layout_marginTop="196dp"
+        android:layout_marginTop="560dp"
         android:layout_marginEnd="158dp"
         android:onClick="forward"
         android:shadowColor="#332B2B"
@@ -137,55 +108,25 @@
         android:textColor="#090000"
         app:backgroundTint="#FAF8F8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.619"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/accelarate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
-        android:text="accelerate"
-        android:onClick="accelerate"
+        android:id="@+id/leftForward"
+        android:layout_width="86dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="48dp"
+        android:onClick="forwardLeft"
+        android:shadowColor="#5A4848"
+        android:text="@string/left"
+        android:textColor="#040404"
+        app:backgroundTint="#FAF8F8"
+        app:iconTint="#F8F6F6"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.223"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stop"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <Button
-        android:id="@+id/decelerate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="decelerate"
-        android:onClick="decelerate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.732"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.761" />
+        app:layout_constraintVertical_bias="0.905" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="367dp"
-        android:layout_height="154dp"
-        android:layout_weight="0.3"
-        android:contentDescription="cameraView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.027" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Manual Mode"
-        tools:layout_editor_absoluteX="10dp"
-        tools:layout_editor_absoluteY="11dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

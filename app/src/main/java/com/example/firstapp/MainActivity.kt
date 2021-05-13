@@ -21,7 +21,5 @@ class MainActivity : AppCompatActivity() {
             binding.startCleaning.text = "start"
             startActivity(Intent(this,CleaningOptionActivity::class.java))
         }
-
-
     }
 }
