@@ -1,11 +1,14 @@
 package com.example.firstapp
 
+
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +22,7 @@ class ManualOptionActivity : AppCompatActivity() {
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
     private val STEERING_CONTROL = "/smartcar/group16/control/steering"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
+
     private val MOVEMENT_SPEED = 40
     private val IDLE_SPEED = 0
     private val STRAIGHT_ANGLE = 0
@@ -31,13 +35,16 @@ class ManualOptionActivity : AppCompatActivity() {
     private var isConnected = false
     private var mCameraView: ImageView? = null
     private var mTraveledDistance: TextView? = null
+    private  var mProgressbar:ProgressBar?=null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+
+   override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
         mCameraView = findViewById(R.id.imageView)
         mTraveledDistance=findViewById(R.id.textView6)
         mMqttClient = MqttClient(applicationContext, MQTT_SERVER, TAG)
+        mProgressbar=findViewById(R.id.progressBar2)
         //context: Context?, serverUrl: String?, clientId: String?
 
         connectToMqttBroker()
@@ -78,6 +85,7 @@ class ManualOptionActivity : AppCompatActivity() {
                     mMqttClient?.subscribe("/smartcar/ultrasound/front", QOS, null);
                     mMqttClient?.subscribe("/smartcar/group16/camera", QOS, null);
                     mMqttClient?.subscribe("/smartcar/group16/distance", QOS, null);
+                    mMqttClient?.subscribe("/smartcar/group16/bagfull",QOS, null);
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
@@ -114,11 +122,32 @@ class ManualOptionActivity : AppCompatActivity() {
                         mCameraView?.setImageBitmap(bm)
                     }
 
-                       if (topic == "/smartcar/group16/distance"){
-                           val distance = message.toString()
-                           mTraveledDistance?.setText(distance+"m")
-                        }
-                     else {
+                    if (topic == "/smartcar/group16/distance") {
+                        val distance = message.toString()
+                        mTraveledDistance?.setText(distance + "m")
+                    }
+                    if (topic == "/smartcar/group16/bagfull") {
+                        var handler=Handler()
+                        var bagStatusMessage = message.toString()
+                        var bagFullStatus=bagStatusMessage.toInt()
+                        mProgressbar?.progress=0
+                        bagFullStatus=0
+
+                        Thread(Runnable {
+
+                            while (bagFullStatus< 99)
+                                bagFullStatus += 10
+                            Thread.sleep(200)
+                            //update tte progress bar)
+                            handler.post{
+
+                                mProgressbar?.progress =bagFullStatus
+
+                                //if (bagFullStatus==99){button.isEnabled=true}
+                            }
+
+                        }).start()
+                    } else {
                         Log.i(TAG, "[MQTT] Topic: $topic | Message: $message")
                     }
                 }
@@ -127,8 +156,8 @@ class ManualOptionActivity : AppCompatActivity() {
                     Log.d(TAG, "Message delivered");
                 }
             })
-        }
-    }
+
+    }}
 
     private fun drive(throttleSpeed: Int?, steeringAngle: Int?,  actionDescription: String) {
         if (!isConnected) {
@@ -164,5 +193,10 @@ class ManualOptionActivity : AppCompatActivity() {
         drive(-MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving backwards")
     }
 
+    //Invoke function in Arduino ,set the progress bar =0
+    fun emptyBag(view: View){
+
+    }
 }
+
 
