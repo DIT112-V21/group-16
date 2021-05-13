@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Firstapp">
         <activity
+            android:name=".PopUpWindow"
+            android:parentActivityName=".ManualOptionActivity" />
+        <activity
             android:name=".AutoOptionActivity"
             android:parentActivityName=".CleaningOptionActivity" />
         <activity

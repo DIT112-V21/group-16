@@ -7,128 +7,15 @@
     android:background="#A1F6F5F4">
 
 
-    <ImageView
-        android:id="@+id/accelerate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+    <TextView
+        android:id="@+id/distance"
+        android:layout_width="169dp"
+        android:layout_height="70dp"
+        android:contentDescription="traveled distance"
+        android:textColor="#070000"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/drawing_sketchpad__9_" />
-
-    <Button
-        android:id="@+id/stopCar"
-        android:layout_width="111dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="49dp"
-        android:onClick="stop"
-        android:text="Stop"
-        android:textSize="18sp"
-        app:backgroundTint="#F44336"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.35"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.512" />
-
-    <Button
-        android:id="@+id/leftForward"
-        android:layout_width="86dp"
-        android:layout_height="54dp"
-        android:layout_marginStart="44dp"
-        android:onClick="forwardLeft"
-        android:shadowColor="#5A4848"
-        android:text="@string/left"
-        android:textColor="#040404"
-        app:backgroundTint="#FAF8F8"
-        app:iconTint="#F8F6F6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.502" />
-
-    <Button
-        android:id="@+id/rightForward"
-        android:layout_width="87dp"
-        android:layout_height="53dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="60dp"
-        android:onClick="forwardRight"
-        android:shadowColor="#3C3333"
-        android:text="@string/right"
-        android:textColor="#020202"
-        app:backgroundTint="#FAF6F6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/backward"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.516" />
-
-    <Button
-        android:id="@+id/backward"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="9dp"
-        android:onClick="backward"
-        android:shadowColor="#2E2424"
-        android:text="@string/backward"
-        android:textColor="#040303"
-        app:backgroundTint="#FAF7F7"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.48"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.576" />
-
-    <Button
-        android:id="@+id/forward"
-        android:layout_width="114dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="300dp"
-        android:layout_marginEnd="158dp"
-        android:onClick="forward"
-        android:shadowColor="#332B2B"
-        android:text="forward"
-        android:textColor="#090000"
-        app:backgroundTint="#FAF8F8"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/accelarate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="75dp"
-        android:onClick="accelerate"
-        android:text="accelerate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.113"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stopCar"
-        app:layout_constraintVertical_bias="0.719" />
-
-    <Button
-        android:id="@+id/decelerate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="decelerate"
-        android:text="decelerate"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.764"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.912" />
 
     <ImageButton
         android:id="@+id/camera"
@@ -143,14 +30,103 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_camera" />
 
-    <TextView
-        android:id="@+id/message"
-        android:layout_width="254dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="84dp"
+
+    <io.github.controlwear.virtual.joystick.android.JoystickView
+        android:id="@+id/joystickView_left"
+        android:layout_width="316dp"
+        android:layout_height="0dp"
+        android:background="@drawable/joystick_background"
+        app:JV_buttonImage="@drawable/pink_ball"
+        app:JV_fixedCenter="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/rightForward"
+        android:layout_width="87dp"
+        android:layout_height="53dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="60dp"
+        android:onClick="forwardRight"
+        android:shadowColor="#3C3333"
+        android:text="@string/right"
+        android:textColor="#020202"
+        app:backgroundTint="#FAF6F6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/backward"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.905" />
+
+    <Button
+        android:id="@+id/stopCar"
+        android:layout_width="111dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="49dp"
+        android:onClick="stop"
+        android:text="Stop"
+        android:textSize="18sp"
+        app:backgroundTint="#F44336"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.338"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.907" />
+
+    <Button
+        android:id="@+id/backward"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="9dp"
+        android:onClick="backward"
+        android:shadowColor="#2E2424"
+        android:text="@string/backward"
+        android:textColor="#040303"
+        app:backgroundTint="#FAF7F7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.976" />
+
+    <Button
+        android:id="@+id/forward"
+        android:layout_width="114dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="560dp"
+        android:layout_marginEnd="158dp"
+        android:onClick="forward"
+        android:shadowColor="#332B2B"
+        android:text="forward"
+        android:textColor="#090000"
+        app:backgroundTint="#FAF8F8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/leftForward"
+        android:layout_width="86dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="48dp"
+        android:onClick="forwardLeft"
+        android:shadowColor="#5A4848"
+        android:text="@string/left"
+        android:textColor="#040404"
+        app:backgroundTint="#FAF8F8"
+        app:iconTint="#F8F6F6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.905" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

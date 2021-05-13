@@ -1,16 +1,23 @@
 package com.example.firstapp
+import android.R.attr
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.MQTT.MqttHandler
-
+import io.github.controlwear.virtual.joystick.android.JoystickView
 
 
 class ManualOptionActivity : AppCompatActivity() {
 
     private var mqttHandler: MqttHandler? = null
     private var mCameraButton : ImageButton? = null
+
+    private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
+    private val STEERING_CONTROL = "/smartcar/group16/control/steering"
+    private val QOS = 0
+    private val FORWARD_SPEED = 40
+    private val ANGLE = 0
 
     private var forwardBtn: Button? = null
     private var backwardBtn: Button? = null
@@ -23,25 +30,39 @@ class ManualOptionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
 
+        val  mTraveledDistance : TextView = findViewById(R.id.distance)
+
+        val actionBar = supportActionBar
+        actionBar!!.title = ""
+
         //mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext)
+        mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance)
         mqttHandler!!.connectToMqttBroker()
 
-        // transition to popup window when clicking on camera button
+        // transition to the popup window when clicking on the camera button
         mCameraButton = findViewById(R.id.camera)
         mCameraButton?.setOnClickListener {
             val window = PopupWindow(this.applicationContext)
             val view = layoutInflater.inflate(R.layout.pop_up_window, null)
             window.contentView = view
-            val imageView = view.findViewById<ImageView>(R.id.camera)
+            val imageView = view.findViewById<ImageView>(R.id.cameraView)
             imageView.setOnClickListener{
                 window.dismiss()
             }
             window.showAsDropDown(mCameraButton)
         }
+
+        // this joystick is adapted from: https://github.com/controlwear/virtual-joystick-android
+        val joystickLeft = findViewById<View>(R.id.joystickView_left) as JoystickView
+        joystickLeft.setOnMoveListener { angle, strength ->
+
+        }
+
     }
 
-    fun forward(view: View) {
+
+
+  /*  fun forward(view: View) {
         forwardBtn = findViewById(R.id.forward)
         mqttHandler!!.forward(forwardBtn)
     }
@@ -60,5 +81,5 @@ class ManualOptionActivity : AppCompatActivity() {
     fun stop(view: View) {
         stopBtn = findViewById(R.id.stop)
         mqttHandler!!.stop(stopBtn)
-    }
+    }*/
 }
