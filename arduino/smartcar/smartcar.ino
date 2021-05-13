@@ -245,9 +245,10 @@ void obstacleAvoidance(){
      rotateOnSpot(rDeg , rotateSpeed);
      delay(300);
      car.setSpeed(fSpeed);
-     if (distance > 0 && distance < 40 )
+     if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
      {
-       autoTurnRight();
+       autoTurnRight();// after turning from an obstacle if we faced another obstacle exremely close to prevent hitting that while turning it would
+       //turn 90 degrees on spot to not hit it.
      }
      
      }
@@ -256,7 +257,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      rotateOnSpot(lDeg , rotateSpeed);
           delay(300);
      car.setSpeed(fSpeed);
-      if (distance > 0 && distance < 40 )
+      if ((distance > 0 && distance < 40) || (frontInfra<30 && frontInfra >0) )
      {
        autoTurnLeft();
      }
@@ -266,10 +267,9 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
       rotateOnSpot(rDeg,rotateSpeed);
            delay(300);
      car.setSpeed(fSpeed); 
-      if (distance > 0 && distance < 40 )
+      if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
      {
-       autoTurnRight();// after turning from an obstacle if we faced another obstacle exremely close to prevent hitting that while turning it would
-       //turn 90 degrees on spot to not hit it.
+       autoTurnRight();
      }
   } 
     if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0)
@@ -279,7 +279,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
        rotateOnSpot(rDeg,rotateSpeed);
        delay(300);
        car.setSpeed(fSpeed);
-        if (distance > 0 && distance < 40 )
+        if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
        autoTurnRight();
      }
@@ -291,7 +291,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
          rotateOnSpot(lDeg,rotateSpeed);
         delay(300);
         car.setSpeed(fSpeed);
-         if (distance > 0 && distance < 40 )
+         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
        autoTurnLeft();
      }
@@ -304,7 +304,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
          rotateOnSpot(lDeg,fSpeed);
         delay(200);
         car.setSpeed(fSpeed);
-         if (distance > 0 && distance < 40 )
+         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
        autoTurnLeft();
      }
@@ -316,7 +316,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
          rotateOnSpot(rDeg,rotateSpeed);
        delay(200);
        car.setSpeed(fSpeed);
-        if (distance > 0 && distance < 40 )
+        if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
        autoTurnRight();
      }
