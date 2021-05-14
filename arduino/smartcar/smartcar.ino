@@ -8,7 +8,6 @@
 #ifdef __SMCE__
 #include <OV767X.h>
 
-
 #endif
 #ifndef __SMCE__
 WiFiClient net;

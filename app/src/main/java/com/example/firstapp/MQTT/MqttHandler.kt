@@ -71,6 +71,7 @@ class MqttHandler : AppCompatActivity {
         this.mSpeed = mSpeed
 
     }
+    //UI update required from text view to progressbar
     constructor(context:Context?,mBagfull: TextView?){
         this.mBagfull=mBagfull
 

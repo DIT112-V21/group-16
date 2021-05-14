@@ -60,7 +60,7 @@ class ManualOptionActivity : AppCompatActivity() {
             override fun onMove(angle: Int, strength: Int) {
                 val newAngle: Int = updateAngle(angle)
                 val newSpeed: Int = updateSpeed(strength, angle)
-                move(newSpeed, newAngle, currentSpeed, currentSpeed)
+                move(newSpeed, newAngle, currentAngle, currentSpeed)
                 currentAngle = newAngle
                 currentSpeed = newSpeed
             }
