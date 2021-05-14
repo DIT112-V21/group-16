@@ -42,14 +42,14 @@
         app:layout_constraintHorizontal_bias="0.763"
         app:layout_constraintStart_toEndOf="@+id/start2"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.357" />
+        app:layout_constraintVertical_bias="0.357"
+        tools:ignore="OnClick" />
 
     <Button
         android:id="@+id/start2"
         android:layout_width="108dp"
         android:layout_height="63dp"
         android:layout_marginStart="48dp"
-        android:onClick="forward"
         android:text="start"
         android:textSize="18sp"
         app:backgroundTint="#009688"
@@ -95,23 +95,19 @@
         android:text="Bag filled status"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/progressBar3" />
+        app:layout_constraintBottom_toTopOf="@id/progressBar3"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
         android:id="@+id/editTextTextPersonName2"
         android:layout_width="190dp"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="102dp"
-        android:layout_marginEnd="205dp"
-        android:layout_marginBottom="10dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Traveled distance:"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/editTextNumber"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
@@ -132,8 +128,8 @@
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="356dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="44dp"
         android:text="empty"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/progressBar3" />
@@ -150,22 +146,56 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@id/progressBar3"
-        />
+        app:layout_constraintTop_toBottomOf="@id/progressBar3" />
 
-    <EditText
-        android:id="@+id/editTextNumber"
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="116dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="85dp"
-        android:layout_marginBottom="82dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="632dp"
+        android:onCLick="lowSpeed"
+        android:text="Low"
+        app:backgroundTint="#3F51B5"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="125dp"
+        android:layout_marginTop="632dp"
+        android:onClick="forward"
+        android:text="Medium"
+        app:backgroundTint="#3F51B5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="OnClick" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="140dp"
+        android:text="Select velocity"
+        android:textColor="#121111"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="75dp"
+        android:onClick="highSpeed"
+        android:text="High"
+        app:backgroundTint="#3F51B5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8"
+        tools:ignore="OnClick" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

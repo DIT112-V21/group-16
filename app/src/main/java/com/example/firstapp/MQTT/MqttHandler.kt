@@ -36,6 +36,8 @@ class MqttHandler : AppCompatActivity {
     private val IDLE_SPEED = 0
     private val STRAIGHT_ANGLE = 0
     private val STEERING_ANGLE = 10
+    private val LOW_MOVEMENT_SPEED = 20
+    private val HIGH_MOVEMENT_SPEED = 75
 
     // Camera
     private val IMAGE_WIDTH = 320
@@ -195,9 +197,21 @@ class MqttHandler : AppCompatActivity {
         mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
     }
 
-   /* fun forward(view: View?) {
+    fun lowSpeed (view: View?) {
+        drive(LOW_MOVEMENT_SPEED, STRAIGHT_ANGLE, "set speed to low")
+
+    }
+
+    fun forward(view: View?) {
         drive(MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving forward")
     }
+
+    fun highSpeed(view: View?){
+        drive(HIGH_MOVEMENT_SPEED, STRAIGHT_ANGLE, "Set speed to high")
+    }
+
+
+    /*
 
     fun forwardLeft(view: View?) {
         drive(MOVEMENT_SPEED, -STEERING_ANGLE, "Moving forward left")
