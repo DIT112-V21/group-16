@@ -29,6 +29,7 @@ class MqttHandler : AppCompatActivity {
     private val CAMERA_SUB = "/smartcar/group16/camera"
     private val ULTRASOUND_SUB = "/smartcar/group16/ultrasound/front"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
+    private val SPEED_SUB = "/smartcar/group16/speed"
 
     //messages
     private val MOVEMENT_SPEED = 40
@@ -49,6 +50,8 @@ class MqttHandler : AppCompatActivity {
     private var mCameraView: ImageView? = null
     private var mMqttClient: MqttClient? = null
     private var mTraveledDistance: TextView? = null
+    private var mFront: TextView? = null
+    private var mSpeed: TextView? = null
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
@@ -57,10 +60,12 @@ class MqttHandler : AppCompatActivity {
         this.context = context
     }
 
-    constructor(context: Context?, mTraveledDistance : TextView?) {
+    constructor(context: Context?, mTraveledDistance : TextView?, mSpeed : TextView?, mFront : TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
         this.mTraveledDistance = mTraveledDistance
+        this.mFront = mFront
+        this.mSpeed = mSpeed
 
     }
 
@@ -91,6 +96,8 @@ class MqttHandler : AppCompatActivity {
                     mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
                     mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                     mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
+                    mMqttClient?.subscribe(SPEED_SUB, QOS, null)
+
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
@@ -127,7 +134,15 @@ class MqttHandler : AppCompatActivity {
                     }
                     if (topic == TRAVELED_DIS) {
                         val distance = message.toString()
-                        mTraveledDistance?.setText(distance+"m")
+                        mTraveledDistance?.setText(distance + " cm")
+                    }
+                        if (topic == ULTRASOUND_SUB) {
+                            val ultraSound = message.toString()
+                            mFront?.setText(ultraSound + " cm")
+                        }
+                    if (topic == SPEED_SUB) {
+                        val speed = message.toString()
+                        mSpeed?.setText(speed)
 
                     } else {
                         Log.i(
@@ -168,7 +183,7 @@ class MqttHandler : AppCompatActivity {
         mMqttClient?.unsubscribe(topic, unsubscriptionCallback)
     }
 
-   /* fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
+    fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
         if (!isConnected) {
             val notConnected = "Not connected (yet)"
             Log.e(TAG, notConnected)
@@ -180,16 +195,12 @@ class MqttHandler : AppCompatActivity {
         mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
     }
 
-    fun forward(view: View?) {
+   /* fun forward(view: View?) {
         drive(MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving forward")
     }
 
     fun forwardLeft(view: View?) {
         drive(MOVEMENT_SPEED, -STEERING_ANGLE, "Moving forward left")
-    }
-
-    fun stop(view: View?) {
-        drive(IDLE_SPEED, STRAIGHT_ANGLE, "Stopping")
     }
 
     fun forwardRight(view: View?) {
@@ -200,4 +211,10 @@ class MqttHandler : AppCompatActivity {
         drive(-MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving backward")
     }*/
 
+    fun stop(view: View?) {
+        drive(IDLE_SPEED, STRAIGHT_ANGLE, "Stopping")
+    }
+
 }
+
+
