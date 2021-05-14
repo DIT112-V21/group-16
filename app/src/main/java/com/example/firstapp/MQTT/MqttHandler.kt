@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import org.eclipse.paho.client.mqttv3.*
 
+
 class MqttHandler : AppCompatActivity {
 
     //connection to Mqtt
@@ -30,6 +31,7 @@ class MqttHandler : AppCompatActivity {
     private val ULTRASOUND_SUB = "/smartcar/group16/ultrasound/front"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
+    private val BAG_FULL="/smartcar/smartcar/group16/bagfull"
 
     //messages
     private val MOVEMENT_SPEED = 40
@@ -52,6 +54,7 @@ class MqttHandler : AppCompatActivity {
     private var mTraveledDistance: TextView? = null
     private var mFront: TextView? = null
     private var mSpeed: TextView? = null
+    private var mBagfull: TextView?=null
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
@@ -68,7 +71,10 @@ class MqttHandler : AppCompatActivity {
         this.mSpeed = mSpeed
 
     }
+    constructor(context:Context?,mBagfull: TextView?){
+        this.mBagfull=mBagfull
 
+    }
     override fun onResume() {
         connectToMqttBroker()
         super.onResume()
@@ -97,7 +103,7 @@ class MqttHandler : AppCompatActivity {
                     mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                     mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
                     mMqttClient?.subscribe(SPEED_SUB, QOS, null)
-
+                    mMqttClient?.subscribe(BAG_FULL, QOS, null)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
@@ -142,8 +148,10 @@ class MqttHandler : AppCompatActivity {
                         }
                     if (topic == SPEED_SUB) {
                         val speed = message.toString()
-                        mSpeed?.setText(speed)
-
+                        mSpeed?.setText(speed)}
+                    if (topic == BAG_FULL) {
+                        val BagStatus = message.toString()
+                        mBagfull?.setText(BagStatus+"%")
                     } else {
                         Log.i(
                             TAG,

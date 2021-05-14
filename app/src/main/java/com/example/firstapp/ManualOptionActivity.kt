@@ -24,13 +24,15 @@ class ManualOptionActivity : AppCompatActivity() {
 
         val  mTraveledDistance : TextView = findViewById(R.id.distance)
         val  mFront : TextView = findViewById(R.id.front)
-        val  mSpeed: TextView = findViewById(R.id.speed)
+        val  mSpeed:  TextView = findViewById(R.id.speed)
+        val  mBagfull:TextView = findViewById(R.id.bagfull)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
         //mqtt car handler
         mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mFront, mSpeed)
+        mqttHandler=MqttHandler(this.applicationContext,mBagfull)
         mqttHandler!!.connectToMqttBroker()
 
         // Transition to the popup window when clicking on the camera button
