@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.*
 
 
+
 class AutoOptionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

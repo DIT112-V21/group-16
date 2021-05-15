@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".AutoOptionActivity">
 
+
     <TextView
         android:id="@+id/textView7"
         android:layout_width="206dp"
