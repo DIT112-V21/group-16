@@ -196,7 +196,6 @@ void setup() {
 
 void loop() {
     obstacleAvoidance();
- new_rotateOnSpot
     //handleInput();
 //   {
 //     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
@@ -204,7 +203,7 @@ void loop() {
     
 
  
- master
+ //master
     if (mqtt.connected()) {
     mqtt.loop();
     
