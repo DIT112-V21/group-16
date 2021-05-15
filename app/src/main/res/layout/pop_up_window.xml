@@ -47,8 +47,8 @@
 
                 <ImageView
                     android:id="@+id/cameraView"
-                    android:layout_width="342dp"
-                    android:layout_height="242dp"
+                    android:layout_width="320dp"
+                    android:layout_height="240dp"
                     android:layout_weight="0.3"
                     android:contentDescription="cameraView"
                     app:layout_constraintBottom_toBottomOf="parent"
