@@ -23,14 +23,14 @@ class ManualOptionActivity : AppCompatActivity() {
         setContentView(R.layout.activity_manual_option)
 
         val  mTraveledDistance : TextView = findViewById(R.id.distance)
-        val  mFront : TextView = findViewById(R.id.front)
         val  mSpeed: TextView = findViewById(R.id.speed)
+        val  mFront : TextView = findViewById(R.id.front)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
         //mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mFront, mSpeed)
+        mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
         mqttHandler!!.connectToMqttBroker()
 
         // Transition to the popup window when clicking on the camera button
@@ -56,47 +56,41 @@ class ManualOptionActivity : AppCompatActivity() {
             var currentSpeed = 0
             var currentAngle = 0
             override fun onMove(angle: Int, strength: Int) {
-                val newAngle: Int = updateAngle(angle)
-                val newSpeed: Int = updateSpeed(strength, angle)
-                move(newSpeed, newAngle, currentSpeed, currentSpeed)
-                currentAngle = newAngle
-                currentSpeed = newSpeed
+                var newSpeed: Int
+                var newAngle: Int
+                if (angle in 90..180) {
+                    newAngle = turnForwards(angle)
+                    newSpeed = (strength * 0.8).toInt()
+                } else if (angle in 0..89) {
+                    newAngle = turnForwards(angle)
+                    newSpeed = (strength * 0.8).toInt()
+                } else if (angle > 0 && angle >= 270) {
+                    newAngle = turnBackwards(angle)
+                    newSpeed = (strength * 0.5 * REVERSE).toInt()
+                } else {
+                    newAngle = turnBackwards(angle)
+                    newSpeed = (strength * 0.5 * REVERSE).toInt()
+                }
+                if (newAngle != currentAngle || newSpeed != currentSpeed) {
+                    if (newSpeed == 0) newAngle = 0
+                    sendMovement(newSpeed, newAngle)
+                    currentAngle = newAngle
+                    currentSpeed = newSpeed
+                }
             }
         })
     }
+    private fun turnForwards ( angle: Int) : Int{
+        val angle = 90 - angle
+        return angle
+    }
 
-    private fun move(
-        newSpeed: Int,
-        newAngle: Int,
-        currentAngle: Int,
-        currentSpeed: Int
-    ) {
-        var newAngle = newAngle
-        if (newAngle != currentAngle || newSpeed != currentSpeed) {
-            if (newSpeed == 0) newAngle = 0
-            mqttHandler?.publish(STEERING_CONTROL, Integer.toString(newAngle), QOS, null)
-            mqttHandler?.publish(THROTTLE_CONTROL, Integer.toString(newSpeed), QOS, null)
+    private fun turnBackwards ( angle: Int) : Int{
+        val angle =  angle - 270
+        return angle
+    }
+
+    private fun sendMovement(newSpeed: Int, newAngle: Int) {
+            mqttHandler?.drive(newSpeed,newAngle,"")
         }
-    }
-
-    private fun updateAngle(angle: Int): Int {
-        return if (angle in 90..180) { // left
-        90 - angle
-    } else if (angle in 0..89) { // right
-        90 - angle
-    } else if (angle > 0 && angle >= 270) { // back right
-        angle - 270
-    } else { // back left
-        angle - 270
-    }
-    }
-
-    private fun updateSpeed(strength: Int, angle: Int): Int {
-        val newSpeed: Double = if (angle <= 180) {
-            strength * 0.8
-        } else {
-            strength * 0.8 * REVERSE
-        }
-        return newSpeed.toInt()
-    }
-}
+     }

@@ -3,6 +3,8 @@ package com.example.firstapp.MQTT
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Color.BLACK
+import android.graphics.Color.RED
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -27,7 +29,7 @@ class MqttHandler : AppCompatActivity {
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
     private val STEERING_CONTROL = "/smartcar/group16/control/steering"
     private val CAMERA_SUB = "/smartcar/group16/camera"
-    private val ULTRASOUND_SUB = "/smartcar/group16/ultrasound/front"
+    private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
 
@@ -50,8 +52,8 @@ class MqttHandler : AppCompatActivity {
     private var mCameraView: ImageView? = null
     private var mMqttClient: MqttClient? = null
     private var mTraveledDistance: TextView? = null
-    private var mFront: TextView? = null
     private var mSpeed: TextView? = null
+    private var mFront: TextView? = null
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
@@ -64,8 +66,8 @@ class MqttHandler : AppCompatActivity {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
         this.mTraveledDistance = mTraveledDistance
-        this.mFront = mFront
         this.mSpeed = mSpeed
+        this.mFront = mFront
 
     }
 
@@ -91,8 +93,7 @@ class MqttHandler : AppCompatActivity {
                     isConnected = true
                     Log.i(TAG, SUCCESSFUL_CONNECTION)
                     // Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-                    //message.text = SUCCESSFUL_CONNECTION
-                    message(SUCCESSFUL_CONNECTION)
+
                     mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
                     mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                     mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
@@ -103,16 +104,12 @@ class MqttHandler : AppCompatActivity {
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     Log.e(TAG, FAILED_CONNECTION)
                     //Toast.makeText(getApplicationContext(), failedConnection, Toast.LENGTH_SHORT).show();
-                    //message.text = FAILED_CONNECTION
-                    message(FAILED_CONNECTION)
                 }
             }, object : MqttCallback {
                 override fun connectionLost(cause: Throwable) {
                     isConnected = false
                     Log.w(TAG, LOST_CONNECTION)
                     //Toast.makeText(getApplicationContext(), connectionLost, Toast.LENGTH_SHORT).show();
-                    //message.text = LOST_CONNECTION
-                    message(LOST_CONNECTION)
                 }
 
                 @Throws(Exception::class)
@@ -134,16 +131,20 @@ class MqttHandler : AppCompatActivity {
                     }
                     if (topic == TRAVELED_DIS) {
                         val distance = message.toString()
-                        mTraveledDistance?.setText(distance + " cm")
+                        mTraveledDistance?.setText(distance + " m")
                     }
-                        if (topic == ULTRASOUND_SUB) {
-                            val ultraSound = message.toString()
-                            mFront?.setText(ultraSound + " cm")
+                    if (topic == ULTRASOUND_SUB) {
+                        val ultraSound = message.toString()
+                        if (ultraSound > 1.toString()) {
+                            mFront?.setText("WARNING")
+                            mFront?.setTextColor(RED)
+                        }else{
+                            mFront?.setText("")
                         }
+                    }
                     if (topic == SPEED_SUB) {
                         val speed = message.toString()
                         mSpeed?.setText(speed)
-
                     } else {
                         Log.i(
                             TAG,
@@ -159,11 +160,6 @@ class MqttHandler : AppCompatActivity {
         }
     }
 
-    fun message(message: String?) {
-        val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
-        toast.setGravity(Gravity.TOP, 0, 0)
-        toast.show()
-    }
 
     fun publish(topic: String?, message: String?, qos: Int, publishCallback: IMqttActionListener?) {
         if (message != null) {
@@ -171,16 +167,8 @@ class MqttHandler : AppCompatActivity {
         }
     }
 
-    fun disconnect(disconnectionCallback: IMqttActionListener?) {
-        mMqttClient?.disconnect(disconnectionCallback)
-    }
-
     fun subscribe(topic: String?, qos: Int, subscriptionCallback: IMqttActionListener?) {
         mMqttClient?.subscribe(topic, qos, subscriptionCallback)
-    }
-
-    fun unsubscribe(topic: String?, unsubscriptionCallback: IMqttActionListener?) {
-        mMqttClient?.unsubscribe(topic, unsubscriptionCallback)
     }
 
     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
@@ -195,26 +183,11 @@ class MqttHandler : AppCompatActivity {
         mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
     }
 
-   /* fun forward(view: View?) {
-        drive(MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving forward")
-    }
-
-    fun forwardLeft(view: View?) {
-        drive(MOVEMENT_SPEED, -STEERING_ANGLE, "Moving forward left")
-    }
-
-    fun forwardRight(view: View?) {
-        drive(MOVEMENT_SPEED, STEERING_ANGLE, "Moving forward left")
-    }
-
-    fun backward(view: View?) {
-        drive(-MOVEMENT_SPEED, STRAIGHT_ANGLE, "Moving backward")
-    }*/
-
     fun stop(view: View?) {
         drive(IDLE_SPEED, STRAIGHT_ANGLE, "Stopping")
     }
 
 }
+
 
 
