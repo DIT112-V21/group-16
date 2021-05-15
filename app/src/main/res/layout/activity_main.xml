@@ -21,7 +21,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:typeface="monospace"
-        app:backgroundTint="#DC002A7E"
+        app:backgroundTint="#DC0A0A0B"
         app:backgroundTintMode="src_in"
         app:iconTint="#626A69"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -36,10 +36,9 @@
         android:layout_height="945dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.494"
+        app:layout_constraintVertical_bias="0.373"
         app:srcCompat="@drawable/drawing__6_" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

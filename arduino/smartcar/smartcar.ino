@@ -181,7 +181,7 @@ void setup() {
   #endif
   if (mqtt.connect("arduino", "public", "public")) {
     mqtt.subscribe("/smartcar/group16/control/#", 1);
-    mqtt.onMessage([](String topic, String message) {
+    mqtt.onMessage(+[](String& topic, String& message) {
       if (topic == "/smartcar/group16/control/throttle") {
         currentSpeed = message.toInt();
         car.setSpeed(currentSpeed);
@@ -196,11 +196,15 @@ void setup() {
 
 void loop() {
     obstacleAvoidance();
+ new_rotateOnSpot
     //handleInput();
 //   {
 //     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
 // }
     
+
+ 
+ master
     if (mqtt.connected()) {
     mqtt.loop();
     
@@ -219,9 +223,10 @@ void loop() {
     {
       previousTransmission = currentTime;
       const auto distance = String(front.getDistance());
-      mqtt.publish("/smartcar/ultrasound/front", distance);
-      mqtt.publish("/smartcar/group16/distance", String(car.getDistance()));
+      mqtt.publish("/smartcar/ultrasound/front", String(distance));
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
+      mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
+      mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
     }
   }
 #ifdef __SMCE__
@@ -229,6 +234,24 @@ void loop() {
   delay(35);
 #endif
 }  
+
+
+// Changing odometer measurement from cm to km
+int distanceInMeter(){
+int distance = car.getDistance();
+distance = distance/100;
+return distance;
+}
+
+//obstacle avoidance message
+int obstacleDetectionMessage(){
+ unsigned int triggerDist = 200;
+ unsigned int distance = front.getDistance();
+  if (distance > 0 && distance < triggerDist){
+    distance--;
+    return distance;
+     }
+  }
 
 //obstacle avoidance 
 void obstacleAvoidance(){
