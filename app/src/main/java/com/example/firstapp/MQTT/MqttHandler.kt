@@ -62,6 +62,11 @@ class MqttHandler : AppCompatActivity {
         this.context = context
     }
 
+    constructor(context: Context?) {
+        mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
+        this.context = context
+    }
+
     constructor(context: Context?, mTraveledDistance : TextView?, mSpeed : TextView?, mFront : TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context

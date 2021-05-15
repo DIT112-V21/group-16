@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2FDAD4D4">
+    android:background="#4FDDDCDD">
 
     <ImageView
         android:id="@+id/imageView7"
@@ -16,7 +16,7 @@
         app:layout_constraintHorizontal_bias="0.529"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.767"
+        app:layout_constraintVertical_bias="0.813"
         app:srcCompat="@drawable/drawing_sketchpad__2_" />
 
     <Button
@@ -26,14 +26,14 @@
         android:text="@string/manual"
         android:textColor="#0B0A0A"
         android:textSize="18sp"
-        app:backgroundTint="#E2F6F4F4"
+        app:backgroundTint="#D2FFFFFF"
         app:iconTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.192"
+        app:layout_constraintHorizontal_bias="0.184"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.562" />
+        app:layout_constraintVertical_bias="0.532" />
 
     <Button
         android:id="@+id/auto"
@@ -48,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.562" />
+        app:layout_constraintVertical_bias="0.534" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -56,10 +56,10 @@
         android:layout_height="66dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.778"
+        app:layout_constraintHorizontal_bias="0.78"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.623"
+        app:layout_constraintVertical_bias="0.606"
         app:srcCompat="@drawable/autonomous_vehicles" />
 
     <ImageView
@@ -71,7 +71,7 @@
         app:layout_constraintHorizontal_bias="0.234"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.621"
+        app:layout_constraintVertical_bias="0.603"
         app:srcCompat="@drawable/joystick222" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

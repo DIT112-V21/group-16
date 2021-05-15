@@ -13,9 +13,6 @@ class ManualOptionActivity : AppCompatActivity() {
     private var mqttHandler: MqttHandler? = null
     private var mCameraButton : ImageButton? = null
 
-    private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
-    private val STEERING_CONTROL = "/smartcar/group16/control/steering"
-    private val QOS = 0
     private val REVERSE = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {

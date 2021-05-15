@@ -145,13 +145,13 @@
 
     <Button
         android:id="@+id/start"
-        android:layout_width="164dp"
-        android:layout_height="63dp"
+        android:layout_width="193dp"
+        android:layout_height="48dp"
         android:background="#605454"
         android:text="start cleaning"
-        android:textColor="#050505"
+        android:textColor="#FAF7F7"
         android:textStyle="bold"
-        app:backgroundTint="#F3EBEB"
+        app:backgroundTint="#403F3F"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
