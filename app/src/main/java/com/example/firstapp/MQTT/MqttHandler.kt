@@ -3,10 +3,8 @@ package com.example.firstapp.MQTT
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.graphics.Color.BLACK
 import android.graphics.Color.RED
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -32,12 +30,16 @@ class MqttHandler : AppCompatActivity {
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
+    private val BAG_FULL="/smartcar/group16/bagfull"
+    private val Emptybag="smartcar/group16/Emptybag"
 
     //messages
     private val MOVEMENT_SPEED = 40
     private val IDLE_SPEED = 0
     private val STRAIGHT_ANGLE = 0
     private val STEERING_ANGLE = 10
+    //private val boolean Emptybag
+
 
     // Camera
     private val IMAGE_WIDTH = 320
@@ -54,6 +56,7 @@ class MqttHandler : AppCompatActivity {
     private var mTraveledDistance: TextView? = null
     private var mSpeed: TextView? = null
     private var mFront: TextView? = null
+    private var mBagfull: TextView?=null
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
@@ -70,8 +73,12 @@ class MqttHandler : AppCompatActivity {
         this.mFront = mFront
 
     }
+    //UI update required from text view to progressbar
+    constructor(context:Context?,mBagfull: TextView?) {
+        this.mBagfull = mBagfull
+    }
 
-    override fun onResume() {
+        override fun onResume() {
         connectToMqttBroker()
         super.onResume()
     }
@@ -98,6 +105,7 @@ class MqttHandler : AppCompatActivity {
                     mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                     mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
                     mMqttClient?.subscribe(SPEED_SUB, QOS, null)
+                    mMqttClient?.subscribe(BAG_FULL, QOS, null)
 
                 }
 
@@ -138,27 +146,32 @@ class MqttHandler : AppCompatActivity {
                         if (ultraSound > 1.toString()) {
                             mFront?.setText("WARNING")
                             mFront?.setTextColor(RED)
-                        }else{
+
+                        } else {
                             mFront?.setText("")
                         }
                     }
                     if (topic == SPEED_SUB) {
                         val speed = message.toString()
                         mSpeed?.setText(speed)
+                    }
+                    if (topic == BAG_FULL) {
+                        val bagStatus = message.toString()
+                        mBagfull?.setText(bagStatus + "%")
                     } else {
                         Log.i(
                             TAG,
                             "[MQTT] Topic: $topic | Message: $message"
                         )
                     }
-                }
 
+                }
                 override fun deliveryComplete(token: IMqttDeliveryToken) {
                     Log.d(TAG, "Message delivered")
                 }
             })
         }
-    }
+        }
 
 
     fun publish(topic: String?, message: String?, qos: Int, publishCallback: IMqttActionListener?) {
