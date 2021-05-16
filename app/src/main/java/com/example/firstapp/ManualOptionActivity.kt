@@ -1,42 +1,39 @@
 package com.example.firstapp
-import android.media.CamcorderProfile.get
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.*
-import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.MQTT.MqttHandler
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
-import java.lang.IndexOutOfBoundsException
 
 
 class ManualOptionActivity : AppCompatActivity() {
 
     private var mqttHandler: MqttHandler? = null
-    private var mCameraButton: ImageButton? = null
+    private var mCameraButton : ImageButton? = null
     private var progressBar: ProgressBar? = null
-    private var i = 0
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
     private val STEERING_CONTROL = "/smartcar/group16/control/steering"
     private val QOS = 0
     private val REVERSE = -1
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
 
-        val mTraveledDistance: TextView = findViewById(R.id.distance)
-        val mSpeed: TextView = findViewById(R.id.speed)
-        val mFront: TextView = findViewById(R.id.front)
-        var mBagfull: TextView = findViewById(R.id.bagfull)
-
+        val  mTraveledDistance : TextView = findViewById(R.id.distance)
+        val  mSpeed: TextView = findViewById(R.id.speed)
+        val  mFront : TextView = findViewById(R.id.front)
+        val  mBagfull : TextView = findViewById(R.id.front)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
         //mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront, mBagfull)
+        mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront,mBagfull )
         mqttHandler!!.connectToMqttBroker()
 
         // Transition to the popup window when clicking on the camera button
@@ -50,35 +47,33 @@ class ManualOptionActivity : AppCompatActivity() {
             mqttHandler = MqttHandler(this.applicationContext, imageView)
             mqttHandler!!.connectToMqttBroker()
 
-            imageView.setOnClickListener {
+            imageView.setOnClickListener{
                 window.dismiss()
             }
             window.showAsDropDown(mCameraButton)
         }
-
-
         //Cleaning start bagfull progressBar
         progressBar = findViewById<ProgressBar>(R.id.pb) as ProgressBar
         val btn= findViewById<Button>(R.id.start)
 
-           //on click for button
-             btn.setOnClickListener {
-                 var progressStatus=0
-                 var handler=Handler()
-                // var run=true
+        //on click for button
+        btn.setOnClickListener {
+            var progressStatus=0
+            var handler= Handler()
+            // var run=true
 
             Thread(Runnable {
-               // val progressStatus = Integer.valueOf(mBagfull.text.toString())
+                // val progressStatus = Integer.valueOf(mBagfull.text.toString())
 
                 while (progressStatus < 100) {
-                   // progressBar!!.progress = progressStatus+1
-                       progressStatus+=1
+                    // progressBar!!.progress = progressStatus+1
+                    progressStatus+=1
 
                     Thread.sleep(1000)
-                       handler.post{
-                           progressBar!!.progress=progressStatus
+                    handler.post{
+                        progressBar!!.progress=progressStatus
 
-                       }
+                    }
                 }
             }).start()
 
@@ -87,16 +82,14 @@ class ManualOptionActivity : AppCompatActivity() {
         }
         //method invoke to drive car via MQTT
         val btn2=findViewById<Button>(R.id.empty_b)
-           btn2.setOnClickListener {
-               progressBar!!.progress=0
-             // toast message ="Empth bag has been pushed"
+        btn2.setOnClickListener {
+            progressBar!!.progress=0
+            // toast message ="Empth bag has been pushed"
             //so babfull progress can start again.
-              // counting keep going( looping )so we pause that until message is arrived,
+            // counting keep going( looping )so we pause that until message is arrived,
 
 
-           }
-
-
+        }
 
         // This joystick is adapted from: https://github.com/controlwear/virtual-joystick-android
         val joystick = findViewById<View>(R.id.joystickView_left) as JoystickView
@@ -141,7 +134,4 @@ class ManualOptionActivity : AppCompatActivity() {
     private fun sendMovement(newSpeed: Int, newAngle: Int) {
             mqttHandler?.drive(newSpeed,newAngle,"")
         }
-
-
-    }
-
+     }
