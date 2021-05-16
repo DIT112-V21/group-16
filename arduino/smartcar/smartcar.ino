@@ -25,6 +25,7 @@ const int maxSpeed = 100;
 const int bSpeed   = -40; // 40% of the full speed backward
 int bagCapacity=99;
 bool bagFull=false;
+float maxTraveledDistance=0.0;
 
 ArduinoRuntime arduinoRuntime;
 
@@ -348,23 +349,23 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
 
      }
 }
-  int bagFilledProgress(){
-      float traveledDistance=car.getDistance();
-      if (traveledDistance>maxTraveledDistance){
-          maxTraveledDistance=traveledDistance;
-          int bagContents = (int)((int)traveledDistance%1000)/10;
-          if (bagContents == bagCapacity){
-            //stopVehicle();
-            bagFull=true;
-            Serial.println("Bag is full. Please change");
-          }
-          Serial.println("Bag is " + (String)bagContents + "% full");
-          return bagContents;
-      }
-    }
-
-      // initialize progressBar when emptyBag() is invoked, not possible to reset the odometer
-
-       void emptyBag() {
-        bool bagFull=false;
+int bagFilledProgress(){
+    float traveledDistance=car.getDistance();
+    if (traveledDistance>maxTraveledDistance){
+        maxTraveledDistance=traveledDistance;
+        int bagContents = (int)((int)traveledDistance%1000)/10;
+        if (bagContents == bagCapacity){
+          stopVehicle();
+          bagFull=true;
+          Serial.println("Bag is full. Please change");
         }
+        Serial.println("Bag is " + (String)bagContents + "% full");
+        return bagContents;
+    }
+  }
+
+    // initialize progressBar when emptyBag() is invoked, not possible to reset the odometer
+
+     void emptyBag() {
+      bool bagFull=false;
+      }
