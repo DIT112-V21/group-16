@@ -18,11 +18,8 @@ const auto pulsePerMeter = 600;
 const int lDeg= -40;  //Degree for rotate on spot 
 const int rDeg = 40;  //Degree for rotate on spot 
 const int rotateSpeed = 70 ;  //speed for rotate on spot
-const int changeSpeed = 10;
-const int minSpeed = 10;
-int currentSpeed = 0;
-const int maxSpeed = 100;
 const int bSpeed   = -40; // 40% of the full speed backward
+int currentSpeed = 0;
 
 ArduinoRuntime arduinoRuntime;
 
@@ -146,29 +143,7 @@ std::vector<char> frameBuffer;
     delay(6000);
     car.setAngle(0);
  }
- void decelerate(int curSpeed){ // start at 50 
-   int targetSpeed = curSpeed - changeSpeed; // decelerate by 10 
-   if (currentSpeed > minSpeed){
-    car.setSpeed(targetSpeed); // sets the speed to 40 
-   currentSpeed = targetSpeed; // sets the current 40  
-   }  
- }
- void accelerate(int curSpeed){
-  int targetSpeed = curSpeed + changeSpeed;
-   if (currentSpeed < maxSpeed){
-  car.setSpeed(targetSpeed);
-  currentSpeed = targetSpeed;
-   }
- }
- void goForward(int speed){
-  	car.setSpeed(speed);
-	currentSpeed = speed; 
- }
 
- void goBackward(int speed){
-  	car.setSpeed(speed);
-	currentSpeed = speed;
- }
  
 void setup() {
    Serial.begin(9600);
@@ -196,14 +171,7 @@ void setup() {
 
 void loop() {
     obstacleAvoidance();
-    //handleInput();
-//   {
-//     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
-// }
-    
 
- 
- //master
     if (mqtt.connected()) {
     mqtt.loop();
     
