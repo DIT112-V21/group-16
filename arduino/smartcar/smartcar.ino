@@ -345,3 +345,85 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      
      }
 } 
+void go(long centimeters, int speed)
+{
+    if (centimeters == 0)
+    {
+        return;
+    }
+    // Ensure the speed is towards the correct direction
+    speed = smartcarlib::utils::getAbsolute(speed) * ((centimeters < 0) ? -1 : 1);
+    car.setAngle(0);
+    car.setSpeed(speed);
+
+    long initialDistance          = car.getDistance();
+    bool hasReachedTargetDistance = false;
+    while (!hasReachedTargetDistance)
+    {
+        car.update();
+        auto currentDistance   = car.getDistance();
+        auto travelledDistance = initialDistance > currentDistance
+                                     ? initialDistance - currentDistance
+                                     : currentDistance - initialDistance;
+        hasReachedTargetDistance
+            = travelledDistance >= smartcarlib::utils::getAbsolute(centimeters);
+    }
+    car.setSpeed(0);
+    
+}
+
+double sideDistance = 10;
+double area ;
+double distance= sqrt(area); 
+int velocity;
+
+void Apattern(){
+go(distance,velocity);
+delay(500);
+turnRightWhenStoped();
+delay(500);
+go(sideDistance ,25);
+delay(500);
+turnRightWhenStoped();
+}
+
+void Bpattern(){
+    Apattern();
+    delay(500);
+    go(distance,velocity);
+    delay(500);
+    turnLeftWhenStoped();
+    delay(500);
+    go(sideDistance,25);
+    delay(500);
+    turnLeftWhenStoped();
+}
+
+void pattern(){
+
+int value = sqrt(area);
+if (value%2==0)
+{
+    int times = value/sideDistance;
+    times /= 2;
+    int i =0;
+    while (i < times)
+    {
+        Bpattern();
+        i += 1; 
+    }
+    
+}
+else {
+    int times = value/sideDistance;
+    times /= 2;
+    int i =0;
+    while (i < times)
+    {
+        Bpattern();
+        i += 1;
+    }
+    Apattern();
+    
+}
+}
