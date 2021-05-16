@@ -54,7 +54,6 @@ class AutoOptionActivity : AppCompatActivity() {
             }
             window.showAsDropDown(mCameraButton)
         }
-
         mLowBtn = findViewById(R.id.low)
         mLowBtn?.setOnClickListener {
             mqttHandler!!.sendSpeed(LOW_SPEED, "")

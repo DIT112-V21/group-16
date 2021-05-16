@@ -276,6 +276,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      }
      else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0)
      { 
+
      //this method used for when the front obstacle is not close enought to the trigger amount but still we get close to the side obstacle,
        // so it turn more to avoide hitting the side obstacle.
          rotateOnSpot(lDeg,rotateSpeed);
