@@ -169,8 +169,8 @@ std::vector<char> frameBuffer;
   	car.setSpeed(speed);
 	currentSpeed = speed;
  }
- double area;
- double velocity;
+ int area;
+ int velocity;
 void setup() {
    Serial.begin(9600);
  #ifdef __SMCE__
@@ -191,11 +191,11 @@ void setup() {
       } 
       else if (topic == "/smartcar/group16/auto/size" )
       {
-        area =message.toDouble();
+        area =message.toInt();
       }
       else if (topic=="/smartcar/group16/auto/speed")
       {
-        velocity= message.toDouble();
+        velocity= message.toInt();
       }
       else if(topic = "/smartcar/group16/auto/start"){
         pattern();
@@ -361,7 +361,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      
      }
 } 
-void go(long centimeters, int speed)
+void go(double centimeters, int speed)
 {
     if (centimeters == 0)
     {
@@ -372,7 +372,7 @@ void go(long centimeters, int speed)
     car.setAngle(0);
     car.setSpeed(speed);
 
-    long initialDistance          = car.getDistance();
+    double initialDistance          = car.getDistance();
     bool hasReachedTargetDistance = false;
     while (!hasReachedTargetDistance)
     {
@@ -388,35 +388,44 @@ void go(long centimeters, int speed)
     
 }
 
-double sideDistance = 10;
-double distance= sqrt(area); 
+int sideDistance = 10;
+double distancee= sqrt(area); 
 
 
 void Apattern(){
-go(distance,velocity);
+  if (velocity !=0)
+  {
+    go(distancee,velocity);
 delay(500);
 turnRightWhenStoped();
 delay(500);
 go(sideDistance ,25);
 delay(500);
 turnRightWhenStoped();
+  }
 }
 
 void Bpattern(){
+  if (velocity != 0)
+  {
     Apattern();
     delay(500);
-    go(distance,velocity);
+    go(distancee,velocity);
     delay(500);
     turnLeftWhenStoped();
     delay(500);
     go(sideDistance,25);
     delay(500);
     turnLeftWhenStoped();
+  }
+  
+    
 }
 
 void pattern(){
-if(area != 0 && velocity != 0 ){
-int value = sqrt(area);
+if(area != 0  ){
+double x = sqrt(area);
+int value = int (x);
 if (value%2==0)
 {
     int times = value/sideDistance;
@@ -442,4 +451,53 @@ else {
     
 }}
 
+}
+int toTravel = sqrt(area);
+void patternB(){
+if(area != 0 ){
+int x= toTravel / 10;
+    int y= x/2;
+    int z=y-1;
+    int i =0;
+if ( toTravel%2 ==0)
+{
+    while (i<z)
+    {
+        complete();
+        i++;
+    }
+    goAndRight3();
+}
+else {
+    while (i<y)
+    {
+        complete();
+        i++;
+    }
+    go(10,25);
+}
+}
+}
+
+void complete(){
+  if (velocity !=0)
+  {
+    goAndRight3();
+   toTravel -=10;
+   go(toTravel,velocity);
+  }
+}
+
+void goAndRight3(){
+  if (velocity != 0)
+  {
+    int i =0;
+    while (i<3)
+    {
+     go(toTravel,velocity);
+    delay(500);
+    turnRightWhenStoped();
+    i++;
+  }
+    }
 }
