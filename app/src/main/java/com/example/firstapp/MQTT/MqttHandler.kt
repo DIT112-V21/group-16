@@ -8,10 +8,12 @@ import android.graphics.Color.RED
 import android.util.Log
 import android.view.Gravity
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.firstapp.R
 import org.eclipse.paho.client.mqttv3.*
 
 class MqttHandler : AppCompatActivity {
@@ -25,19 +27,18 @@ class MqttHandler : AppCompatActivity {
     private var isConnected = false
     private var context: Context? = null
 
-    //Topics
-    private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
-    private val STEERING_CONTROL = "/smartcar/group16/control/steering"
+    //Subscription topics
     private val CAMERA_SUB = "/smartcar/group16/camera"
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
 
-    //messages
-    private val MOVEMENT_SPEED = 40
-    private val IDLE_SPEED = 0
-    private val STRAIGHT_ANGLE = 0
-    private val STEERING_ANGLE = 10
+    // Publishing topics
+    private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
+    private val STEERING_CONTROL = "/smartcar/group16/control/steering"
+    private val AUTO_SPEED = "/smartcar/group16/auto/speed"
+    private val AUTO_PATTERN = "/smartcar/group16/auto/pattern"
+    private val AUTO_SIZE = "/smartcar/group16/auto/size"
 
     // Camera
     private val IMAGE_WIDTH = 320
@@ -176,23 +177,42 @@ class MqttHandler : AppCompatActivity {
         mMqttClient?.subscribe(topic, qos, subscriptionCallback)
     }
 
-    fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
+    fun notConnected(){
         if (!isConnected) {
             val notConnected = "Not connected (yet)"
             Log.e(TAG, notConnected)
             Toast.makeText(context!!.applicationContext, notConnected, Toast.LENGTH_SHORT).show()
             return
         }
+    }
+
+    fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
+        notConnected()
         Log.i(TAG, actionDescription!!)
         mMqttClient?.publish(THROTTLE_CONTROL, Integer.toString(throttleSpeed), QOS, null)
         mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
     }
 
-    fun stop(view: View?) {
-        drive(IDLE_SPEED, STRAIGHT_ANGLE, "Stopping")
+
+    fun sendSpeed(speed : Int, actionDescription: String?) {
+        notConnected()
+        Log.i(TAG, actionDescription!!)
+        mMqttClient?.publish(AUTO_SPEED, Integer.toString(speed), QOS, null)
     }
 
-}
+    fun sendPattern(pattern : Int, actionDescription: String?) {
+       notConnected()
+        Log.i(TAG, actionDescription!!)
+        mMqttClient?.publish(AUTO_PATTERN, Integer.toString(pattern), QOS, null)
+    }
+
+
+
+
+
+
+
+          }
 
 
 

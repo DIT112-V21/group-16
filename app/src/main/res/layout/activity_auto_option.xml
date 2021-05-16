@@ -8,7 +8,7 @@
     tools:context=".AutoOptionActivity">
 
     <Button
-        android:id="@+id/manual4"
+        android:id="@+id/pattern1"
         android:layout_width="161dp"
         android:layout_height="155dp"
         android:textColor="#0B0A0A"
@@ -23,7 +23,7 @@
         app:layout_constraintVertical_bias="0.409" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="MEDIUM"
@@ -49,7 +49,7 @@
         app:srcCompat="@drawable/drawing_sketchpad__14_" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/low"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="LOW"
@@ -64,17 +64,30 @@
         app:layout_constraintVertical_bias="0.651" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/start_cleaning"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="start cleaning"
         app:backgroundTint="#403F3F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.542"
+        app:layout_constraintHorizontal_bias="0.21"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.784" />
+        app:layout_constraintVertical_bias="0.778" />
+
+    <Button
+        android:id="@+id/empty_bag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Empty bag"
+        app:backgroundTint="#403F3F"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.838"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.778" />
 
     <ProgressBar
         android:id="@+id/progressBar3"
@@ -119,7 +132,7 @@
         app:layout_constraintVertical_bias="0.217" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/imag5"
         android:layout_width="134dp"
         android:layout_height="120dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -174,7 +187,7 @@
         app:layout_constraintVertical_bias="0.093" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/high"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="HIGH"
@@ -202,7 +215,7 @@
         app:layout_constraintVertical_bias="0.18" />
 
     <Button
-        android:id="@+id/manual3"
+        android:id="@+id/pattern2"
         android:layout_width="161dp"
         android:layout_height="155dp"
         android:textColor="#0B0A0A"
