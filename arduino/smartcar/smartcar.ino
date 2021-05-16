@@ -169,7 +169,8 @@ std::vector<char> frameBuffer;
   	car.setSpeed(speed);
 	currentSpeed = speed;
  }
- 
+ double area;
+ double velocity;
 void setup() {
    Serial.begin(9600);
  #ifdef __SMCE__
@@ -190,13 +191,15 @@ void setup() {
       } 
       else if (topic == "/smartcar/group16/auto/size" )
       {
-        area =message.toInt();
+        area =message.toDouble();
       }
       else if (topic=="/smartcar/group16/auto/speed")
       {
-        velocity= message.toInt();
+        velocity= message.toDouble();
       }
-      
+      else if(topic = "/smartcar/group16/auto/start"){
+        pattern();
+      }
       
       else  {
         Serial.println(topic + " " + message);
@@ -238,7 +241,7 @@ void loop() {
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
       mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
       mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-      mqtt.publish("/smartcar/group16/auto/confirmation",String(pattern()));
+    
     }
   }
 #ifdef __SMCE__
@@ -386,9 +389,8 @@ void go(long centimeters, int speed)
 }
 
 double sideDistance = 10;
-double area ;
 double distance= sqrt(area); 
-int velocity;
+
 
 void Apattern(){
 go(distance,velocity);
@@ -412,7 +414,7 @@ void Bpattern(){
     turnLeftWhenStoped();
 }
 
-int pattern(){
+void pattern(){
 if(area != 0 && velocity != 0 ){
 int value = sqrt(area);
 if (value%2==0)
@@ -439,5 +441,5 @@ else {
     Apattern();
     
 }}
-return 1 ;
+
 }
