@@ -187,9 +187,21 @@ void setup() {
         car.setSpeed(currentSpeed);
       } else if (topic == "/smartcar/group16/control/steering") {
         car.setAngle(message.toInt());
-      } else {
+      } 
+      else if (topic == "/smartcar/group16/auto/size" )
+      {
+        area =message.toInt();
+      }
+      else if (topic=="/smartcar/group16/auto/speed")
+      {
+        velocity= message.toInt();
+      }
+      
+      
+      else  {
         Serial.println(topic + " " + message);
       }
+       
     });
   }
 }
@@ -226,6 +238,7 @@ void loop() {
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
       mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
       mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
+      mqtt.publish("/smartcar/group16/auto/confirmation",String(pattern()));
     }
   }
 #ifdef __SMCE__
@@ -399,8 +412,8 @@ void Bpattern(){
     turnLeftWhenStoped();
 }
 
-void pattern(){
-
+int pattern(){
+if(area != 0 && velocity != 0 ){
 int value = sqrt(area);
 if (value%2==0)
 {
@@ -425,5 +438,6 @@ else {
     }
     Apattern();
     
-}
+}}
+return 1 ;
 }
