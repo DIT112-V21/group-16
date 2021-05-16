@@ -65,18 +65,15 @@ class MqttHandler : AppCompatActivity {
         this.context = context
     }
 
-    constructor(context: Context?, mTraveledDistance : TextView?, mSpeed : TextView?, mFront : TextView?) {
+    constructor(context: Context?, mTraveledDistance : TextView?, mSpeed : TextView?, mFront : TextView?,mBagfull: TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
         this.mTraveledDistance = mTraveledDistance
         this.mSpeed = mSpeed
         this.mFront = mFront
-
-    }
-    //UI update required from text view to progressbar
-    constructor(context:Context?,mBagfull: TextView?) {
         this.mBagfull = mBagfull
     }
+
 
         override fun onResume() {
         connectToMqttBroker()
