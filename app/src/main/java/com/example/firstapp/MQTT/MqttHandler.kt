@@ -35,6 +35,7 @@ class MqttHandler : AppCompatActivity {
         private val AUTO_SPEED = "/smartcar/group16/auto/speed"
         private val AUTO_PATTERN = "/smartcar/group16/auto/pattern"
         private val AUTO_SIZE = "/smartcar/group16/auto/size"
+        private val AUTO_START = "/smartcar/group16/auto/start"
 
         // Camera
         private val IMAGE_WIDTH = 320
@@ -201,6 +202,18 @@ class MqttHandler : AppCompatActivity {
             Log.i(TAG, actionDescription!!)
             mMqttClient?.publish(AUTO_PATTERN, Integer.toString(pattern), QOS, null)
         }
+
+        fun sendSize(size : Int, actionDescription: String?){
+            notConnected()
+            Log.i(TAG, actionDescription!!)
+            mMqttClient?.publish(AUTO_SIZE, Integer.toString(size), QOS, null)
+        }
+
+       fun startCleaning(msg : String, actionDescription: String?){
+        notConnected()
+        Log.i(TAG, actionDescription!!)
+        mMqttClient?.publish(AUTO_START, msg, QOS, null)
+    }
 
 
     }

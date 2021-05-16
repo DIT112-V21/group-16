@@ -1,14 +1,10 @@
 package com.example.firstapp
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.view.View
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.PopupWindow
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.MQTT.MqttHandler
+
 
 class AutoOptionActivity : AppCompatActivity() {
 
@@ -17,15 +13,24 @@ class AutoOptionActivity : AppCompatActivity() {
     private var mPatternOne: Button? = null
     private var mPatternTwo: Button? = null
     private var mLowBtn: Button? = null
+    private var mBig : Button? = null
+    private var mMedium : Button? = null
+    private var mSmall : Button? = null
     private var mMediumBtn: Button? = null
     private var mHighBtn: Button? = null
+    private var mStart : Button? = null
+    //private var mSize : EditText? = null
 
     //Messages
+    private val BIG_SIZE = 6400
+    private val MEDIUM_SIZE = 3600
+    private val SMALL_SIZE = 1600
     private val LOW_SPEED = 20
     private val HIGH_SPEED = 60
     private val MEDIUM_SPEED = 40
     private val PATTERN_ONE = 1
     private val PATTERN_TWO = 2
+    private val START_CLEANING = "START"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +58,24 @@ class AutoOptionActivity : AppCompatActivity() {
                 window.dismiss()
             }
             window.showAsDropDown(mCameraButton)
+        }
+
+        mSmall = findViewById(R.id.small)
+        mSmall?.setOnClickListener {
+            mqttHandler!!.sendSize(SMALL_SIZE, "")
+        }
+        mMedium = findViewById(R.id.medium2)
+        mMedium?.setOnClickListener {
+            mqttHandler!!.sendSize(MEDIUM_SIZE, "")
+        }
+        mBig = findViewById(R.id.big)
+        mBig?.setOnClickListener {
+            mqttHandler!!.sendSize(BIG_SIZE, "")
+        }
+
+        mStart = findViewById(R.id.start_cleaning)
+        mStart?.setOnClickListener {
+            mqttHandler!!.startCleaning(START_CLEANING, "")
         }
 
         mLowBtn = findViewById(R.id.low)
