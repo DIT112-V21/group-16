@@ -28,6 +28,7 @@ class MqttHandler : AppCompatActivity {
         private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
         private val TRAVELED_DIS = "/smartcar/group16/distance"
         private val SPEED_SUB = "/smartcar/group16/speed"
+        private val Emptybag="smartcar/group16/Emptybag"
 
         // Publishing topics
         private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"

@@ -23,6 +23,7 @@ const int minSpeed = 10;
 int currentSpeed = 0;
 const int maxSpeed = 100;
 const int bSpeed   = -40; // 40% of the full speed backward
+float maxTraveledDistance=0.0;
 
 ArduinoRuntime arduinoRuntime;
 
@@ -226,6 +227,7 @@ void loop() {
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
       mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
       mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
+      mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
     }
   }
 #ifdef __SMCE__
@@ -345,3 +347,23 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      
      }
 } 
+    int bagFilledProgress(){
+         float traveledDistance=car.getDistance();
+         if (traveledDistance>maxTraveledDistance){
+             maxTraveledDistance=traveledDistance;
+             int bagContents = (int)((int)traveledDistance%1000)/10;
+             if (bagContents == bagCapacity){
+               //stopVehicle();
+               bagFull=true;
+               Serial.println("Bag is full. Please change");
+             }
+             Serial.println("Bag is " + (String)bagContents + "% full");
+             return bagContents;
+         }
+       }
+
+         // initialize progressBar when emptyBag() is invoked, not possible to reset the odometer
+
+          void emptyBag() {
+           bool bagFull=false;
+           }
