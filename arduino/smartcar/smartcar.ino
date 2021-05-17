@@ -169,8 +169,8 @@ std::vector<char> frameBuffer;
   	car.setSpeed(speed);
 	currentSpeed = speed;
  }
- int area;
- int velocity;
+ int area=0;
+ int velocity=0;
 void setup() {
    Serial.begin(9600);
  #ifdef __SMCE__
@@ -197,7 +197,7 @@ void setup() {
       {
         velocity= message.toInt();
       }
-      else if(topic = "/smartcar/group16/auto/start"){
+      else if(topic == "/smartcar/group16/auto/start"){
         pattern();
       }
       
