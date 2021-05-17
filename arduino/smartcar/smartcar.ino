@@ -24,6 +24,8 @@ int currentSpeed = 0;
 const int maxSpeed = 100;
 const int bSpeed   = -40; // 40% of the full speed backward
 float maxTraveledDistance=0.0;
+int bagCapacity=99;
+bool bagFull=false;
 
 ArduinoRuntime arduinoRuntime;
 
