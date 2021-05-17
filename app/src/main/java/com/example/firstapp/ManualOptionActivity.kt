@@ -1,5 +1,6 @@
 package com.example.firstapp
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -12,7 +13,7 @@ class ManualOptionActivity : AppCompatActivity() {
 
     private var mqttHandler: MqttHandler? = null
     private var mCameraButton : ImageButton? = null
-
+    private var progressBar: ProgressBar? = null
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
     private val STEERING_CONTROL = "/smartcar/group16/control/steering"
     private val QOS = 0
@@ -49,6 +50,45 @@ class ManualOptionActivity : AppCompatActivity() {
             }
             window.showAsDropDown(mCameraButton)
         }
+        // Cleaning start bagfull progressBar
+        progressBar = findViewById<ProgressBar>(R.id.progressBar) as ProgressBar
+        val btn= findViewById<Button>(R.id.start)
+
+        //on click for button
+        btn.setOnClickListener {
+            var progressStatus=0
+            var handler= Handler()
+            // var run=true
+
+            Thread(Runnable {
+                // val progressStatus = Integer.valueOf(mBagfull.text.toString())
+
+                while (progressStatus < 100) {
+                    // progressBar!!.progress = progressStatus+1
+                    progressStatus+=1
+
+                    Thread.sleep(1000)
+                    handler.post{
+                        progressBar!!.progress=progressStatus
+
+                    }
+                }
+            }).start()
+
+
+
+        }
+        //method invoke to drive car via MQTT
+        val btn2=findViewById<Button>(R.id.empty_b)
+        btn2.setOnClickListener {
+            progressBar!!.progress=0
+            // toast message ="Empth bag has been pushed"
+            //so babfull progress can start again.
+            // counting keep going( looping )so we pause that until message is arrived,
+
+
+        }
+
 
         // This joystick is adapted from: https://github.com/controlwear/virtual-joystick-android
         val joystick = findViewById<View>(R.id.joystickView_left) as JoystickView
