@@ -183,40 +183,22 @@ class MqttHandler : AppCompatActivity {
             }
         }
 
-        fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
+     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
             notConnected()
             Log.i(TAG, actionDescription!!)
             mMqttClient?.publish(THROTTLE_CONTROL, Integer.toString(throttleSpeed), QOS, null)
             mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
         }
 
-
-        fun sendSpeed(speed : Int, actionDescription: String?) {
-            notConnected()
-            Log.i(TAG, actionDescription!!)
-            mMqttClient?.publish(AUTO_SPEED, Integer.toString(speed), QOS, null)
-        }
-
-        fun sendPattern(pattern : Int, actionDescription: String?) {
-            notConnected()
-            Log.i(TAG, actionDescription!!)
-            mMqttClient?.publish(AUTO_PATTERN, Integer.toString(pattern), QOS, null)
-        }
-
-        fun sendSize(size : Int, actionDescription: String?){
-            notConnected()
-            Log.i(TAG, actionDescription!!)
-            mMqttClient?.publish(AUTO_SIZE, Integer.toString(size), QOS, null)
-        }
-
-       fun startCleaning(msg : String, actionDescription: String?){
+      fun driveAuto(speed: Int, pattern: Int, size: Int, msg : String,  actionDescription: String?) {
         notConnected()
         Log.i(TAG, actionDescription!!)
+        mMqttClient?.publish(AUTO_SPEED, Integer.toString(speed), QOS, null)
+        mMqttClient?.publish(AUTO_PATTERN, Integer.toString(pattern), QOS, null)
+        mMqttClient?.publish(AUTO_SIZE, Integer.toString(size), QOS, null)
         mMqttClient?.publish(AUTO_START, msg, QOS, null)
-    }
-
-
-    }
+      }
+}
 
 
 

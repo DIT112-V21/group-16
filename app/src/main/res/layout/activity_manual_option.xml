@@ -12,7 +12,9 @@
         android:layout_width="310dp"
         android:layout_height="291dp"
         android:background="@drawable/joystick_back"
-        app:JV_buttonImage="@drawable/pink_ball"
+        app:JV_buttonImage="@drawable/blueball"
+        app:JV_buttonSizeRatio="50%"
+        app:JV_backgroundSizeRatio="50%"
         app:JV_fixedCenter="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,15 +61,15 @@
 
     <TextView
         android:id="@+id/distance"
-        android:layout_width="80dp"
-        android:layout_height="26dp"
-        android:layout_marginTop="696dp"
+        android:layout_width="59dp"
+        android:layout_height="27dp"
+        android:layout_marginTop="1dp"
         android:contentDescription="traveled distance"
         android:textColor="#070000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.108"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
     <TextView
         android:id="@+id/textView7"
@@ -80,7 +82,7 @@
         app:layout_constraintHorizontal_bias="0.862"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.853" />
+        app:layout_constraintVertical_bias="0.855" />
 
     <TextView
         android:id="@+id/textView6"
@@ -90,10 +92,10 @@
         android:textColor="#050505"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.853" />
+        app:layout_constraintVertical_bias="0.855" />
 
     <ImageView
         android:id="@+id/imageView4"
@@ -111,13 +113,14 @@
         android:id="@+id/speed"
         android:layout_width="70dp"
         android:layout_height="32dp"
+        android:layout_marginTop="2dp"
         android:textColor="#020202"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.903"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.985" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView6"
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/imageView6"
@@ -141,7 +144,7 @@
         app:layout_constraintHorizontal_bias="0.523"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.975" />
+        app:layout_constraintVertical_bias="0.973" />
 
     <Button
         android:id="@+id/start"
@@ -151,10 +154,10 @@
         android:text="start cleaning"
         android:textColor="#FAF7F7"
         android:textStyle="bold"
-        app:backgroundTint="#403F3F"
+        app:backgroundTint="#495493"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.123"
+        app:layout_constraintHorizontal_bias="0.114"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.791"
@@ -168,7 +171,7 @@
         android:text="empty bag"
         android:textColor="#FAF7F7"
         android:textStyle="bold"
-        app:backgroundTint="#403F3F"
+        app:backgroundTint="#7F8CD8"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.876"

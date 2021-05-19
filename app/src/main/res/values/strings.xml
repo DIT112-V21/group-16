@@ -8,4 +8,6 @@
     <string name="right">right</string>
     <string name="backward">Backward</string>
     <string name="cameraview">cameraView</string>
+        <string name="seekbar">SeekBar</string>
+
 </resources>
