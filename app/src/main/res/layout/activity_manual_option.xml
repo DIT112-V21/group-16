@@ -173,19 +173,27 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.667" />
 
-    <Button
+    <ToggleButton
         android:id="@+id/cleaning_start"
-        android:layout_width="151dp"
-        android:layout_height="43dp"
-        android:onClick="startcleaning"
-        android:text="Cleaning On/Off"
-        android:textSize="10sp"
+        android:layout_width="148dp"
+        android:layout_height="46dp"
+        android:textOff="Cleaning Off"
+        android:textOn="Cleaning on"
+        android:drawableStart="@drawable/selector"
+        android:layout_marginTop="40dp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.352"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.777" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView14"
+        android:layout_marginTop="20dp"/>
 
     <TextView
         android:id="@+id/textViewProgress"
