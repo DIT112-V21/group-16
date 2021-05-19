@@ -26,12 +26,13 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
     private val PATTERN_TWO = 2
     private val START_CLEANING = "start"
     private val STOP = "stop"
+    private var mSpeed = 0
+    private var mPattern = 0
+    private var mSize = 0
 
-    private var speed = 0
-    private var pattern = 0
-    private var size = 0
-    private var startPoint = 0
-    private var endPoint = 0
+    // seekbar pointers
+    private var mStartPoint = 0
+    private var mEndPoint = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,82 +42,90 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         mPatternTwo = findViewById(R.id.pattern2)
         mSpeedText = findViewById(R.id.velocity)
         mSeekBar = findViewById(R.id.seekBar)
-        mCameraButton = findViewById(R.id.camera)
+       // mCameraButton = findViewById(R.id.cameraBtn)
         mStartBtn = findViewById(R.id.start_cleaning)
 
         mPatternOne?.setOnClickListener(this)
         mPatternTwo?.setOnClickListener(this)
+        mStartBtn?.setOnClickListener(this)
+        mCameraButton?.setOnClickListener(this)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
-        //mqtt car handler
+        //mqtt car handler call
         mqttHandler = MqttHandler(this.applicationContext)
         mqttHandler!!.connectToMqttBroker()
 
+        //Seekbar to get input from user regarding velocity
         mSeekBar?.setOnSeekBarChangeListener(object :
                 SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seek: SeekBar,
                                                progress: Int, fromUser: Boolean) {
                     mSpeedText?.text = progress.toString()
-                    speed = Integer.parseInt(mSpeedText?.text as String)
+                    mSpeed = Integer.parseInt(mSpeedText?.text as String)
                 }
                 override fun onStartTrackingTouch(seek: SeekBar) {
-                   startPoint = mSeekBar!!.progress
+                   mStartPoint = mSeekBar!!.progress
                 }
                 override fun onStopTrackingTouch(seek: SeekBar) {
-                   endPoint = mSeekBar!!.progress
+                   mEndPoint = mSeekBar!!.progress
                 }
             })
-
-        // Transition to the popup window when clicking on the camera button
-        mCameraButton?.setOnClickListener {
-            val window = PopupWindow(this.applicationContext)
-            val view = layoutInflater.inflate(R.layout.pop_up_window, null)
-            window.contentView = view
-            val imageView = view.findViewById<ImageView>(R.id.cameraView)
-
-            mqttHandler = MqttHandler(this.applicationContext, imageView)
-            mqttHandler!!.connectToMqttBroker()
-
-            imageView.setOnClickListener {
-                window.dismiss()
-            }
-            window.showAsDropDown(mCameraButton)
-        }
-
-        mStartBtn?.setOnClickListener {
-            mSizeField = findViewById(R.id.size_input);
-            var temp: String = mSizeField?.text.toString()
-            var value: Int
-            if ("" != temp) {
-                value = Integer.parseInt(temp)
-                size = value
-            }
-            connect(speed, pattern, size, START_CLEANING)
-        }
     }
 
     override fun onClick(v: View?) {
             when (v?.id) {
                 R.id.pattern1 -> {
                     v.setBackgroundColor(Color.LTGRAY)
-                    pattern = PATTERN_ONE
+                    mPattern = PATTERN_ONE
                     mPatternTwo?.setBackgroundColor(Color.WHITE)
                 }
                 R.id.pattern2 ->{
                     v.setBackgroundColor(Color.LTGRAY)
-                    pattern = PATTERN_TWO
+                    mPattern = PATTERN_TWO
                     mPatternOne?.setBackgroundColor(Color.WHITE)
                 }
                 R.id.stop ->{
-                connect(0,0,0,STOP)
+                sendMessages(0,0,0,STOP)
+                }
+                R.id.start_cleaning ->{
+                    getSizeInput()
+                    sendMessages(mSpeed, mPattern, mSize, START_CLEANING)
+                }
+                R.id.cameraBtn ->{
+                    //openCameraWindow()
                 }
         }
     }
 
-  private fun connect(speed : Int, pattern : Int, size : Int, command : String) {
-      if (speed != 0 && pattern != 0 && command != ""){
+    private fun getSizeInput(){
+        mSizeField = findViewById(R.id.size_input);
+        var temp: String = mSizeField?.text.toString()
+        var value: Int
+        if ("" != temp) {
+            value = Integer.parseInt(temp)
+            mSize = value
+        }
+    }
+
+    /*private fun openCameraWindow(){
+        val window = PopupWindow(this.applicationContext)
+        val view = layoutInflater.inflate(R.layout.pop_up_window, null)
+        window.contentView = view
+        val imageView = view.findViewById<ImageView>(R.id.cameraView)
+
+        mqttHandler = MqttHandler(this.applicationContext, imageView)
+        mqttHandler!!.connectToMqttBroker()
+
+        imageView.setOnClickListener {
+            window.dismiss()
+        }
+        window.showAsDropDown(mCameraButton)
+    }*/
+
+  private fun sendMessages(speed : Int, pattern : Int, size : Int, command : String) {
+      if (speed != 0 && pattern != 0 && size != 0 && command != ""){
           mqttHandler!!.driveAuto(speed, pattern, size, command, "")
       }
   }

@@ -12,9 +12,9 @@
         android:layout_width="310dp"
         android:layout_height="291dp"
         android:background="@drawable/joystick_back"
+        app:JV_backgroundSizeRatio="50%"
         app:JV_buttonImage="@drawable/blueball"
         app:JV_buttonSizeRatio="50%"
-        app:JV_backgroundSizeRatio="50%"
         app:JV_fixedCenter="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -157,7 +157,7 @@
         app:backgroundTint="#495493"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.114"
+        app:layout_constraintHorizontal_bias="0.152"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.791"
@@ -174,7 +174,7 @@
         app:backgroundTint="#7F8CD8"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.876"
+        app:layout_constraintHorizontal_bias="0.836"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.791"
@@ -190,4 +190,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.667" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
