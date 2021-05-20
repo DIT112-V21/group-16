@@ -186,13 +186,13 @@
 
     <TextView
         android:id="@+id/textViewProgress"
-        android:layout_width="28dp"
-        android:layout_height="21dp"
-        android:textColor="#420AA5"
+        android:layout_width="45dp"
+        android:layout_height="20dp"
+        android:textColor="#050505"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/progressBar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
