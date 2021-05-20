@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.345" />
+        app:layout_constraintVertical_bias="0.334" />
 
     <ImageButton
         android:id="@+id/camera"
@@ -144,48 +144,69 @@
         app:layout_constraintVertical_bias="0.975" />
 
     <Button
-        android:id="@+id/start"
-        android:layout_width="175dp"
-        android:layout_height="42dp"
-        android:background="#605454"
-        android:text="start cleaning"
-        android:textColor="#FAF7F7"
-        android:textStyle="bold"
-        app:backgroundTint="#403F3F"
-        app:layout_constraintBottom_toBottomOf="@+id/front"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.123"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.791"
-        app:strokeColor="#534D4D" />
-
-    <Button
         android:id="@+id/empty_b"
         android:layout_width="142dp"
-        android:layout_height="42dp"
+        android:layout_height="33dp"
         android:background="#605454"
         android:text="empty bag"
         android:textColor="#FAF7F7"
+        android:textSize="12sp"
         android:textStyle="bold"
         app:backgroundTint="#403F3F"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.876"
+        app:layout_constraintHorizontal_bias="0.94"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.791"
+        app:layout_constraintVertical_bias="0.797"
         app:strokeColor="#534D4D" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="357dp"
-        android:layout_height="75dp"
+        android:layout_height="50dp"
         android:scaleY="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.667" />
+
+    <ToggleButton
+        android:id="@+id/cleaning_start"
+        android:layout_width="148dp"
+        android:layout_height="46dp"
+        android:textOff="Cleaning Off"
+        android:textOn="Cleaning on"
+        android:drawableStart="@drawable/selector"
+        android:layout_marginTop="40dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.352"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.777" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView14"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/textViewProgress"
+        android:layout_width="336dp"
+        android:layout_height="22dp"
+        android:text="0"
+        android:textColor="#420AA5"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.48"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.71" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
