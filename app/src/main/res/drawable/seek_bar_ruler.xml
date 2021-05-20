@@ -5,6 +5,7 @@
             <solid
                 android:color="#94A3B3" />
             <corners android:radius="2dp" />
+
         </shape>
     </item>
     <item android:id="@android:id/progress">
