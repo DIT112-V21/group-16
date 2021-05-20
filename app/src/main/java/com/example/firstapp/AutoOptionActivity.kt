@@ -24,8 +24,6 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
     //Messages
     private val PATTERN_ONE = 1
     private val PATTERN_TWO = 2
-    private val START_CLEANING = "start"
-    private val STOP = "stop"
     private var mSpeed = 0
     private var mPattern = 0
     private var mSize = 0
@@ -87,11 +85,11 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
                     mPatternOne?.setBackgroundColor(Color.WHITE)
                 }
                 R.id.stop ->{
-                sendMessages(0,0,0,STOP)
+                mqttHandler!!.driveAuto(0,0,0,"")
                 }
                 R.id.start_cleaning ->{
                     getSizeInput()
-                    sendMessages(mSpeed, mPattern, mSize, START_CLEANING)
+                    sendMessages(mSpeed, mPattern, mSize)
                 }
                 R.id.cameraBtn ->{
                     //openCameraWindow()
@@ -124,9 +122,9 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         window.showAsDropDown(mCameraButton)
     }*/
 
-  private fun sendMessages(speed : Int, pattern : Int, size : Int, command : String) {
-      if (speed != 0 && pattern != 0 && size != 0 && command != ""){
-          mqttHandler!!.driveAuto(speed, pattern, size, command, "")
+  private fun sendMessages(speed : Int, pattern : Int, size : Int) {
+      if (speed != 0 && pattern != 0 && size != 0 ){
+          mqttHandler!!.driveAuto(speed, pattern, size, "")
       }
   }
 }

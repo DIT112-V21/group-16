@@ -24,8 +24,7 @@ class ManualOptionActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
-      
-      var progressBar: ProgressBar = findViewById(R.id.progressBar)
+
         val  mTraveledDistance : TextView = findViewById(R.id.distance)
         val  mSpeed: TextView = findViewById(R.id.speed)
         val  mFront : TextView = findViewById(R.id.front)
@@ -56,11 +55,9 @@ class ManualOptionActivity : AppCompatActivity() {
             window.showAsDropDown(mCameraButton)
         }
 
-
-
         // Cleaning start bagfull progressBar
         handler = Handler(Handler.Callback {
-            var progressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar)
+            var mProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar)
             if (isStarted && progressStatus <100) {
                 progressStatus++
                 if(progressStatus==100){
@@ -77,7 +74,6 @@ class ManualOptionActivity : AppCompatActivity() {
         mStartBtn.setOnClickListener {
             isStarted = ! isStarted
         }
-        
         //empty the bag
         mEmptyBtn.setOnClickListener {
             progressStatus = 0
@@ -93,16 +89,16 @@ class ManualOptionActivity : AppCompatActivity() {
                 var newAngle: Int
                 if (angle in 90..180) {
                     newAngle = turnForwards(angle)
-                    newSpeed = (strength * 0.8).toInt()
+                    newSpeed = driveForwards(strength)
                 } else if (angle in 0..89) {
                     newAngle = turnForwards(angle)
-                    newSpeed = (strength * 0.8).toInt()
+                    newSpeed = driveForwards(strength)
                 } else if (angle > 0 && angle >= 270) {
                     newAngle = turnBackwards(angle)
-                    newSpeed = (strength * 0.5 * REVERSE).toInt()
+                    newSpeed = driveBackwards(strength)
                 } else {
                     newAngle = turnBackwards(angle)
-                    newSpeed = (strength * 0.5 * REVERSE).toInt()
+                    newSpeed = driveBackwards(strength)
                 }
                 if (newAngle != currentAngle || newSpeed != currentSpeed) {
                     if (newSpeed == 0) newAngle = 0
@@ -112,7 +108,6 @@ class ManualOptionActivity : AppCompatActivity() {
                 }
             }
         })
-
     }
 
     private fun driveForwards(strength: Int) : Int{
