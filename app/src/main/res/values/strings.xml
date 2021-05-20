@@ -7,5 +7,7 @@
     <string name="left">left</string>
     <string name="right">right</string>
     <string name="backward">Backward</string>
-    <string name="cameraview">cameraView</string>
+    <string name="cameraView">cameraView</string>
+        <string name="seekbar">SeekBar</string>
+
 </resources>

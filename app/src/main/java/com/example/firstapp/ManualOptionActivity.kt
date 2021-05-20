@@ -10,46 +10,30 @@ import com.example.firstapp.MQTT.MqttHandler
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
 
-
-
 class ManualOptionActivity : AppCompatActivity() {
 
     private var mqttHandler: MqttHandler? = null
-    private var mCameraButton: ImageButton? = null
-    private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
-    private val STEERING_CONTROL = "/smartcar/group16/control/steering"
-    private val QOS = 0
+    private var mCameraButton : ImageButton? = null
     private val REVERSE = -1
 
-    //progress Bar attribute
-    //private var mPbText: TextView? = null
-    //
     var isStarted = false
     var progressStatus = 0
     var handler: Handler? = null
-
-
-
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
-        var progressBar: ProgressBar = findViewById(R.id.progressBar)
-        val btn1: Button = findViewById(R.id.cleaning_start)
-        val btn2: Button = findViewById(R.id.empty_b)
-        val mTraveledDistance: TextView = findViewById(R.id.distance)
-        val mSpeed: TextView = findViewById(R.id.speed)
-        val mFront: TextView = findViewById(R.id.front)
-       // val toggle: ToggleButton = findViewById(R.id.start)
 
-        //val mPbText: TextView = findViewById(R.id.bagfull)
+        val  mTraveledDistance : TextView = findViewById(R.id.distance)
+        val  mSpeed: TextView = findViewById(R.id.speed)
+        val  mFront : TextView = findViewById(R.id.front)
+        val mStartBtn: Button = findViewById(R.id.start_cleaning)
+        val mEmptyBtn: Button = findViewById(R.id.empty_b)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
-        //var handler = Handler()
-
-
+    
         //mqtt car handler
         mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
         mqttHandler!!.connectToMqttBroker()
@@ -60,7 +44,7 @@ class ManualOptionActivity : AppCompatActivity() {
             val window = PopupWindow(this.applicationContext)
             val view = layoutInflater.inflate(R.layout.pop_up_window, null)
             window.contentView = view
-            val imageView = view.findViewById<ImageView>(R.id.cameraView)
+            val imageView = view.findViewById<ImageView>(R.id.camera)
 
             mqttHandler = MqttHandler(this.applicationContext, imageView)
             mqttHandler!!.connectToMqttBroker()
@@ -71,37 +55,30 @@ class ManualOptionActivity : AppCompatActivity() {
             window.showAsDropDown(mCameraButton)
         }
 
+        // Cleaning start bagfull progressBar
         handler = Handler(Handler.Callback {
-            var progressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar)
+            var mProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar)
             if (isStarted && progressStatus <100) {
                 progressStatus++
                 if(progressStatus==100){
                     Toast.makeText(applicationContext, "Waste Bag is full, please empty bag", Toast.LENGTH_LONG).show()
-
                 }
             }
-            progressBar.progress = progressStatus
+            mProgressBar.progress = progressStatus
             var progressView=findViewById<TextView>(R.id.textViewProgress)
-            progressView.text = "Bag full ${progressStatus}% "
-            handler?.sendEmptyMessageDelayed(0, 100)
-
+            progressView.text = "${progressStatus}% "
+            handler?.sendEmptyMessageDelayed(0, 4000)
             true
         })
-
         handler?.sendEmptyMessage(0)
-
-
-        btn1.setOnClickListener {
+        mStartBtn.setOnClickListener {
             isStarted = ! isStarted
-
         }
         //empty the bag
-        btn2.setOnClickListener {
+        mEmptyBtn.setOnClickListener {
             progressStatus = 0
             isStarted = false
         }
-
-
         // This joystick is adapted from: https://github.com/controlwear/virtual-joystick-android
         val joystick = findViewById<View>(R.id.joystickView_left) as JoystickView
         joystick.setOnMoveListener(object : OnMoveListener {
@@ -112,16 +89,16 @@ class ManualOptionActivity : AppCompatActivity() {
                 var newAngle: Int
                 if (angle in 90..180) {
                     newAngle = turnForwards(angle)
-                    newSpeed = (strength * 0.8).toInt()
+                    newSpeed = driveForwards(strength)
                 } else if (angle in 0..89) {
                     newAngle = turnForwards(angle)
-                    newSpeed = (strength * 0.8).toInt()
+                    newSpeed = driveForwards(strength)
                 } else if (angle > 0 && angle >= 270) {
                     newAngle = turnBackwards(angle)
-                    newSpeed = (strength * 0.5 * REVERSE).toInt()
+                    newSpeed = driveBackwards(strength)
                 } else {
                     newAngle = turnBackwards(angle)
-                    newSpeed = (strength * 0.5 * REVERSE).toInt()
+                    newSpeed = driveBackwards(strength)
                 }
                 if (newAngle != currentAngle || newSpeed != currentSpeed) {
                     if (newSpeed == 0) newAngle = 0
@@ -131,7 +108,15 @@ class ManualOptionActivity : AppCompatActivity() {
                 }
             }
         })
+    }
 
+    private fun driveForwards(strength: Int) : Int{
+        val strength = (strength * 0.8).toInt()
+        return strength
+    }
+    private fun driveBackwards(strength : Int) : Int{
+        val strength = (strength * 0.5 * REVERSE).toInt()
+        return strength
     }
 
     private fun turnForwards(angle: Int): Int {

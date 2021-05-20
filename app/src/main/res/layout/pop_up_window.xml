@@ -46,11 +46,11 @@
                 android:minHeight="250dp">
 
                 <ImageView
-                    android:id="@+id/cameraView"
+                    android:id="@+id/camera"
                     android:layout_width="320dp"
                     android:layout_height="240dp"
                     android:layout_weight="0.3"
-                    android:contentDescription="cameraView"
+                    android:contentDescription="@string/cameraView"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

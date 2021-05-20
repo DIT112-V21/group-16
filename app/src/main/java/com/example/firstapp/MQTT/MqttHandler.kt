@@ -14,7 +14,7 @@ import org.eclipse.paho.client.mqttv3.*
 
 class MqttHandler : AppCompatActivity {
 
-        //connection to Mqtt
+        //Connection to Mqtt
         private val TAG = "app"
         private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
         private val LOCALHOST = "10.0.2.2"
@@ -36,13 +36,12 @@ class MqttHandler : AppCompatActivity {
         private val AUTO_SPEED = "/smartcar/group16/auto/speed"
         private val AUTO_PATTERN = "/smartcar/group16/auto/pattern"
         private val AUTO_SIZE = "/smartcar/group16/auto/size"
-        private val AUTO_START = "/smartcar/group16/auto/start"
 
         // Camera
         private val IMAGE_WIDTH = 320
         private val IMAGE_HEIGHT = 240
 
-        //messages related to connection to mqtt broker
+       //messages related to connection to mqtt broker
         private val SUCCESSFUL_CONNECTION = "Connected to MQTT broker"
         private val FAILED_CONNECTION = "Failed to connect to MQTT broker"
         private val LOST_CONNECTION = "Connection to MQTT broker lost"
@@ -184,40 +183,21 @@ class MqttHandler : AppCompatActivity {
             }
         }
 
-        fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
+     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
             notConnected()
             Log.i(TAG, actionDescription!!)
             mMqttClient?.publish(THROTTLE_CONTROL, Integer.toString(throttleSpeed), QOS, null)
             mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
         }
 
-
-        fun sendSpeed(speed : Int, actionDescription: String?) {
-            notConnected()
-            Log.i(TAG, actionDescription!!)
-            mMqttClient?.publish(AUTO_SPEED, Integer.toString(speed), QOS, null)
-        }
-
-        fun sendPattern(pattern : Int, actionDescription: String?) {
-            notConnected()
-            Log.i(TAG, actionDescription!!)
-            mMqttClient?.publish(AUTO_PATTERN, Integer.toString(pattern), QOS, null)
-        }
-
-        fun sendSize(size : Int, actionDescription: String?){
-            notConnected()
-            Log.i(TAG, actionDescription!!)
-            mMqttClient?.publish(AUTO_SIZE, Integer.toString(size), QOS, null)
-        }
-
-       fun startCleaning(msg : String, actionDescription: String?){
+      fun driveAuto(speed: Int, pattern: Int, size: Int, actionDescription: String?) {
         notConnected()
         Log.i(TAG, actionDescription!!)
-        mMqttClient?.publish(AUTO_START, msg, QOS, null)
-    }
-
-
-    }
+        mMqttClient?.publish(AUTO_SPEED, Integer.toString(speed), QOS, null)
+        mMqttClient?.publish(AUTO_PATTERN, Integer.toString(pattern), QOS, null)
+        mMqttClient?.publish(AUTO_SIZE, Integer.toString(size), QOS, null)
+      }
+}
 
 
 
