@@ -1,13 +1,14 @@
 package com.example.firstapp
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.HandlerCompat.postDelayed
 import com.example.firstapp.MQTT.MqttHandler
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
-
 
 class ManualOptionActivity : AppCompatActivity() {
 
@@ -19,10 +20,12 @@ class ManualOptionActivity : AppCompatActivity() {
     var progressStatus = 0
     var handler: Handler? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
-
+      
+      var progressBar: ProgressBar = findViewById(R.id.progressBar)
         val  mTraveledDistance : TextView = findViewById(R.id.distance)
         val  mSpeed: TextView = findViewById(R.id.speed)
         val  mFront : TextView = findViewById(R.id.front)
@@ -31,7 +34,7 @@ class ManualOptionActivity : AppCompatActivity() {
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
-
+    
         //mqtt car handler
         mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
         mqttHandler!!.connectToMqttBroker()
@@ -47,16 +50,17 @@ class ManualOptionActivity : AppCompatActivity() {
             mqttHandler = MqttHandler(this.applicationContext, imageView)
             mqttHandler!!.connectToMqttBroker()
 
-            imageView.setOnClickListener{
+            imageView.setOnClickListener {
                 window.dismiss()
             }
             window.showAsDropDown(mCameraButton)
         }
 
 
+
         // Cleaning start bagfull progressBar
         handler = Handler(Handler.Callback {
-            var mProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar)
+            var progressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar)
             if (isStarted && progressStatus <100) {
                 progressStatus++
                 if(progressStatus==100){
@@ -66,23 +70,19 @@ class ManualOptionActivity : AppCompatActivity() {
             mProgressBar.progress = progressStatus
             var progressView=findViewById<TextView>(R.id.textViewProgress)
             progressView.text = "${progressStatus}% "
-            handler?.sendEmptyMessageDelayed(0, 100)
+            handler?.sendEmptyMessageDelayed(0, 4000)
             true
         })
         handler?.sendEmptyMessage(0)
         mStartBtn.setOnClickListener {
             isStarted = ! isStarted
-
         }
+        
         //empty the bag
         mEmptyBtn.setOnClickListener {
             progressStatus = 0
             isStarted = false
         }
-
-
-
-
         // This joystick is adapted from: https://github.com/controlwear/virtual-joystick-android
         val joystick = findViewById<View>(R.id.joystickView_left) as JoystickView
         joystick.setOnMoveListener(object : OnMoveListener {
@@ -112,6 +112,7 @@ class ManualOptionActivity : AppCompatActivity() {
                 }
             }
         })
+
     }
 
     private fun driveForwards(strength: Int) : Int{
@@ -122,17 +123,28 @@ class ManualOptionActivity : AppCompatActivity() {
         val strength = (strength * 0.5 * REVERSE).toInt()
         return strength
     }
-    private fun turnForwards ( angle: Int) : Int{
+
+    private fun turnForwards(angle: Int): Int {
         val angle = 90 - angle
         return angle
     }
 
-    private fun turnBackwards ( angle: Int) : Int{
-        val angle =  angle - 270
+    private fun turnBackwards(angle: Int): Int {
+        val angle = angle - 270
         return angle
     }
 
     private fun sendMovement(newSpeed: Int, newAngle: Int) {
-            mqttHandler?.drive(newSpeed,newAngle,"")
-        }
-     }
+        mqttHandler?.drive(newSpeed, newAngle, "")
+    }
+
+}
+
+
+
+
+
+
+
+
+
