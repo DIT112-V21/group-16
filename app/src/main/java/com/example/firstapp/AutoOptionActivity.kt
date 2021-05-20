@@ -53,7 +53,7 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
-        //mqtt car handler call
+        //mqtt car handler
         mqttHandler = MqttHandler(this.applicationContext)
         mqttHandler!!.connectToMqttBroker()
 
