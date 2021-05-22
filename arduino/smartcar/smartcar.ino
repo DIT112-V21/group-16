@@ -172,7 +172,8 @@ std::vector<char> frameBuffer;
   	car.setSpeed(speed);
 	currentSpeed = speed;
  }
- 
+ int area=0;
+ int velocity=0;
 void setup() {
    Serial.begin(9600);
  #ifdef __SMCE__
@@ -190,23 +191,29 @@ void setup() {
         car.setSpeed(currentSpeed);
       } else if (topic == "/smartcar/group16/control/steering") {
         car.setAngle(message.toInt());
-      } else {
+      } 
+      else if (topic == "/smartcar/group16/auto/size" )
+      {
+        area =message.toInt();
+      }
+      else if (topic=="/smartcar/group16/auto/speed")
+      {
+        velocity= message.toInt();
+      }
+      else if(topic == "/smartcar/group16/auto/start"){
+        pattern();
+      }
+      
+      else  {
         Serial.println(topic + " " + message);
       }
+       
     });
   }
 }
 
 void loop() {
     obstacleAvoidance();
-    //handleInput();
-//   {
-//     Serial.println((leftOdometer.getDistance() + rightOdometer.getDistance())/2);
-// }
-    
-
- 
- //master
     if (mqtt.connected()) {
     mqtt.loop();
     
@@ -237,8 +244,6 @@ void loop() {
   delay(35);
 #endif
 }  
-
-
 // Changing odometer measurement from cm to km
 int distanceInMeter(){
 int distance = car.getDistance();
@@ -349,6 +354,148 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      
      }
 } 
+
+void go(double centimeters, int speed)
+{
+    if (centimeters == 0)
+    {
+        return;
+    }
+    // Ensure the speed is towards the correct direction
+    speed = smartcarlib::utils::getAbsolute(speed) * ((centimeters < 0) ? -1 : 1);
+    car.setAngle(0);
+    car.setSpeed(speed);
+
+    double initialDistance          = car.getDistance();
+    bool hasReachedTargetDistance = false;
+    while (!hasReachedTargetDistance)
+    {
+        car.update();
+        auto currentDistance   = car.getDistance();
+        auto travelledDistance = initialDistance > currentDistance
+                                     ? initialDistance - currentDistance
+                                     : currentDistance - initialDistance;
+        hasReachedTargetDistance
+            = travelledDistance >= smartcarlib::utils::getAbsolute(centimeters);
+    }
+    car.setSpeed(0);
+    
+}
+
+int sideDistance = 10;
+double distancee= sqrt(area); 
+
+
+void Apattern(){
+  if (velocity !=0)
+  {
+    go(distancee,velocity);
+delay(500);
+turnRightWhenStoped();
+delay(500);
+go(sideDistance ,25);
+delay(500);
+turnRightWhenStoped();
+  }
+}
+
+void Bpattern(){
+  if (velocity != 0)
+  {
+    Apattern();
+    delay(500);
+    go(distancee,velocity);
+    delay(500);
+    turnLeftWhenStoped();
+    delay(500);
+    go(sideDistance,25);
+    delay(500);
+    turnLeftWhenStoped();
+  }
+  
+    
+}
+
+void pattern(){
+if(area != 0  ){
+double x = sqrt(area);
+int value = int (x);
+if (value%2==0)
+{
+    int times = value/sideDistance;
+    times /= 2;
+    int i =0;
+    while (i < times)
+    {
+        Bpattern();
+        i += 1; 
+    }
+    
+}
+else {
+    int times = value/sideDistance;
+    times /= 2;
+    int i =0;
+    while (i < times)
+    {
+        Bpattern();
+        i += 1;
+    }
+    Apattern();
+    
+}}
+
+}
+int toTravel = sqrt(area);
+void patternB(){
+if(area != 0 ){
+int x= toTravel / 10;
+    int y= x/2;
+    int z=y-1;
+    int i =0;
+if ( toTravel%2 ==0)
+{
+    while (i<z)
+    {
+        complete();
+        i++;
+    }
+    goAndRight3();
+}
+else {
+    while (i<y)
+    {
+        complete();
+        i++;
+    }
+    go(10,25);
+}
+}
+}
+
+void complete(){
+  if (velocity !=0)
+  {
+    goAndRight3();
+   toTravel -=10;
+   go(toTravel,velocity);
+  }
+}
+
+void goAndRight3(){
+  if (velocity != 0)
+  {
+    int i =0;
+    while (i<3)
+    {
+     go(toTravel,velocity);
+    delay(500);
+    turnRightWhenStoped();
+    i++;
+  }
+    }
+}
+
     int bagFilledProgress(){
          float traveledDistance=car.getDistance();
          if (traveledDistance>maxTraveledDistance){
