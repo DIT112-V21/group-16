@@ -13,7 +13,7 @@ class PopUpWindow : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.pop_up_window)
 
-        val mCameraView : ImageView = findViewById(R.id.cameraView)
+        val mCameraView : ImageView = findViewById(R.id.camera)
 
         mqttHandler = MqttHandler(this.applicationContext, mCameraView)
         mqttHandler!!.connectToMqttBroker()

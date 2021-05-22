@@ -39,18 +39,18 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/popup_window_background_container"
-                android:layout_width="406dp"
-                android:layout_height="263dp"
+                android:layout_width="320dp"
+                android:layout_height="240dp"
                 android:layout_centerInParent="true"
                 android:background="#83FF9800"
                 android:minHeight="250dp">
 
                 <ImageView
-                    android:id="@+id/cameraView"
+                    android:id="@+id/camera"
                     android:layout_width="320dp"
                     android:layout_height="240dp"
                     android:layout_weight="0.3"
-                    android:contentDescription="cameraView"
+                    android:contentDescription="@string/cameraView"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
