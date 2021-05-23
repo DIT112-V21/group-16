@@ -1,8 +1,6 @@
 package com.example.firstapp
 
-import android.R.attr.angle
 import android.graphics.Color
-import android.icu.text.CaseMap
 import android.os.Bundle
 import android.view.View
 import android.widget.*
@@ -13,7 +11,6 @@ import com.example.firstapp.MQTT.MqttHandler
 class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mqttHandler: MqttHandler? = null
-    private var mCameraButton: ImageButton? = null
     private var mPatternOne: Button? = null
     private var mPatternTwo: Button? = null
     private var mStartBtn: Button? = null
@@ -40,13 +37,11 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         mPatternTwo = findViewById(R.id.pattern2)
         mSpeedText = findViewById(R.id.velocity)
         mSeekBar = findViewById(R.id.seekBar)
-       // mCameraButton = findViewById(R.id.cameraBtn)
         mStartBtn = findViewById(R.id.start_cleaning)
 
         mPatternOne?.setOnClickListener(this)
         mPatternTwo?.setOnClickListener(this)
         mStartBtn?.setOnClickListener(this)
-        mCameraButton?.setOnClickListener(this)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
@@ -57,43 +52,40 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
 
         //Seekbar to get input from user regarding velocity
         mSeekBar?.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seek: SeekBar,
-                                               progress: Int, fromUser: Boolean) {
-                    mSpeedText?.text = progress.toString()
-                    mSpeed = Integer.parseInt(mSpeedText?.text as String)
-                }
-                override fun onStartTrackingTouch(seek: SeekBar) {
-                   mStartPoint = mSeekBar!!.progress
-                }
-                override fun onStopTrackingTouch(seek: SeekBar) {
-                   mEndPoint = mSeekBar!!.progress
-                }
-            })
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seek: SeekBar,
+                                           progress: Int, fromUser: Boolean) {
+                mSpeedText?.text = progress.toString()
+                mSpeed = Integer.parseInt(mSpeedText?.text as String)
+            }
+            override fun onStartTrackingTouch(seek: SeekBar) {
+                mStartPoint = mSeekBar!!.progress
+            }
+            override fun onStopTrackingTouch(seek: SeekBar) {
+                mEndPoint = mSeekBar!!.progress
+            }
+        })
     }
 
     override fun onClick(v: View?) {
-            when (v?.id) {
-                R.id.pattern1 -> {
-                    v.setBackgroundColor(Color.LTGRAY)
-                    mPattern = PATTERN_ONE
-                    mPatternTwo?.setBackgroundColor(Color.WHITE)
-                }
-                R.id.pattern2 ->{
-                    v.setBackgroundColor(Color.LTGRAY)
-                    mPattern = PATTERN_TWO
-                    mPatternOne?.setBackgroundColor(Color.WHITE)
-                }
-                R.id.stop ->{
+        when (v?.id) {
+            R.id.pattern1 -> {
+                v.setBackgroundColor(Color.LTGRAY)
+                mPattern = PATTERN_ONE
+                mPatternTwo?.setBackgroundColor(Color.WHITE)
+            }
+            R.id.pattern2 ->{
+                v.setBackgroundColor(Color.LTGRAY)
+                mPattern = PATTERN_TWO
+                mPatternOne?.setBackgroundColor(Color.WHITE)
+            }
+            R.id.stop ->{
                 mqttHandler!!.driveAuto(0,0,0,"")
-                }
-                R.id.start_cleaning ->{
-                    getSizeInput()
-                    sendMessages(mSpeed, mPattern, mSize)
-                }
-                R.id.cameraBtn ->{
-                    //openCameraWindow()
-                }
+            }
+            R.id.start_cleaning ->{
+                getSizeInput()
+                sendMessages(mSpeed, mPattern, mSize)
+            }
         }
     }
 
@@ -107,26 +99,9 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    /*private fun openCameraWindow(){
-        val window = PopupWindow(this.applicationContext)
-        val view = layoutInflater.inflate(R.layout.pop_up_window, null)
-        window.contentView = view
-        val imageView = view.findViewById<ImageView>(R.id.cameraView)
-
-        mqttHandler = MqttHandler(this.applicationContext, imageView)
-        mqttHandler!!.connectToMqttBroker()
-
-        imageView.setOnClickListener {
-            window.dismiss()
+    private fun sendMessages(speed : Int, pattern : Int, size : Int) {
+        if (speed != 0 && pattern != 0 && size != 0 ){
+            mqttHandler!!.driveAuto(speed, pattern, size, "")
         }
-        window.showAsDropDown(mCameraButton)
-    }*/
-
-  private fun sendMessages(speed : Int, pattern : Int, size : Int) {
-      if (speed != 0 && pattern != 0 && size != 0 ){
-          mqttHandler!!.driveAuto(speed, pattern, size, "")
-      }
-  }
+    }
 }
-
-

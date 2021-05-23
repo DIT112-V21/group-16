@@ -24,7 +24,7 @@
         app:layout_constraintVertical_bias="0.288" />
 
     <ImageButton
-        android:id="@+id/camera"
+        android:id="@+id/cameraButton"
         android:layout_width="57dp"
         android:layout_height="24dp"
         android:layout_marginTop="16dp"
@@ -151,7 +151,7 @@
     <ToggleButton
         android:id="@+id/start_cleaning"
         android:layout_width="157dp"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:layout_marginTop="40dp"
         android:background="#7F8CD8"
         android:drawableStart="@drawable/selector"
@@ -162,15 +162,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.192"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.767" />
+        app:layout_constraintVertical_bias="0.764" />
 
     <Button
         android:id="@+id/empty_b"
         android:layout_width="140dp"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:background="#605454"
         android:text="empty bag"
         android:textColor="#FAF7F7"

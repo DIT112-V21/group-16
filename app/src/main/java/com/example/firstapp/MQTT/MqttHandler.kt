@@ -4,13 +4,12 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Color.RED
 import android.util.Log
- import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.firstapp.R
 import org.eclipse.paho.client.mqttv3.*
+
 
 class MqttHandler : AppCompatActivity {
 
@@ -162,7 +161,6 @@ class MqttHandler : AppCompatActivity {
                 })
             }
         }
-
 
         fun publish(topic: String?, message: String?, qos: Int, publishCallback: IMqttActionListener?) {
             if (message != null) {
