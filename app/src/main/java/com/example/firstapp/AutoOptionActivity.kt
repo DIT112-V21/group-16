@@ -1,9 +1,9 @@
 package com.example.firstapp
 
-import android.R.attr.angle
+import android.annotation.SuppressLint
 import android.graphics.Color
-import android.icu.text.CaseMap
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -21,6 +21,13 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
     private var mSeekBar: SeekBar? = null
     private var mSpeedText : TextView? = null
 
+   //progressbar variable
+
+    var isStarted = false
+    var progressStatus = 0
+    var handler: Handler? = null
+    var mBagfull=0
+
     //Messages
     private val PATTERN_ONE = 1
     private val PATTERN_TWO = 2
@@ -28,10 +35,12 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
     private var mPattern = 0
     private var mSize = 0
 
+
     // seekbar pointers
     private var mStartPoint = 0
     private var mEndPoint = 0
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auto_option)
@@ -52,8 +61,11 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         actionBar!!.title = ""
 
         //mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext)
+        mqttHandler = MqttHandler(this.applicationContext,mBagfull)
         mqttHandler!!.connectToMqttBroker()
+
+
+
 
         //Seekbar to get input from user regarding velocity
         mSeekBar?.setOnSeekBarChangeListener(object :
@@ -70,6 +82,26 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
                    mEndPoint = mSeekBar!!.progress
                 }
             })
+
+        //Bagfull Progresesbar
+
+        handler = Handler(Handler.Callback {
+            var aProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar3)
+            if (isStarted && progressStatus <100) {
+             progressStatus=mBagfull
+                if(progressStatus==100){
+                    Toast.makeText(applicationContext, "Waste Bag is full, please empty bag", Toast.LENGTH_LONG).show()
+                }
+            }
+            aProgressBar.progress = progressStatus
+            var progressView=findViewById<TextView>(R.id.textViewProgress)
+           // progressView.text = "${progressStatus}% "
+            handler?.sendEmptyMessageDelayed(0, 4000)
+            true
+        })
+        handler?.sendEmptyMessage(0)
+
+
     }
 
     override fun onClick(v: View?) {
@@ -85,11 +117,13 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
                     mPatternOne?.setBackgroundColor(Color.WHITE)
                 }
                 R.id.stop ->{
-                mqttHandler!!.driveAuto(0,0,0,"")
+                    isStarted=false
+             //  mqttHandler!!.driveAuto(0,0,0,"")
                 }
                 R.id.start_cleaning ->{
                     getSizeInput()
                     sendMessages(mSpeed, mPattern, mSize)
+                    isStarted = ! isStarted
                 }
                 R.id.cameraBtn ->{
                     //openCameraWindow()
@@ -107,24 +141,11 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    /*private fun openCameraWindow(){
-        val window = PopupWindow(this.applicationContext)
-        val view = layoutInflater.inflate(R.layout.pop_up_window, null)
-        window.contentView = view
-        val imageView = view.findViewById<ImageView>(R.id.cameraView)
 
-        mqttHandler = MqttHandler(this.applicationContext, imageView)
-        mqttHandler!!.connectToMqttBroker()
-
-        imageView.setOnClickListener {
-            window.dismiss()
-        }
-        window.showAsDropDown(mCameraButton)
-    }*/
 
   private fun sendMessages(speed : Int, pattern : Int, size : Int) {
       if (speed != 0 && pattern != 0 && size != 0 ){
-          mqttHandler!!.driveAuto(speed, pattern, size, "")
+       // mqttHandler!!.driveAuto(speed, pattern, size, "")
       }
   }
 }

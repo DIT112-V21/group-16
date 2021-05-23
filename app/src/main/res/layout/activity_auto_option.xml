@@ -39,7 +39,8 @@
         android:id="@+id/progressBar3"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="359dp"
-        android:layout_height="52dp"
+        android:layout_height="20dp"
+        android:progressDrawable="@drawable/progressbar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -172,6 +173,7 @@
         app:layout_constraintVertical_bias="0.436"
         app:strokeColor="#8E8888" />
 
+
     <SeekBar
         android:id="@+id/seekBar"
         android:layout_width="345dp"
@@ -186,11 +188,10 @@
         android:thumb="@drawable/seek_bar_slider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.631"
+        app:layout_constraintHorizontal_bias="0.06"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.715" />
-
+        app:layout_constraintVertical_bias="0.709" />
 
     <TextView
         android:id="@+id/velocity"
