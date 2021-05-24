@@ -20,6 +20,7 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
     private var mSizeField: EditText? = null
     private var mSeekBar: SeekBar? = null
     private var mSpeedText : TextView? = null
+    private var mEmptyBtn: Button? = null
 
    //progressbar variable
 
@@ -49,43 +50,48 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         mPatternTwo = findViewById(R.id.pattern2)
         mSpeedText = findViewById(R.id.velocity)
         mSeekBar = findViewById(R.id.seekBar)
-       // mCameraButton = findViewById(R.id.cameraBtn)
+        // mCameraButton = findViewById(R.id.cameraBtn)
         mStartBtn = findViewById(R.id.start_cleaning)
+        mEmptyBtn= findViewById(R.id.empty)
 
         mPatternOne?.setOnClickListener(this)
         mPatternTwo?.setOnClickListener(this)
         mStartBtn?.setOnClickListener(this)
+        mEmptyBtn?.setOnClickListener(this)
         mCameraButton?.setOnClickListener(this)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
         //mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext,mBagfull)
+        mqttHandler = MqttHandler(this.applicationContext, mBagfull)
         mqttHandler!!.connectToMqttBroker()
-
-
-
+        mqttHandler = MqttHandler(this.applicationContext)
+        mqttHandler!!.connectToMqttBroker()
 
         //Seekbar to get input from user regarding velocity
         mSeekBar?.setOnSeekBarChangeListener(object :
-                SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(seek: SeekBar,
-                                               progress: Int, fromUser: Boolean) {
-                    mSpeedText?.text = progress.toString()
-                    mSpeed = Integer.parseInt(mSpeedText?.text as String)
-                }
-                override fun onStartTrackingTouch(seek: SeekBar) {
-                   mStartPoint = mSeekBar!!.progress
-                }
-                override fun onStopTrackingTouch(seek: SeekBar) {
-                   mEndPoint = mSeekBar!!.progress
-                }
-            })
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seek: SeekBar,
+                progress: Int, fromUser: Boolean
+            ) {
+                mSpeedText?.text = progress.toString()
+                mSpeed = Integer.parseInt(mSpeedText?.text as String)
+            }
 
-        //Bagfull Progresesbar
+            override fun onStartTrackingTouch(seek: SeekBar) {
+                mStartPoint = mSeekBar!!.progress
+            }
 
-        handler = Handler(Handler.Callback {
+            override fun onStopTrackingTouch(seek: SeekBar) {
+                mEndPoint = mSeekBar!!.progress
+            }
+        })
+
+        //Bagfull Progresesbar 1
+
+        /*    handler = Handler(Handler.Callback {
             var aProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar3)
             if (isStarted && progressStatus <100) {
              progressStatus=mBagfull
@@ -99,11 +105,31 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
             handler?.sendEmptyMessageDelayed(0, 4000)
             true
         })
+        handler?.sendEmptyMessage(0) */
+
+        // Cleaning start bagfull progressBar 2
+        handler = Handler(Handler.Callback {
+            var aProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar3)
+            if (isStarted && progressStatus < 100) {
+                progressStatus++
+                if (progressStatus == 100) {
+                    Toast.makeText(
+                        applicationContext,
+                        "Waste Bag is full, please empty bag",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            aProgressBar.progress = progressStatus
+            var progressView = findViewById<TextView>(R.id.textViewProgress)
+           // progressView.text = "${progressStatus}% "
+            handler?.sendEmptyMessageDelayed(0, 4000)
+            true
+        })
         handler?.sendEmptyMessage(0)
 
 
     }
-
     override fun onClick(v: View?) {
             when (v?.id) {
                 R.id.pattern1 -> {
@@ -118,7 +144,7 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.stop ->{
                     isStarted=false
-             //  mqttHandler!!.driveAuto(0,0,0,"")
+                    mqttHandler!!.driveAuto(0,0,0,"")
                 }
                 R.id.start_cleaning ->{
                     getSizeInput()
@@ -127,6 +153,11 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.cameraBtn ->{
                     //openCameraWindow()
+                }
+                R.id.empty->{
+                    progressStatus = 0
+                    isStarted = false
+
                 }
         }
     }
@@ -145,7 +176,7 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
 
   private fun sendMessages(speed : Int, pattern : Int, size : Int) {
       if (speed != 0 && pattern != 0 && size != 0 ){
-       // mqttHandler!!.driveAuto(speed, pattern, size, "")
+       mqttHandler!!.driveAuto(speed, pattern, size, "")
       }
   }
 }

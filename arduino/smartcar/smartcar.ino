@@ -1,4 +1,3 @@
-
 #include <Smartcar.h>
 #include <vector>
 #include <MQTT.h>
@@ -25,7 +24,7 @@ int bagCapacity=99;
 bool bagFull=false;
 
 int currentSpeed = 0;
-double area = 0.0;
+double area = 0;
 int velocity = 0;
 int patter = 0;
 int sideDistance = 10;
@@ -62,6 +61,7 @@ SmartCar car(arduinoRuntime, control, gyro, leftOdometer, rightOdometer);
 
 std::vector<char> frameBuffer;
 
+
 void setup() {
    Serial.begin(9600);
  #ifdef __SMCE__
@@ -81,13 +81,13 @@ void setup() {
         car.setAngle(message.toInt());
       }
       else if (topic == "/smartcar/group16/auto/size") {
-        area = message.toDouble() * 100;
+        area = message.toInt() * 100;
       }
       else if (topic=="/smartcar/group16/auto/speed"){
         velocity = message.toInt();
       }
       else if (topic == "/smartcar/group16/auto/pattern"){
-        patter = message.toInt();
+         patter = message.toInt();
       }
 
       else  {
@@ -99,14 +99,6 @@ void setup() {
 }
 
 void loop() {
-
-{
- Serial.println(velocity);
-  Serial.println(area);
-   Serial.println(patter);
-
-      }
-
     obstacleAvoidance();
     handlePatterns();
 
@@ -132,7 +124,8 @@ void loop() {
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
       mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
       mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-       mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
+      mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
+
     }
   }
 #ifdef __SMCE__
@@ -145,9 +138,11 @@ void handlePatterns(){
     switch (patter){
     case 1:
         pattern();
+        patter = 0;
         break;
     case 2:
         patternB();
+        patter = 0;
         break;
          default:
         break;
@@ -354,10 +349,8 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
 
      }
 }
-void go(double centimeters, int speed)
-{
-    if (centimeters == 0)
-    {
+void go(double centimeters, int speed){
+    if (centimeters == 0){
         return;
     }
     // Ensure the speed is towards the correct direction
@@ -382,8 +375,6 @@ void go(double centimeters, int speed)
 }
 
 void Apattern(){
-  if (velocity !=0)
-  {
     go(distancee,velocity);
 delay(500);
 turnRightWhenStoped();
@@ -391,12 +382,10 @@ delay(500);
 go(sideDistance ,25);
 delay(500);
 turnRightWhenStoped();
-  }
+
 }
 
 void Bpattern(){
-  if (velocity != 0)
-  {
     Apattern();
     delay(500);
     go(distancee,velocity);
@@ -406,13 +395,9 @@ void Bpattern(){
     go(sideDistance,25);
     delay(500);
     turnLeftWhenStoped();
-  }
-
-
 }
 
 void pattern(){
-if(area != 0  ){
 double x = sqrt(area);
 int value = int (x);
 if (value%2==0)
@@ -425,7 +410,6 @@ if (value%2==0)
         Bpattern();
         i += 1;
     }
-
 }
 else {
     int times = value/sideDistance;
@@ -437,14 +421,11 @@ else {
         i += 1;
     }
     Apattern();
-
-}}
-
+}
 }
 int toTravel = sqrt(area);
 
 void patternB(){
-if(area != 0 ){
 int x= toTravel / 10;
     int y= x/2;
     int z=y-1;
@@ -467,20 +448,15 @@ else {
     go(10,25);
 }
 }
-}
 
 void complete(){
-  if (velocity !=0)
-  {
     goAndRight3();
    toTravel -=10;
    go(toTravel,velocity);
-  }
+
 }
 
 void goAndRight3(){
-  if (velocity != 0)
-  {
     int i =0;
     while (i<3)
     {
@@ -488,26 +464,24 @@ void goAndRight3(){
     delay(500);
     turnRightWhenStoped();
     i++;
-  }
+
     }
 }
- int bagFilledProgress(){
-         float traveledDistance=car.getDistance();
-         if (traveledDistance>maxTraveledDistance){
-             maxTraveledDistance=traveledDistance;
-             int bagContents = (int)((int)traveledDistance%1000)/10;
-             if (bagContents == bagCapacity){
-               //stopVehicle();
-               bagFull=true;
-               Serial.println("Bag is full. Please change");
+     int bagFilledProgress(){
+             float traveledDistance=car.getDistance();
+             if (traveledDistance>maxTraveledDistance){
+                 maxTraveledDistance=traveledDistance;
+                 int bagContents = (int)((int)traveledDistance%1000)/10;
+                 if (bagContents == bagCapacity){
+                   //stopVehicle();
+                   bagFull=true;
+                   Serial.println("Bag is full. Please change");
+                 }
+                 Serial.println("Bag is " + (String)bagContents + "% full");
+                 return bagContents;
              }
-             Serial.println("Bag is " + (String)bagContents + "% full");
-             return bagContents;
-         }
-       }
-
-         // initialize progressBar when emptyBag() is invoked, not possible to reset the odometer
-
-          void emptyBag() {
-           bool bagFull=false;
            }
+
+             // initialize progressBar when emptyBag() is invoked, not possible to reset the odometer
+
+
