@@ -84,7 +84,8 @@ void setup() {
         velocity = message.toInt();
       }
       else if (topic == "/smartcar/group16/auto/pattern"){
-         patter = message.toInt();
+       patter = message.toInt();
+
       }
 
       else  {
@@ -144,7 +145,6 @@ void handlePatterns(){
         break;
             }
         }
-
 
 // Changing odometer measurement from cm to km
 int distanceInMeter(){
@@ -448,18 +448,15 @@ else {
 void complete(){
     goAndRight3();
    toTravel -=10;
-   go(toTravel,velocity);
-  
+   go(toTravel,velocity); 
 }
 
 void goAndRight3(){
     int i =0;
-    while (i<3)
-    {
+    while (i<3) {
      go(toTravel,velocity);
     delay(500);
     turnRightWhenStoped();
-    i++;
-  
+    i++; 
     }
 }
