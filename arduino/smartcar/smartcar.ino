@@ -19,9 +19,7 @@ const int lDeg= -40;  //Degree for rotate on spot
 const int rDeg = 40;  //Degree for rotate on spot
 const int rotateSpeed = 70 ;  //speed for rotate on spot
 const int bSpeed   = -40; // 40% of the full speed backward
-float maxTraveledDistance=0.0;
-int bagCapacity=99;
-bool bagFull=false;
+
 
 int currentSpeed = 0;
 double area = 0;
@@ -29,6 +27,7 @@ int velocity = 0;
 int patter = 0;
 int sideDistance = 10;
 double distancee = sqrt(area);
+int isCompleted = 0;
 
 ArduinoRuntime arduinoRuntime;
 
@@ -124,7 +123,7 @@ void loop() {
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
       mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
       mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-      mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
+       mqtt.publish("/smartcar/group16/completion", String(isCompleted));
 
     }
   }
@@ -139,10 +138,12 @@ void handlePatterns(){
     case 1:
         pattern();
         patter = 0;
+        isCompleted = 1;
         break;
     case 2:
         patternB();
         patter = 0;
+        isCompleted = 1;
         break;
          default:
         break;
@@ -398,6 +399,7 @@ void Bpattern(){
 }
 
 void pattern(){
+isCompleted = 0;
 double x = sqrt(area);
 int value = int (x);
 if (value%2==0)
@@ -426,6 +428,7 @@ else {
 int toTravel = sqrt(area);
 
 void patternB(){
+isCompleted = 0;
 int x= toTravel / 10;
     int y= x/2;
     int z=y-1;
@@ -467,7 +470,8 @@ void goAndRight3(){
 
     }
 }
-     int bagFilledProgress(){
+
+   /*  int bagFilledProgress(){
              float traveledDistance=car.getDistance();
              if (traveledDistance>maxTraveledDistance){
                  maxTraveledDistance=traveledDistance;
@@ -484,4 +488,6 @@ void goAndRight3(){
 
              // initialize progressBar when emptyBag() is invoked, not possible to reset the odometer
 
-
+ void emptyBag() {
+           bool bagFull=false;
+           }*/

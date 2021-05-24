@@ -28,7 +28,7 @@ class MqttHandler : AppCompatActivity {
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
-    private val EMPTYBAG = "smartcar/group16/Emptybag"
+    private val COMPLETION = "/smartcar/group16/completion"
 
     // Publishing topics
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
@@ -36,7 +36,6 @@ class MqttHandler : AppCompatActivity {
     private val AUTO_SPEED = "/smartcar/group16/auto/speed"
     private val AUTO_PATTERN = "/smartcar/group16/auto/pattern"
     private val AUTO_SIZE = "/smartcar/group16/auto/size"
-    private val AUTO_START = "/smartcar/group16/auto/start"
 
     // Camera
     private val IMAGE_WIDTH = 320
@@ -53,17 +52,12 @@ class MqttHandler : AppCompatActivity {
     private var mTraveledDistance: TextView? = null
     private var mSpeed: TextView? = null
     private var mFront: TextView? = null
-    private var mBagfull: Int? = null
+    private var isStarted : Boolean? = null
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.mCameraView = mCameraView
-        this.context = context
-    }
-
-    constructor(context: Context?) {
-        mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
     }
 
@@ -80,12 +74,11 @@ class MqttHandler : AppCompatActivity {
         this.mFront = mFront
     }
 
-    constructor(context: Context?, mBagfull: Int?) {
+    constructor(context: Context?, isStarted : Boolean?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
-        this.mBagfull = mBagfull
+        this.isStarted = isStarted
     }
-
 
     override fun onResume() {
         connectToMqttBroker()
@@ -115,8 +108,7 @@ class MqttHandler : AppCompatActivity {
                     mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                     mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
                     mMqttClient?.subscribe(SPEED_SUB, QOS, null)
-                    mMqttClient?.subscribe(EMPTYBAG, QOS, null)
-
+                    mMqttClient?.subscribe(COMPLETION, QOS, null)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
@@ -163,36 +155,27 @@ class MqttHandler : AppCompatActivity {
                     if (topic == SPEED_SUB) {
                         val speed = message.toString()
                         mSpeed?.setText(speed)
-
                     }
-                    if (topic == EMPTYBAG) {
-                        val bagStatus = message.toString()
-                        mBagfull = bagStatus.toInt()
-
-                    } else {
+                        if (topic == COMPLETION) {
+                            val temp = message.toString()
+                            if (temp == "0"){
+                               isStarted = true
+                            }else if (temp == "1"){
+                               isStarted = false
+                            }
+                        }
+                      else {
                         Log.i(
                             TAG,
                             "[MQTT] Topic: $topic | Message: $message"
                         )
                     }
                 }
-
                 override fun deliveryComplete(token: IMqttDeliveryToken) {
                     Log.d(TAG, "Message delivered")
                 }
             })
         }
-    }
-
-
-    fun publish(topic: String?, message: String?, qos: Int, publishCallback: IMqttActionListener?) {
-        if (message != null) {
-            mMqttClient?.publish(topic, message, qos, publishCallback)
-        }
-    }
-
-    fun subscribe(topic: String?, qos: Int, subscriptionCallback: IMqttActionListener?) {
-        mMqttClient?.subscribe(topic, qos, subscriptionCallback)
     }
 
     fun notConnected() {
