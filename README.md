@@ -19,6 +19,8 @@
 - The user will be able to control the vehicle which exists in an emulator through an external controller to fulfil its purpose. 
 - It will also be possible to take manual control of the vehicle.
 
+### Demo Video
+
 ## Installation Guide for Open Source Developers
 
 ### Smartcar
