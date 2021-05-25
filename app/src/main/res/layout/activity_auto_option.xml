@@ -5,7 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4FDDDCDD"
-    tools:context=".activity.AutonomousActivity">
+    tools:context=".AutonomousActivity">
+
+
 
 
     <Button
@@ -81,17 +83,18 @@
 
     <TextView
         android:id="@+id/binProgress"
-        android:layout_width="60dp"
-        android:layout_height="33dp"
+        android:layout_width="49dp"
+        android:layout_height="30dp"
+        android:text="0  "
         android:textColor="#787676"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.863"
+        app:layout_constraintHorizontal_bias="0.812"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.916" />
+        app:layout_constraintVertical_bias="0.914" />
 
     <TextView
         android:id="@+id/textView4"
