@@ -479,7 +479,6 @@ void goAndRight3(){
 
     }
 }
-
      int bagFilledProgress(){
                  float traveledDistance=distanceInMeter();
                  if (traveledDistance>maxTraveledDistance){
@@ -499,4 +498,3 @@ void goAndRight3(){
          int  bagContent=0;
 
         }
-
