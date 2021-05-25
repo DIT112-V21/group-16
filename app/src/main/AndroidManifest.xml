@@ -18,12 +18,12 @@
         android:theme="@style/Theme.Firstapp">
         <activity
             android:name=".PopUpWindow"
-            android:parentActivityName=".ManualOptionActivity" />
+            android:parentActivityName=".ManualDrivingActivity" />
         <activity
-            android:name=".AutoOptionActivity"
+            android:name=".AutonomousActivity"
             android:parentActivityName=".CleaningOptionActivity" />
         <activity
-            android:name=".ManualOptionActivity"
+            android:name=".ManualDrivingActivity"
             android:parentActivityName=".CleaningOptionActivity" />
         <activity
             android:name=".CleaningOptionActivity"

@@ -5,20 +5,20 @@ import android.os.Handler
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.HandlerCompat.postDelayed
 import com.example.firstapp.MQTT.MqttHandler
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
 
-class ManualOptionActivity : AppCompatActivity() {
+class ManualDrivingActivity : AppCompatActivity() {
 
-    private var mqttHandler: MqttHandler? = null
+    private var mMqttHandler: MqttHandler? = null
     private var mCameraButton : ImageButton? = null
     private val REVERSE = -1
 
-    var isStarted = false
-    var progressStatus = 0
-    var handler: Handler? = null
+    //progressbar attributes
+    private var isStarted = false
+    private var progressStatus = 0
+    private var handler: Handler? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,15 +28,15 @@ class ManualOptionActivity : AppCompatActivity() {
         val  mTraveledDistance : TextView = findViewById(R.id.distance)
         val  mSpeed: TextView = findViewById(R.id.speed)
         val  mFront : TextView = findViewById(R.id.front)
-        val mStartBtn: Button = findViewById(R.id.start_cleaning)
+        val mStartBtn: Button = findViewById(R.id.start)
         val mEmptyBtn: Button = findViewById(R.id.empty_b)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
-    
+
         //mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
-        mqttHandler!!.connectToMqttBroker()
+        mMqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
+        mMqttHandler!!.connectToMqttBroker()
 
         // Transition to the popup window when clicking on the camera button
         mCameraButton = findViewById(R.id.camera)
@@ -46,8 +46,8 @@ class ManualOptionActivity : AppCompatActivity() {
             window.contentView = view
             val imageView = view.findViewById<ImageView>(R.id.camera)
 
-            mqttHandler = MqttHandler(this.applicationContext, imageView)
-            mqttHandler!!.connectToMqttBroker()
+            mMqttHandler = MqttHandler(this.applicationContext, imageView)
+            mMqttHandler!!.connectToMqttBroker()
 
             imageView.setOnClickListener {
                 window.dismiss()
@@ -65,8 +65,6 @@ class ManualOptionActivity : AppCompatActivity() {
                 }
             }
             mProgressBar.progress = progressStatus
-            var progressView=findViewById<TextView>(R.id.textViewProgress)
-            progressView.text = "${progressStatus}% "
             handler?.sendEmptyMessageDelayed(0, 4000)
             true
         })
@@ -114,6 +112,7 @@ class ManualOptionActivity : AppCompatActivity() {
         val strength = (strength * 0.8).toInt()
         return strength
     }
+
     private fun driveBackwards(strength : Int) : Int{
         val strength = (strength * 0.5 * REVERSE).toInt()
         return strength
@@ -130,16 +129,6 @@ class ManualOptionActivity : AppCompatActivity() {
     }
 
     private fun sendMovement(newSpeed: Int, newAngle: Int) {
-        mqttHandler?.drive(newSpeed, newAngle, "")
+        mMqttHandler?.drive(newSpeed, newAngle, "")
     }
-
 }
-
-
-
-
-
-
-
-
-

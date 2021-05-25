@@ -14,7 +14,7 @@ import org.eclipse.paho.client.mqttv3.*
 
 class MqttHandler : AppCompatActivity {
 
-    //connection to Mqtt
+    //Connection to Mqtt
     private val TAG = "app"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
     private val LOCALHOST = "10.0.2.2"
@@ -28,7 +28,6 @@ class MqttHandler : AppCompatActivity {
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
-    private val COMPLETION = "/smartcar/group16/completion"
 
     // Publishing topics
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
@@ -52,7 +51,6 @@ class MqttHandler : AppCompatActivity {
     private var mTraveledDistance: TextView? = null
     private var mSpeed: TextView? = null
     private var mFront: TextView? = null
-    private var isStarted : Boolean? = null
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
@@ -61,12 +59,7 @@ class MqttHandler : AppCompatActivity {
         this.context = context
     }
 
-    constructor(
-        context: Context?,
-        mTraveledDistance: TextView?,
-        mSpeed: TextView?,
-        mFront: TextView?
-    ) {
+    constructor(context: Context?, mTraveledDistance: TextView?, mSpeed: TextView?, mFront: TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
         this.mTraveledDistance = mTraveledDistance
@@ -74,10 +67,9 @@ class MqttHandler : AppCompatActivity {
         this.mFront = mFront
     }
 
-    constructor(context: Context?, isStarted : Boolean?) {
+    constructor(context: Context?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
-        this.isStarted = isStarted
     }
 
     override fun onResume() {
@@ -91,7 +83,6 @@ class MqttHandler : AppCompatActivity {
             override fun onSuccess(asyncActionToken: IMqttToken) {
                 Log.i(TAG, DISCONNECTED)
             }
-
             override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {}
         })
     }
@@ -102,26 +93,19 @@ class MqttHandler : AppCompatActivity {
                 override fun onSuccess(asyncActionToken: IMqttToken) {
                     isConnected = true
                     Log.i(TAG, SUCCESSFUL_CONNECTION)
-                    // Toast.makeText(getApplicationContext(), successfulConnection, Toast.LENGTH_SHORT).show();
-
                     mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
                     mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                     mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
                     mMqttClient?.subscribe(SPEED_SUB, QOS, null)
-                    mMqttClient?.subscribe(COMPLETION, QOS, null)
                 }
-
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     Log.e(TAG, FAILED_CONNECTION)
-                    //Toast.makeText(getApplicationContext(), failedConnection, Toast.LENGTH_SHORT).show();
                 }
             }, object : MqttCallback {
                 override fun connectionLost(cause: Throwable) {
                     isConnected = false
                     Log.w(TAG, LOST_CONNECTION)
-                    //Toast.makeText(getApplicationContext(), connectionLost, Toast.LENGTH_SHORT).show();
                 }
-
                 @Throws(Exception::class)
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     if (topic == CAMERA_SUB) {
@@ -136,7 +120,6 @@ class MqttHandler : AppCompatActivity {
                             colors[ci] = Color.rgb(r.toInt(), g.toInt(), b.toInt())
                         }
                         bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT)
-
                         mCameraView?.setImageBitmap(bm)
                     }
                     if (topic == TRAVELED_DIS) {
@@ -156,15 +139,7 @@ class MqttHandler : AppCompatActivity {
                         val speed = message.toString()
                         mSpeed?.setText(speed)
                     }
-                        if (topic == COMPLETION) {
-                            val temp = message.toString()
-                            if (temp == "0"){
-                               isStarted = true
-                            }else if (temp == "1"){
-                               isStarted = false
-                            }
-                        }
-                      else {
+                    else {
                         Log.i(
                             TAG,
                             "[MQTT] Topic: $topic | Message: $message"
@@ -194,11 +169,11 @@ class MqttHandler : AppCompatActivity {
         mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
     }
 
-    fun driveAuto(speed: Int, pattern: Int, size: Int, actionDescription: String?) {
-        mMqttClient?.publish(AUTO_SPEED, Integer.toString(speed), QOS, null)
-        mMqttClient?.publish(AUTO_PATTERN, Integer.toString(pattern), QOS, null)
-        mMqttClient?.publish(AUTO_SIZE, Integer.toString(size), QOS, null)
+    fun driveAuto(size : Int, speed : Int, pattern: Int, actionDescription: String?) {
+        notConnected()
+        Log.i(TAG, actionDescription!!)
+        mMqttClient?.publish(AUTO_SIZE, size.toString(), QOS, null)
+        mMqttClient?.publish(AUTO_SPEED, speed.toString(), QOS, null)
+        mMqttClient?.publish(AUTO_PATTERN, pattern.toString(), QOS, null)
     }
 }
-
-

@@ -7,7 +7,7 @@ import com.example.firstapp.MQTT.MqttHandler
 
 class PopUpWindow : AppCompatActivity() {
 
-     private var mqttHandler: MqttHandler? = null
+    private var mMqttHandler: MqttHandler? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,9 +15,7 @@ class PopUpWindow : AppCompatActivity() {
 
         val mCameraView : ImageView = findViewById(R.id.camera)
 
-        mqttHandler = MqttHandler(this.applicationContext, mCameraView)
-        mqttHandler!!.connectToMqttBroker()
-
-
+        mMqttHandler = MqttHandler(this.applicationContext, mCameraView)
+        mMqttHandler!!.connectToMqttBroker()
     }
 }

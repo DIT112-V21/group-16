@@ -10,23 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.MQTT.MqttHandler
 
 
-class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
+class AutonomousActivity : AppCompatActivity(), View.OnClickListener {
 
     private var mqttHandler: MqttHandler? = null
-    private var mCameraButton: ImageButton? = null
     private var mPatternOne: Button? = null
     private var mPatternTwo: Button? = null
     private var mStartBtn: Button? = null
     private var mSizeField: EditText? = null
     private var mSeekBar: SeekBar? = null
     private var mSpeedText : TextView? = null
-    private var mEmptyBtn: Button? = null
-
-   //progressbar variable
-    private var isStarted = false
-    private var progressStatus = 0
-    private var handler: Handler? = null
-    private var mBagfull=0
 
     //Messages
     private val PATTERN_ONE = 1
@@ -35,7 +27,7 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
     private var mPattern = 0
     private var mSize = 0
 
-    // seekbar pointers
+    //Seekbar pointers
     private var mStartPoint = 0
     private var mEndPoint = 0
 
@@ -48,21 +40,19 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
         mPatternTwo = findViewById(R.id.pattern2)
         mSpeedText = findViewById(R.id.velocity)
         mSeekBar = findViewById(R.id.seekBar)
-       // mCameraButton = findViewById(R.id.cameraBtn)
         mStartBtn = findViewById(R.id.start_cleaning)
-        mEmptyBtn= findViewById(R.id.empty)
 
         mPatternOne?.setOnClickListener(this)
         mPatternTwo?.setOnClickListener(this)
         mStartBtn?.setOnClickListener(this)
-        mEmptyBtn?.setOnClickListener(this)
-        mCameraButton?.setOnClickListener(this)
 
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
-        //mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext, isStarted)
+        val  mBagCapacity : TextView = findViewById(R.id.binProgress)
+
+        //Mqtt car handler
+        mqttHandler = MqttHandler(this.applicationContext)
         mqttHandler!!.connectToMqttBroker()
 
         //Seekbar to get input from user regarding velocity
@@ -80,27 +70,6 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
                    mEndPoint = mSeekBar!!.progress
                 }
             })
-
-        // Cleaning start bagfull progressBar 2
-        handler = Handler(Handler.Callback {
-            var aProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar3)
-            if (isStarted && progressStatus < 100) {
-                progressStatus++
-                if (progressStatus == 100) {
-                    Toast.makeText(
-                        applicationContext,
-                        "Waste Bag is full, please empty bag",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-            aProgressBar.progress = progressStatus
-            var progressView = findViewById<TextView>(R.id.textViewProgress)
-            // progressView.text = "${progressStatus}% "
-            handler?.sendEmptyMessageDelayed(0, 4000)
-            true
-        })
-        handler?.sendEmptyMessage(0)
     }
 
     override fun onClick(v: View?) {
@@ -117,34 +86,24 @@ class AutoOptionActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.start_cleaning ->{
                     getSizeInput()
-                    sendMessages(mSpeed, mPattern, mSize)
+                    sendMessages(mSize, mSpeed, mPattern)
                 }
-                R.id.cameraBtn ->{
-                    //openCameraWindow()
-                }
-                R.id.empty->{
-                    progressStatus = 0
-                    isStarted = false
-
-                }
+             }
         }
-    }
 
     private fun getSizeInput(){
         mSizeField = findViewById(R.id.size_input);
-        var temp: String = mSizeField?.text.toString()
-        var value: Int
+        val temp: String = mSizeField?.text.toString()
+        val value: Int
         if ("" != temp) {
             value = Integer.parseInt(temp)
             mSize = value
         }
     }
 
-  private fun sendMessages(speed : Int, pattern : Int, size : Int) {
-      if (speed != 0 && pattern != 0 && size != 0 ){
-       mqttHandler!!.driveAuto(speed, pattern, size, "")
+  private fun sendMessages(size : Int, speed : Int, pattern : Int) {
+      if (size != 0 && speed != 0 && pattern != 0 ){
+       mqttHandler!!.driveAuto(size, speed, pattern,"")
       }
   }
 }
-
-

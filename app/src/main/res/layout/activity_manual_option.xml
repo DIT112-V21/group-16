@@ -151,9 +151,9 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ToggleButton
-        android:id="@+id/start_cleaning"
+        android:id="@+id/start"
         android:layout_width="157dp"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:layout_marginTop="40dp"
         android:background="#7F8CD8"
         android:drawableStart="@drawable/selector"
@@ -164,15 +164,15 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintHorizontal_bias="0.145"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.767" />
+        app:layout_constraintVertical_bias="0.764" />
 
     <Button
         android:id="@+id/empty_b"
         android:layout_width="140dp"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:background="#605454"
         android:text="empty bag"
         android:textColor="#FAF7F7"
@@ -180,31 +180,17 @@
         app:backgroundTint="#495493"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.786"
+        app:layout_constraintHorizontal_bias="0.841"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.788"
+        app:layout_constraintVertical_bias="0.787"
         app:strokeColor="#534D4D" />
-
-    <TextView
-        android:id="@+id/textViewProgress"
-        android:layout_width="45dp"
-        android:layout_height="20dp"
-        android:textColor="#050505"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="376dp"
-        android:layout_height="22dp"
-
+        android:layout_height="10dp"
         android:layout_marginStart="20dp"
         android:progressDrawable="@drawable/progressbar"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -221,9 +207,9 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/front"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.119"
+        app:layout_constraintHorizontal_bias="0.066"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.67" />
+        app:layout_constraintVertical_bias="0.66" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
