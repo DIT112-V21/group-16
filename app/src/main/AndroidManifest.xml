@@ -17,18 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Firstapp">
         <activity
-            android:name=".PopUpWindow"
-            android:parentActivityName=".ManualDrivingActivity" />
+            android:name=".activity.PopUpWindow"
+            android:parentActivityName=".activity.ManualCleaningActivity" />
         <activity
-            android:name=".AutonomousActivity"
-            android:parentActivityName=".CleaningOptionActivity" />
+            android:name=".activity.AutonomousActivity"
+            android:parentActivityName=".activity.CleaningOptionActivity" />
         <activity
-            android:name=".ManualDrivingActivity"
-            android:parentActivityName=".CleaningOptionActivity" />
+            android:name=".activity.ManualCleaningActivity"
+            android:parentActivityName=".activity.CleaningOptionActivity" />
         <activity
-            android:name=".CleaningOptionActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".MainActivity">
+            android:name=".activity.CleaningOptionActivity"
+            android:parentActivityName=".activity.MainActivity" />
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

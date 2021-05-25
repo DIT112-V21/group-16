@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4FDDDCDD"
-    tools:context=".AutonomousActivity">
+    tools:context=".activity.AutonomousActivity">
 
 
     <Button
@@ -83,7 +83,6 @@
         android:id="@+id/binProgress"
         android:layout_width="60dp"
         android:layout_height="33dp"
-        android:text="0 %"
         android:textColor="#787676"
         android:textSize="24sp"
         android:textStyle="bold"

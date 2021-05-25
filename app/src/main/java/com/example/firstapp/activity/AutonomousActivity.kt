@@ -1,13 +1,13 @@
-package com.example.firstapp
+package com.example.firstapp.activity
 
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.firstapp.MQTT.MqttHandler
+import com.example.firstapp.mqtt.MqttHandler
+import com.example.firstapp.R
 
 
 class AutonomousActivity : AppCompatActivity(), View.OnClickListener {
@@ -51,9 +51,8 @@ class AutonomousActivity : AppCompatActivity(), View.OnClickListener {
 
         val  mBagCapacity : TextView = findViewById(R.id.binProgress)
 
-
         //Mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext,mBagCapacity)
+        mqttHandler = MqttHandler(this.applicationContext, mBagCapacity)
         mqttHandler!!.connectToMqttBroker()
 
         //Seekbar to get input from user regarding velocity
