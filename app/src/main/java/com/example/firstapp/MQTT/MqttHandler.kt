@@ -112,23 +112,23 @@ class MqttHandler : AppCompatActivity {
                         setCameraView(message)
                     }
                     if (topic == TRAVELED_DIS) {
-                       setDistanceView(message)
+                        setDistanceView(message)
                     }
                     if (topic == ULTRASOUND_SUB) {
-                       setWarningView(message)
+                        setWarningView(message)
                     }
                     if (topic == SPEED_SUB) {
                         setSpeedView(message)
                     }
                     if (topic == BIN_CAPACITY) {
-                           setBinView(message)
+                        setBinView(message)
                     } else {
-                            Log.i(
-                                TAG,
-                                "[MQTT] Topic: $topic | Message: $message"
-                            )
-                        }
+                        Log.i(
+                            TAG,
+                            "[MQTT] Topic: $topic | Message: $message"
+                        )
                     }
+                }
                 override fun deliveryComplete(token: IMqttDeliveryToken) {
                     Log.d(TAG, "Message delivered")
                 }

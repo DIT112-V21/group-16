@@ -2,13 +2,13 @@ package com.example.firstapp.activity
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.firstapp.mqtt.MqttHandler
 import com.example.firstapp.R
+import com.example.firstapp.mqtt.MqttHandler
 
 
 class PopUpWindow : AppCompatActivity() {
 
-    private var mMqttHandler: MqttHandler? = null
+      private var mMqttHandler: MqttHandler? = null
 
   override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
