@@ -34,11 +34,11 @@ TDM is a cleaning Smartcar controlled by an app. When using our product, the use
 
 ## Resources
 ### Software
-- SMCE
-- Android Studio
-- Arduino IDE
-- Smartcar shield library
-- GitHub
+- [SMCE](https://github.com/ItJustWorksTM/smce-gd)
+- [Android Studio](https://developer.android.com/studio)
+- [Arduino IDE](https://www.arduino.cc/en/software)
+- [Smartcar shield library](https://www.arduinolibraries.info/libraries/smartcar-shield)
+- [GitHub](https://github.com/)
 
 ## Development Team 
 - Adam Magnus
