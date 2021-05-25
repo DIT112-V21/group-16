@@ -15,10 +15,14 @@ const int lDe = -90; // degrees to turn left on spot
 const int rDe = 90; // degrees to turn right on spot
 const auto oneSecond = 1000UL;
 const auto pulsePerMeter = 600;
-const int lDeg= -40;  //Degree for rotate on spot 
-const int rDeg = 40;  //Degree for rotate on spot 
+const int lDeg= -40;  //Degree for rotate on spot
+const int rDeg = 40;  //Degree for rotate on spot
 const int rotateSpeed = 70 ;  //speed for rotate on spot
 const int bSpeed   = -40; // 40% of the full speed backward
+float maxTraveledDistance=0.0;
+int bagCapacity=99;
+bool bagFull=false;
+
 
 int currentSpeed = 0;
 double area = 0;
@@ -26,6 +30,7 @@ int velocity = 0;
 int patter = 0;
 int sideDistance = 10;
 double distancee = sqrt(area);
+int isCompleted=0;
 
 ArduinoRuntime arduinoRuntime;
 
@@ -84,8 +89,7 @@ void setup() {
         velocity = message.toInt();
       }
       else if (topic == "/smartcar/group16/auto/pattern"){
-       patter = message.toInt();
-
+         patter = message.toInt();
       }
 
       else  {
@@ -122,7 +126,8 @@ void loop() {
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
       mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
       mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-
+      mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
+      mqtt.publish("/smartcar/group16/completion", String(isCompleted));
     }
   }
 #ifdef __SMCE__
@@ -136,15 +141,18 @@ void handlePatterns(){
     case 1:
         pattern();
         patter = 0;
+        isCompleted=1;
         break;
     case 2:
         patternB();
         patter = 0;
+        isCompleted=1;
         break;
          default:
         break;
             }
         }
+
 
 // Changing odometer measurement from cm to km
 int distanceInMeter(){
@@ -153,6 +161,12 @@ distance = distance/100;
 return distance;
 }
 
+//chage speed unit to integer
+int speedInPercentage(){
+  int speed=car.getSpeed();
+
+return speed;
+}
 //obstacle avoidance message
 int obstacleDetectionMessage(){
  unsigned int triggerDist = 200;
@@ -378,7 +392,7 @@ delay(500);
 go(sideDistance ,25);
 delay(500);
 turnRightWhenStoped();
-  
+
 }
 
 void Bpattern(){
@@ -394,6 +408,7 @@ void Bpattern(){
 }
 
 void pattern(){
+isCompleted=0;
 double x = sqrt(area);
 int value = int (x);
 if (value%2==0)
@@ -422,6 +437,7 @@ else {
 int toTravel = sqrt(area);
 
 void patternB(){
+isCompleted=0;
 int x= toTravel / 10;
     int y= x/2;
     int z=y-1;
@@ -448,15 +464,37 @@ else {
 void complete(){
     goAndRight3();
    toTravel -=10;
-   go(toTravel,velocity); 
+   go(toTravel,velocity);
+
 }
 
 void goAndRight3(){
     int i =0;
-    while (i<3) {
+    while (i<3)
+    {
      go(toTravel,velocity);
     delay(500);
     turnRightWhenStoped();
-    i++; 
+    i++;
+
     }
 }
+     int bagFilledProgress(){
+                 float traveledDistance=distanceInMeter();
+                 if (traveledDistance>maxTraveledDistance){
+                     maxTraveledDistance=traveledDistance;
+                     int bagContents = (int)((int)traveledDistance%1000)/10;
+                     if (bagContents == bagCapacity){
+                       //stopVehicle();
+                       bagFull=true;
+                       Serial.println("Bag is full. Please change");
+                     }
+                     Serial.println("Bag is " + (String)bagContents + "% full");
+                     return bagContents;
+                 }
+               }
+
+        void emptyBag(){
+         int  bagContent=0;
+
+        }

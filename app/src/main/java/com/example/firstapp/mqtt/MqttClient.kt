@@ -1,4 +1,4 @@
-package com.example.firstapp.MQTT
+package com.example.firstapp.mqtt
 
 import android.content.Context
 import org.eclipse.paho.android.service.MqttAndroidClient
@@ -10,12 +10,7 @@ class MqttClient(context: Context?, serverUrl: String?, clientId: String?) {
     private val mMqttAndroidClient: MqttAndroidClient =
         MqttAndroidClient(context, serverUrl, clientId)
 
-    fun connect(
-        username: String?,
-        password: String,
-        connectionCallback: IMqttActionListener?,
-        clientCallback: MqttCallback?
-    ) {
+    fun connect(username: String?, password: String, connectionCallback: IMqttActionListener?, clientCallback: MqttCallback?) {
         mMqttAndroidClient.setCallback(clientCallback)
         val options = MqttConnectOptions()
         options.userName = username
@@ -45,14 +40,6 @@ class MqttClient(context: Context?, serverUrl: String?, clientId: String?) {
         }
     }
 
-    fun unsubscribe(topic: String?, unsubscriptionCallback: IMqttActionListener?) {
-        try {
-            mMqttAndroidClient.unsubscribe(topic, null, unsubscriptionCallback)
-        } catch (e: MqttException) {
-            e.printStackTrace()
-        }
-    }
-
     fun publish(topic: String?, message: String, qos: Int, publishCallback: IMqttActionListener?) {
         val mqttMessage = MqttMessage()
         mqttMessage.payload = message.toByteArray()
@@ -63,5 +50,4 @@ class MqttClient(context: Context?, serverUrl: String?, clientId: String?) {
             e.printStackTrace()
         }
     }
-
 }
