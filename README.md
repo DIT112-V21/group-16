@@ -6,7 +6,8 @@
 
 ## Description 
 ### What we are going to make.
-- What we are going to make is a vehicle which acts as a trash disposing machine. 
+- We are going to make an autonomous driven vehichle witht the purpose of cleaning in dorr areas. The vehicle will have a manual controlled option that implements obstacle avoidance and a joystick to manouver with. The automated controll function will feature 2 "Cleaning Pattern" they are a zig zag type pattern and a square pattern allowing the user to adapt the automation to what is best suited for their envoirnement. Furthermore the user can input the size field of the area they wish to clean as well as the velocity. 
+- The vehicle will be controlled through an android app connected through an mqtt broker. 
 
 ### Why we will make it. 
 - We will make it because it will keep streets tidy and neat while mitigating human labor.
