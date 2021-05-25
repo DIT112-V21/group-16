@@ -1,15 +1,14 @@
 package com.example.firstapp.MQTT
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Color.RED
 import android.util.Log
- import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.firstapp.R
 import org.eclipse.paho.client.mqttv3.*
 
 class MqttHandler : AppCompatActivity {
@@ -28,6 +27,7 @@ class MqttHandler : AppCompatActivity {
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
+    private val BIN_CAPACITY="/smartcar/group16/bagfull"
 
     // Publishing topics
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
@@ -51,6 +51,8 @@ class MqttHandler : AppCompatActivity {
     private var mTraveledDistance: TextView? = null
     private var mSpeed: TextView? = null
     private var mFront: TextView? = null
+    private var mBagCapacity: TextView? = null
+
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
@@ -65,11 +67,13 @@ class MqttHandler : AppCompatActivity {
         this.mTraveledDistance = mTraveledDistance
         this.mSpeed = mSpeed
         this.mFront = mFront
+
     }
 
-    constructor(context: Context?) {
+    constructor(context: Context?,mBagCapacity: TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
+        this.mBagCapacity=mBagCapacity
     }
 
     override fun onResume() {
@@ -97,6 +101,7 @@ class MqttHandler : AppCompatActivity {
                     mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
                     mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
                     mMqttClient?.subscribe(SPEED_SUB, QOS, null)
+                    mMqttClient?.subscribe(BIN_CAPACITY, QOS, null)
                 }
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     Log.e(TAG, FAILED_CONNECTION)
@@ -106,6 +111,7 @@ class MqttHandler : AppCompatActivity {
                     isConnected = false
                     Log.w(TAG, LOST_CONNECTION)
                 }
+                @SuppressLint("SetTextI18n")
                 @Throws(Exception::class)
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     if (topic == CAMERA_SUB) {
@@ -139,13 +145,17 @@ class MqttHandler : AppCompatActivity {
                         val speed = message.toString()
                         mSpeed?.setText(speed)
                     }
-                    else {
-                        Log.i(
-                            TAG,
-                            "[MQTT] Topic: $topic | Message: $message"
-                        )
+                    if (topic == BIN_CAPACITY) {
+                            val bagful = message.toString()
+                            mBagCapacity?.setText("${bagful}% ")
+
+                    } else {
+                            Log.i(
+                                TAG,
+                                "[MQTT] Topic: $topic | Message: $message"
+                            )
+                        }
                     }
-                }
                 override fun deliveryComplete(token: IMqttDeliveryToken) {
                     Log.d(TAG, "Message delivered")
                 }

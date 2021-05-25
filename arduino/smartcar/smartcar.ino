@@ -19,6 +19,9 @@ const int lDeg= -40;  //Degree for rotate on spot
 const int rDeg = 40;  //Degree for rotate on spot
 const int rotateSpeed = 70 ;  //speed for rotate on spot
 const int bSpeed   = -40; // 40% of the full speed backward
+float maxTraveledDistance=0.0;
+int bagCapacity=99;
+bool bagFull=false;
 
 
 int currentSpeed = 0;
@@ -27,7 +30,7 @@ int velocity = 0;
 int patter = 0;
 int sideDistance = 10;
 double distancee = sqrt(area);
-int isCompleted = 0;
+int isCompleted=0;
 
 ArduinoRuntime arduinoRuntime;
 
@@ -123,8 +126,8 @@ void loop() {
       mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
       mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
       mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-       mqtt.publish("/smartcar/group16/completion", String(isCompleted));
-
+      mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
+      mqtt.publish("/smartcar/group16/completion", String(isCompleted));
     }
   }
 #ifdef __SMCE__
@@ -138,12 +141,12 @@ void handlePatterns(){
     case 1:
         pattern();
         patter = 0;
-        isCompleted = 1;
+        isCompleted=1;
         break;
     case 2:
         patternB();
         patter = 0;
-        isCompleted = 1;
+        isCompleted=1;
         break;
          default:
         break;
@@ -158,6 +161,12 @@ distance = distance/100;
 return distance;
 }
 
+//chage speed unit to integer
+int speedInPercentage(){
+  int speed=car.getSpeed();
+
+return speed;
+}
 //obstacle avoidance message
 int obstacleDetectionMessage(){
  unsigned int triggerDist = 200;
@@ -399,7 +408,7 @@ void Bpattern(){
 }
 
 void pattern(){
-isCompleted = 0;
+isCompleted=0;
 double x = sqrt(area);
 int value = int (x);
 if (value%2==0)
@@ -428,7 +437,7 @@ else {
 int toTravel = sqrt(area);
 
 void patternB(){
-isCompleted = 0;
+isCompleted=0;
 int x= toTravel / 10;
     int y= x/2;
     int z=y-1;
@@ -471,23 +480,23 @@ void goAndRight3(){
     }
 }
 
-   /*  int bagFilledProgress(){
-             float traveledDistance=car.getDistance();
-             if (traveledDistance>maxTraveledDistance){
-                 maxTraveledDistance=traveledDistance;
-                 int bagContents = (int)((int)traveledDistance%1000)/10;
-                 if (bagContents == bagCapacity){
-                   //stopVehicle();
-                   bagFull=true;
-                   Serial.println("Bag is full. Please change");
+     int bagFilledProgress(){
+                 float traveledDistance=distanceInMeter();
+                 if (traveledDistance>maxTraveledDistance){
+                     maxTraveledDistance=traveledDistance;
+                     int bagContents = (int)((int)traveledDistance%1000)/10;
+                     if (bagContents == bagCapacity){
+                       //stopVehicle();
+                       bagFull=true;
+                       Serial.println("Bag is full. Please change");
+                     }
+                     Serial.println("Bag is " + (String)bagContents + "% full");
+                     return bagContents;
                  }
-                 Serial.println("Bag is " + (String)bagContents + "% full");
-                 return bagContents;
-             }
-           }
+               }
 
-             // initialize progressBar when emptyBag() is invoked, not possible to reset the odometer
+        void emptyBag(){
+         int  bagContent=0;
 
- void emptyBag() {
-           bool bagFull=false;
-           }*/
+        }
+

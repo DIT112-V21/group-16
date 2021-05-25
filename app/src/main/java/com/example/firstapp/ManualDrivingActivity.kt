@@ -30,7 +30,7 @@ class ManualDrivingActivity : AppCompatActivity() {
         val  mFront : TextView = findViewById(R.id.front)
         val mStartBtn: Button = findViewById(R.id.start)
         val mEmptyBtn: Button = findViewById(R.id.empty_b)
-
+        val mBagCapacity: TextView? =null
         val actionBar = supportActionBar
         actionBar!!.title = ""
 
@@ -65,6 +65,8 @@ class ManualDrivingActivity : AppCompatActivity() {
                 }
             }
             mProgressBar.progress = progressStatus
+            var progressView=findViewById<TextView>(R.id.textView10)
+            progressView.text = "${progressStatus}% "
             handler?.sendEmptyMessageDelayed(0, 4000)
             true
         })

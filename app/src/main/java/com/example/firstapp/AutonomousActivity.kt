@@ -51,8 +51,9 @@ class AutonomousActivity : AppCompatActivity(), View.OnClickListener {
 
         val  mBagCapacity : TextView = findViewById(R.id.binProgress)
 
+
         //Mqtt car handler
-        mqttHandler = MqttHandler(this.applicationContext)
+        mqttHandler = MqttHandler(this.applicationContext,mBagCapacity)
         mqttHandler!!.connectToMqttBroker()
 
         //Seekbar to get input from user regarding velocity
