@@ -1,4 +1,4 @@
-package com.example.firstapp
+package com.example.firstapp.activity
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.startCleaning.setOnClickListener {
             binding.startCleaning.text = "start"
-            startActivity(Intent(this,CleaningOptionActivity::class.java))
+            startActivity(Intent(this, CleaningOptionActivity::class.java))
         }
     }
 }

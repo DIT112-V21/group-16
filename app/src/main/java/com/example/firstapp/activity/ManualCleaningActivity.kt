@@ -1,15 +1,16 @@
-package com.example.firstapp
+package com.example.firstapp.activity
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.firstapp.MQTT.MqttHandler
+import com.example.firstapp.R
+import com.example.firstapp.mqtt.MqttHandler
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
 
-class ManualDrivingActivity : AppCompatActivity() {
+class ManualCleaningActivity : AppCompatActivity() {
 
     private var mMqttHandler: MqttHandler? = null
     private var mCameraButton : ImageButton? = null
@@ -25,36 +26,24 @@ class ManualDrivingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manual_option)
 
+        val actionBar = supportActionBar
+        actionBar!!.title = ""
+
         val  mTraveledDistance : TextView = findViewById(R.id.distance)
         val  mSpeed: TextView = findViewById(R.id.speed)
         val  mFront : TextView = findViewById(R.id.front)
         val mStartBtn: Button = findViewById(R.id.start)
         val mEmptyBtn: Button = findViewById(R.id.empty_b)
-        val mBagCapacity: TextView? =null
-        val actionBar = supportActionBar
-        actionBar!!.title = ""
 
         //mqtt car handler
-        mMqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
-        mMqttHandler!!.connectToMqttBroker()
+         mMqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
+         mMqttHandler!!.connectToMqttBroker()
 
         // Transition to the popup window when clicking on the camera button
         mCameraButton = findViewById(R.id.camera)
         mCameraButton?.setOnClickListener {
-            val window = PopupWindow(this.applicationContext)
-            val view = layoutInflater.inflate(R.layout.pop_up_window, null)
-            window.contentView = view
-            val imageView = view.findViewById<ImageView>(R.id.camera)
-
-            mMqttHandler = MqttHandler(this.applicationContext, imageView)
-            mMqttHandler!!.connectToMqttBroker()
-
-            imageView.setOnClickListener {
-                window.dismiss()
-            }
-            window.showAsDropDown(mCameraButton)
+            displayCameraView()
         }
-
         // Cleaning start bagfull progressBar
         handler = Handler(Handler.Callback {
             var mProgressBar: ProgressBar = findViewById<ProgressBar>(R.id.progressBar)
@@ -108,6 +97,21 @@ class ManualDrivingActivity : AppCompatActivity() {
                 }
             }
         })
+    }
+
+    private fun displayCameraView() {
+        val window = PopupWindow(this.applicationContext)
+        val view = layoutInflater.inflate(R.layout.pop_up_window, null)
+        window.contentView = view
+        val imageView = view.findViewById<ImageView>(R.id.camera)
+
+        mMqttHandler = MqttHandler(this.applicationContext, imageView)
+        mMqttHandler!!.connectToMqttBroker()
+
+        imageView.setOnClickListener {
+            window.dismiss()
+        }
+        window.showAsDropDown(mCameraButton)
     }
 
     private fun driveForwards(strength: Int) : Int{

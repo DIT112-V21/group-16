@@ -1,4 +1,4 @@
-package com.example.firstapp.MQTT
+package com.example.firstapp.mqtt
 
 import android.content.Context
 import org.eclipse.paho.android.service.MqttAndroidClient
