@@ -454,7 +454,7 @@ void goAndRight3(){
     }
 }
 
-    int bagFilledProgress(){ //when car drive 5m, 1% bag filled
+    int bagFilledProgress(){ //when car drive 1m, 1% bag filled
                      int traveledDistance=distanceInMeter();
                      if (traveledDistance>maxTraveledDistance){ //only vacuum when vehicle is moving forward
                          maxTraveledDistance=traveledDistance;
