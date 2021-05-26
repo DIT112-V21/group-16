@@ -24,6 +24,7 @@ int bagCapacity=99;
 bool bagFull=false;
 
 
+
 int currentSpeed = 0;
 double area = 0;
 int velocity = 0;
@@ -182,44 +183,17 @@ int obstacleDetectionMessage(){
   currentSpeed = 0;
  }
 
- void turnLeftWhenStoped()  // when car doesn't move it will turn on spot to left
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(lDe);
-    delay(6000);
-    car.setAngle(0);
-    stopVehicle();
- }
-
-  void turnRightWhenStoped() // when car doesn't move it will turn on spot to right
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(rDe);
-    delay(6000);
-    car.setAngle(0);
-    stopVehicle();
- }
-
-  void autoTurnLeft()
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(lDe);
-   delay(6000);
-    car.setAngle(0);
- }
-
-  void autoTurnRight()
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(rDe);
-    delay(6000);
-    car.setAngle(0);
- }
-
+ // turn the car
+ void turnCar(int Angle, bool moving){
+     car.setSpeed(fSpeed);
+     currentSpeed = fSpeed;
+     car.setAngle(Angle);
+     delay(6000);
+     car.setAngle(0);
+     if (!moving){
+       stopVehicle();
+     }
+  }
   void rotateOnSpot(int targetDegrees, int speed)
 {
     speed = smartcarlib::utils::getAbsolute(speed);
@@ -283,7 +257,7 @@ void obstacleAvoidance(){
      car.setSpeed(fSpeed);
      if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
      {
-       autoTurnRight();// after turning from an obstacle if we faced another obstacle exremely close to prevent hitting that while turning it would
+        turnCar(rDe, TRUE);;// after turning from an obstacle if we faced another obstacle exremely close to prevent hitting that while turning it would
        //turn 90 degrees on spot to not hit it.
      }
 
@@ -295,7 +269,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      car.setSpeed(fSpeed);
       if ((distance > 0 && distance < 40) || (frontInfra<30 && frontInfra >0) )
      {
-       autoTurnLeft();
+       turnCar(lDe, TRUE);
      }
      }
  else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) {
@@ -305,7 +279,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      car.setSpeed(fSpeed);
       if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
      {
-       autoTurnRight();
+       turnCar(rDe, TRUE);
      }
   }
     if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0)
@@ -317,7 +291,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
        car.setSpeed(fSpeed);
         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-       autoTurnRight();
+      turnCar(rDe, TRUE);
      }
      }
      else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0)
@@ -329,7 +303,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
         car.setSpeed(fSpeed);
          if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-       autoTurnLeft();
+       turnCar(lDe, TRUE);
      }
 
       }
@@ -342,7 +316,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
         car.setSpeed(fSpeed);
          if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-       autoTurnLeft();
+        turnCar(lDe, TRUE);
      }
       }
      else if (leftInfra < 15 && leftInfra > 0 && distance == 0)
@@ -354,7 +328,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
        car.setSpeed(fSpeed);
         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-       autoTurnRight();
+       turnCar(rDe, TRUE);
      }
 
      }
@@ -387,11 +361,11 @@ void go(double centimeters, int speed){
 void Apattern(){
     go(distancee,velocity);
 delay(500);
-turnRightWhenStoped();
+turnCar(rDe, FALSE);
 delay(500);
 go(sideDistance ,25);
 delay(500);
-turnRightWhenStoped();
+turnCar(rDe, FALSE);
 
 }
 
@@ -400,11 +374,11 @@ void Bpattern(){
     delay(500);
     go(distancee,velocity);
     delay(500);
-    turnLeftWhenStoped();
+    turnCar(lDe, FALSE);
     delay(500);
     go(sideDistance,25);
     delay(500);
-    turnLeftWhenStoped();
+   turnCar(lDe, FALSE);
 }
 
 void pattern(){
@@ -474,27 +448,35 @@ void goAndRight3(){
     {
      go(toTravel,velocity);
     delay(500);
-    turnRightWhenStoped();
+   turnCar(rDe, FALSE);
     i++;
 
     }
 }
-     int bagFilledProgress(){
-                 float traveledDistance=distanceInMeter();
-                 if (traveledDistance>maxTraveledDistance){
-                     maxTraveledDistance=traveledDistance;
-                     int bagContents = (int)((int)traveledDistance%1000)/10;
-                     if (bagContents == bagCapacity){
-                       //stopVehicle();
-                       bagFull=true;
-                       Serial.println("Bag is full. Please change");
+
+    int bagFilledProgress(){ //when car drive 5m, 1% bag filled
+                     int traveledDistance=distanceInMeter();
+                     if (traveledDistance>maxTraveledDistance){ //only vacuum when vehicle is moving forward
+                         maxTraveledDistance=traveledDistance;
+                         if (!bagFull){
+                          bagContents = traveledDistance%100;
+                          Serial.println("Bag is " + (String)bagContents + "% full");
+                          if (bagContents >= bagCapacity){
+                            //stopVehicle();
+                            bagFull=true;
+                          }
+                          return bagContents;
+                         }
+                         else {
+                          Serial.println("Bag is full, please change");
+                         }
+
                      }
-                     Serial.println("Bag is " + (String)bagContents + "% full");
-                     return bagContents;
-                 }
-               }
 
-        void emptyBag(){
-         int  bagContent=0;
+                }
 
-        }
+            void emptyBag(){
+             bagFull=false;
+             bagContents=0;
+
+            }

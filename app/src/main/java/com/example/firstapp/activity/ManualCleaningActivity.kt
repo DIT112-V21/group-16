@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.R
-import com.example.firstapp.mqtt.MqttHandler
+import com.example.firstapp.MQTT.MqttHandler
 import io.github.controlwear.virtual.joystick.android.JoystickView
 import io.github.controlwear.virtual.joystick.android.JoystickView.OnMoveListener
 

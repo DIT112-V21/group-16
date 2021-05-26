@@ -1,4 +1,4 @@
-package com.example.firstapp.mqtt
+package com.example.firstapp.MQTT
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.firstapp.mqtt.MqttClient
 import org.eclipse.paho.client.mqttv3.*
 
 class MqttHandler : AppCompatActivity {
@@ -27,7 +28,7 @@ class MqttHandler : AppCompatActivity {
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
     private val SPEED_SUB = "/smartcar/group16/speed"
-    private val BIN_CAPACITY = "/smartcar/group16/bagfull"
+    private val BIN_CAPACITY="/smartcar/group16/bagfull"
 
     // Publishing topics
     private val THROTTLE_CONTROL = "/smartcar/group16/control/throttle"
@@ -40,7 +41,7 @@ class MqttHandler : AppCompatActivity {
     private val IMAGE_WIDTH = 320
     private val IMAGE_HEIGHT = 240
 
-    //Messages related to connection to mqtt broker
+    //messages related to connection to mqtt broker
     private val SUCCESSFUL_CONNECTION = "Connected to MQTT broker"
     private val FAILED_CONNECTION = "Failed to connect to MQTT broker"
     private val LOST_CONNECTION = "Connection to MQTT broker lost"
@@ -52,6 +53,7 @@ class MqttHandler : AppCompatActivity {
     private var mSpeed: TextView? = null
     private var mFront: TextView? = null
     private var mBagCapacity: TextView? = null
+
 
     //Constructors
     constructor(context: Context?, mCameraView: ImageView?) {
@@ -66,12 +68,13 @@ class MqttHandler : AppCompatActivity {
         this.mTraveledDistance = mTraveledDistance
         this.mSpeed = mSpeed
         this.mFront = mFront
+
     }
 
-    constructor(context: Context?, mBagCapacity: TextView?) {
+    constructor(context: Context?,mBagCapacity: TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
-        this.mBagCapacity = mBagCapacity
+        this.mBagCapacity=mBagCapacity
     }
 
     override fun onResume() {
@@ -95,7 +98,11 @@ class MqttHandler : AppCompatActivity {
                 override fun onSuccess(asyncActionToken: IMqttToken) {
                     isConnected = true
                     Log.i(TAG, SUCCESSFUL_CONNECTION)
-                    subscriptions()
+                    mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
+                    mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
+                    mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
+                    mMqttClient?.subscribe(SPEED_SUB, QOS, null)
+                    mMqttClient?.subscribe(BIN_CAPACITY, QOS, null)
                 }
                 override fun onFailure(asyncActionToken: IMqttToken, exception: Throwable) {
                     Log.e(TAG, FAILED_CONNECTION)
@@ -109,19 +116,40 @@ class MqttHandler : AppCompatActivity {
                 @Throws(Exception::class)
                 override fun messageArrived(topic: String, message: MqttMessage) {
                     if (topic == CAMERA_SUB) {
-                        setCameraView(message)
+                        val bm =
+                            Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888)
+                        val payload = message.payload
+                        val colors = IntArray(IMAGE_WIDTH * IMAGE_HEIGHT)
+                        for (ci in colors.indices) {
+                            val r = payload[3 * ci]
+                            val g = payload[3 * ci + 1]
+                            val b = payload[3 * ci + 2]
+                            colors[ci] = Color.rgb(r.toInt(), g.toInt(), b.toInt())
+                        }
+                        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT)
+                        mCameraView?.setImageBitmap(bm)
                     }
                     if (topic == TRAVELED_DIS) {
-                        setDistanceView(message)
+                        val distance = message.toString()
+                        mTraveledDistance?.setText(distance + " m")
                     }
                     if (topic == ULTRASOUND_SUB) {
-                        setWarningView(message)
+                        val ultraSound = message.toString()
+                        if (ultraSound > 1.toString()) {
+                            mFront?.setText("WARNING")
+                            mFront?.setTextColor(RED)
+                        } else {
+                            mFront?.setText("")
+                        }
                     }
                     if (topic == SPEED_SUB) {
-                        setSpeedView(message)
+                        val speed = message.toString()
+                        mSpeed?.setText(speed)
                     }
                     if (topic == BIN_CAPACITY) {
-                        setBinView(message)
+                        val bagful = message.toString()
+                        mBagCapacity?.setText("${bagful}% ")
+
                     } else {
                         Log.i(
                             TAG,
@@ -145,53 +173,6 @@ class MqttHandler : AppCompatActivity {
         }
     }
 
-    fun setCameraView(message : MqttMessage){
-        val bm =
-            Bitmap.createBitmap(IMAGE_WIDTH, IMAGE_HEIGHT, Bitmap.Config.ARGB_8888)
-        val payload = message.payload
-        val colors = IntArray(IMAGE_WIDTH * IMAGE_HEIGHT)
-        for (ci in colors.indices) {
-            val r = payload[3 * ci]
-            val g = payload[3 * ci + 1]
-            val b = payload[3 * ci + 2]
-            colors[ci] = Color.rgb(r.toInt(), g.toInt(), b.toInt())
-        }
-        bm.setPixels(colors, 0, IMAGE_WIDTH, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT)
-        mCameraView?.setImageBitmap(bm)
-    }
-
-    fun setDistanceView(message : MqttMessage) {
-        val distance = message.toString()
-        mTraveledDistance?.setText(distance + " m")
-    }
-
-    fun setWarningView(message: MqttMessage){
-        val ultraSound = message.toString()
-        if (ultraSound > 1.toString()) {
-            mFront?.setText("WARNING")
-            mFront?.setTextColor(RED)
-        } else {
-            mFront?.setText("")
-        }
-    }
-
-    fun setSpeedView(message: MqttMessage) {
-        val speed = message.toString()
-        mSpeed?.setText(speed)
-    }
-
-    fun setBinView(message : MqttMessage){
-        val bagful = message.toString()
-        mBagCapacity?.setText("${bagful}% ")
-    }
-
-    fun subscriptions(){
-        mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
-        mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
-        mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
-        mMqttClient?.subscribe(SPEED_SUB, QOS, null)
-        mMqttClient?.subscribe(BIN_CAPACITY, QOS, null)
-    }
     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
         notConnected()
         Log.i(TAG, actionDescription!!)
