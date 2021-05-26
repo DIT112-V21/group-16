@@ -1,10 +1,13 @@
-# Group-16: TDM 
+# Group-16: TDM ![example workflow](https://github.com/DIT112-V21/group-16/actions/workflows/android_build.yml/badge.svg) ![example workflow](https://github.com/DIT112-V21/group-16/actions/workflows/arduino-build.yml/badge.svg)
 
-![readme](https://user-images.githubusercontent.com/72136631/119411943-80d96780-bceb-11eb-8fdc-7ebe44c88666.png)
+![0266c5f1-654f-4bfe-bc7d-9fc117f1bda3 sketchpad (7)](https://user-images.githubusercontent.com/72136631/119741302-ba45da80-be85-11eb-8c90-73dac9fc8040.png)
 
 ## Contents
 
 ## Description 
+
+TDM is a cleaning Smartcar controlled by an app. When using our product, the user can choose between two modes: Clean Manually or clean a certain area autonomously. In the manual cleaning mode, the user can drive around and area with the option to turn on/off the vacuum cleaner function. In the autonomous cleaning mode, the user can choose to clean any size of area from two set of pre-programmed patterns. TDM is a two-tier system that inlcudes an Android app and SmartCar, where request are sent to the Smartcar from the app through a MQTT broker. To see the software architecture of TDM, please refer to the [Class Diagram](https://github.com/DIT112-V21/group-16/wiki/Class-Diagram) Wiki page.
+
 ### What we are going to make.
 - What we are going to make is a vehicle which acts as a trash disposing machine. 
 
@@ -31,15 +34,15 @@
 
 ## Resources
 ### Software
-- SMCE
-- Android Studio
-- Arduino IDE
-- Smartcar shield library
-- GitHub
+- [SMCE](https://github.com/ItJustWorksTM/smce-gd)
+- [Android Studio](https://developer.android.com/studio)
+- [Arduino IDE](https://www.arduino.cc/en/software)
+- [Smartcar shield library](https://www.arduinolibraries.info/libraries/smartcar-shield)
+- [GitHub](https://github.com/)
 
 ## Development Team 
-- Adam Magnus
-- Eun Young Cho
-- Jina Dawood
-- Mohammad Zandkarimi
-- Alexander Andreasson
+- [Eun Young Cho](https://github.com/Young799)
+- [Mohammad Zandkarimi](https://github.com/Mozand)
+- [Jina Dawood](https://github.com/JinaDawood)
+- [Alexander Andreasson](https://github.com/gusandalce)
+- [Adam Magnus](https://github.com/gusmagadc)
