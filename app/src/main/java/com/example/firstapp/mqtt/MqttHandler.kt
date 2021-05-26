@@ -14,6 +14,7 @@ import org.eclipse.paho.client.mqttv3.*
 class MqttHandler : AppCompatActivity {
 
     //Connection to Mqtt
+    private var mMqttClient: MqttClient? = null
     private val TAG = "app"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
     private val LOCALHOST = "10.0.2.2"
@@ -36,7 +37,7 @@ class MqttHandler : AppCompatActivity {
     private val AUTO_PATTERN = "/smartcar/group16/auto/pattern"
     private val AUTO_SIZE = "/smartcar/group16/auto/size"
 
-    // Camera
+    // Camera view sizing
     private val IMAGE_WIDTH = 320
     private val IMAGE_HEIGHT = 240
 
@@ -47,7 +48,6 @@ class MqttHandler : AppCompatActivity {
     private val DISCONNECTED = "Disconnected from broker"
 
     private var mCameraView: ImageView? = null
-    private var mMqttClient: MqttClient? = null
     private var mTraveledDistance: TextView? = null
     private var mSpeed: TextView? = null
     private var mFront: TextView? = null
@@ -160,29 +160,30 @@ class MqttHandler : AppCompatActivity {
         mCameraView?.setImageBitmap(bm)
     }
 
+    @SuppressLint("SetTextI18n")
     fun setDistanceView(message : MqttMessage) {
         val distance = message.toString()
-        mTraveledDistance?.setText(distance + " m")
+        mTraveledDistance?.text = "$distance m"
     }
 
     fun setWarningView(message: MqttMessage){
         val ultraSound = message.toString()
         if (ultraSound > 1.toString()) {
-            mFront?.setText("WARNING")
+            mFront?.text = "WARNING"
             mFront?.setTextColor(RED)
         } else {
-            mFront?.setText("")
+            mFront?.text = ""
         }
     }
 
     fun setSpeedView(message: MqttMessage) {
         val speed = message.toString()
-        mSpeed?.setText(speed)
+        mSpeed?.text = speed
     }
 
     fun setBinView(message : MqttMessage){
         val bagful = message.toString()
-        mBagCapacity?.setText("${bagful}% ")
+        mBagCapacity?.text = "${bagful}% "
     }
 
     fun subscriptions(){

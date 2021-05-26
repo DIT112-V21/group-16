@@ -12,7 +12,7 @@ import com.example.firstapp.mqtt.MqttHandler
 
 class AutonomousActivity : AppCompatActivity(), View.OnClickListener {
 
-    private var mqttHandler: MqttHandler? = null
+    private var mMqttHandler: MqttHandler? = null
     private var mPatternOne: Button? = null
     private var mPatternTwo: Button? = null
     private var mStartBtn: Button? = null
@@ -52,8 +52,8 @@ class AutonomousActivity : AppCompatActivity(), View.OnClickListener {
         val  mBagCapacity : TextView = findViewById(R.id.binProgress)
 
         //Mqtt car handler
-         mqttHandler = MqttHandler(this.applicationContext, mBagCapacity)
-         mqttHandler!!.connectToMqttBroker()
+         mMqttHandler = MqttHandler(this.applicationContext, mBagCapacity)
+         mMqttHandler!!.connectToMqttBroker()
 
         //Seekbar to get input from user regarding velocity
         mSeekBar?.setOnSeekBarChangeListener(object :
@@ -103,7 +103,7 @@ class AutonomousActivity : AppCompatActivity(), View.OnClickListener {
 
   private fun sendMessages(size : Int, speed : Int, pattern : Int) {
       if (size != 0 && speed != 0 && pattern != 0 ){
-          mqttHandler!!.driveAuto(size, speed, pattern,"")
+          mMqttHandler!!.driveAuto(size, speed, pattern,"")
       }
   }
 }

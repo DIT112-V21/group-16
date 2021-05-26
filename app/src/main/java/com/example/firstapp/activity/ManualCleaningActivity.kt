@@ -115,13 +115,11 @@ class ManualCleaningActivity : AppCompatActivity() {
     }
 
     private fun driveForwards(strength: Int) : Int{
-        val strength = (strength * 0.8).toInt()
-        return strength
+       return (strength * 0.8).toInt()
     }
 
     private fun driveBackwards(strength : Int) : Int{
-        val strength = (strength * 0.5 * REVERSE).toInt()
-        return strength
+        return (strength * 0.5 * REVERSE).toInt()
     }
 
     private fun turnForwards(angle: Int): Int {
