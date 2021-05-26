@@ -24,7 +24,7 @@ int bagCapacity=99;
 bool bagFull=false;
 
 
-
+int bagContents=0;
 int currentSpeed = 0;
 double area = 0;
 int velocity = 0;
@@ -257,7 +257,7 @@ void obstacleAvoidance(){
      car.setSpeed(fSpeed);
      if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
      {
-        turnCar(rDe, TRUE);;// after turning from an obstacle if we faced another obstacle exremely close to prevent hitting that while turning it would
+        turnCar(rDe, true);;// after turning from an obstacle if we faced another obstacle exremely close to prevent hitting that while turning it would
        //turn 90 degrees on spot to not hit it.
      }
 
@@ -269,7 +269,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      car.setSpeed(fSpeed);
       if ((distance > 0 && distance < 40) || (frontInfra<30 && frontInfra >0) )
      {
-       turnCar(lDe, TRUE);
+       turnCar(lDe, true);
      }
      }
  else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) {
@@ -279,7 +279,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
      car.setSpeed(fSpeed);
       if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
      {
-       turnCar(rDe, TRUE);
+       turnCar(rDe, true);
      }
   }
     if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0)
@@ -291,7 +291,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
        car.setSpeed(fSpeed);
         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-      turnCar(rDe, TRUE);
+      turnCar(rDe, true);
      }
      }
      else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0)
@@ -303,7 +303,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
         car.setSpeed(fSpeed);
          if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-       turnCar(lDe, TRUE);
+       turnCar(lDe, true);
      }
 
       }
@@ -316,7 +316,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
         car.setSpeed(fSpeed);
          if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-        turnCar(lDe, TRUE);
+        turnCar(lDe, true);
      }
       }
      else if (leftInfra < 15 && leftInfra > 0 && distance == 0)
@@ -328,7 +328,7 @@ else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfr
        car.setSpeed(fSpeed);
         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
      {
-       turnCar(rDe, TRUE);
+       turnCar(rDe, true);
      }
 
      }
@@ -361,11 +361,11 @@ void go(double centimeters, int speed){
 void Apattern(){
     go(distancee,velocity);
 delay(500);
-turnCar(rDe, FALSE);
+turnCar(rDe, false);
 delay(500);
 go(sideDistance ,25);
 delay(500);
-turnCar(rDe, FALSE);
+turnCar(rDe, false);
 
 }
 
@@ -374,11 +374,11 @@ void Bpattern(){
     delay(500);
     go(distancee,velocity);
     delay(500);
-    turnCar(lDe, FALSE);
+    turnCar(lDe, false);
     delay(500);
     go(sideDistance,25);
     delay(500);
-   turnCar(lDe, FALSE);
+   turnCar(lDe, false);
 }
 
 void pattern(){
@@ -448,7 +448,7 @@ void goAndRight3(){
     {
      go(toTravel,velocity);
     delay(500);
-   turnCar(rDe, FALSE);
+   turnCar(rDe, false);
     i++;
 
     }
