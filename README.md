@@ -1,6 +1,6 @@
 # Group-16: TDM ![example workflow](https://github.com/DIT112-V21/group-16/actions/workflows/android_build.yml/badge.svg) ![example workflow](https://github.com/DIT112-V21/group-16/actions/workflows/arduino-build.yml/badge.svg)
 
-![0266c5f1-654f-4bfe-bc7d-9fc117f1bda3 sketchpad (3)](https://user-images.githubusercontent.com/72136631/119732002-ebb7a980-be77-11eb-9a1c-74c4d3252e2d.png)
+![0266c5f1-654f-4bfe-bc7d-9fc117f1bda3 sketchpad (6)](https://user-images.githubusercontent.com/72136631/119733230-82d13100-be79-11eb-991a-cfa1e2ec95ac.png)
 
 ## Contents
 
@@ -41,8 +41,8 @@ TDM is a cleaning Smartcar controlled by an app. When using our product, the use
 - [GitHub](https://github.com/)
 
 ## Development Team 
-- Adam Magnus
-- Eun Young Cho
-- Jina Dawood
-- Mohammad Zandkarimi
-- Alexander Andreasson
+- [Eun Young Cho](https://github.com/Young799)
+- [Mohammad Zandkarimi](https://github.com/Mozand)
+- [Jina Dawood](https://github.com/JinaDawood)
+- [Alexander Andreasson](https://github.com/gusandalce)
+- [Adam Magnus](https://github.com/gusmagadc)
