@@ -1,6 +1,6 @@
 # Group-16: TDM ![example workflow](https://github.com/DIT112-V21/group-16/actions/workflows/android_build.yml/badge.svg) ![example workflow](https://github.com/DIT112-V21/group-16/actions/workflows/arduino-build.yml/badge.svg)
 
-![0266c5f1-654f-4bfe-bc7d-9fc117f1bda3 sketchpad (6)](https://user-images.githubusercontent.com/72136631/119733230-82d13100-be79-11eb-991a-cfa1e2ec95ac.png)
+![0266c5f1-654f-4bfe-bc7d-9fc117f1bda3 sketchpad (7)](https://user-images.githubusercontent.com/72136631/119741302-ba45da80-be85-11eb-8c90-73dac9fc8040.png)
 
 ## Contents
 
