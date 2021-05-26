@@ -1,4 +1,4 @@
-package com.example.firstapp.MQTT
+package com.example.firstapp.mqtt
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap

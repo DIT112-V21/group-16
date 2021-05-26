@@ -360,122 +360,112 @@ void go(double centimeters, int speed){
 
 void Apattern(){
     go(distancee,velocity);
-delay(500);
-turnCar(rDe, false);
-delay(500);
-go(sideDistance ,25);
-delay(500);
-turnCar(rDe, false);
+        delay(500);
+        turnCar(rDe, false);
+        delay(500);
+        go(sideDistance ,25);
+        delay(500);
+        turnCar(rDe, false);
 
 }
 
 void Bpattern(){
-    Apattern();
-    delay(500);
-    go(distancee,velocity);
-    delay(500);
-    turnCar(lDe, false);
-    delay(500);
-    go(sideDistance,25);
-    delay(500);
-   turnCar(lDe, false);
+      Apattern();
+      delay(500);
+      go(distancee,velocity);
+      delay(500);
+      turnCar(lDe, false);
+      delay(500);
+      go(sideDistance,25);
+      delay(500);
+      turnCar(lDe, false);
 }
 
 void pattern(){
-isCompleted=0;
-double x = sqrt(area);
-int value = int (x);
-if (value%2==0)
-{
-    int times = value/sideDistance;
-    times /= 2;
-    int i =0;
-    while (i < times)
-    {
+      isCompleted=0;
+      double x = sqrt(area);
+      int value = int (x);
+      if (value%2==0) {
+      int times = value/sideDistance;
+      times /= 2;
+      int i =0;
+      while (i < times) {
         Bpattern();
         i += 1;
-    }
-}
-else {
-    int times = value/sideDistance;
-    times /= 2;
-    int i =0;
-    while (i < times)
-    {
+         }
+      }
+    else {
+      int times = value/sideDistance;
+      times /= 2;
+      int i =0;
+      while (i < times) {
         Bpattern();
         i += 1;
+        }
+        Apattern();
+        }
     }
-    Apattern();
-}
-}
-int toTravel = sqrt(area);
 
+int toTravel = sqrt(area);
 void patternB(){
-isCompleted=0;
-int x= toTravel / 10;
+    isCompleted=0;
+    int x= toTravel / 10;
     int y= x/2;
     int z=y-1;
     int i =0;
-if (toTravel%2 ==0)
-{
-    while (i<z)
-    {
+if (toTravel%2 ==0) {
+     while (i<z) {
         complete();
         i++;
-    }
+      }
     goAndRight3();
-}
+   }
 else {
-    while (i<y)
-    {
+    while (i<y) {
         complete();
         i++;
     }
     go(10,25);
-}
+   }
 }
 
 void complete(){
     goAndRight3();
-   toTravel -=10;
-   go(toTravel,velocity);
+    toTravel -=10;
+    go(toTravel,velocity);
 
-}
+   }
 
 void goAndRight3(){
     int i =0;
-    while (i<3)
-    {
+    while (i<3) {
      go(toTravel,velocity);
-    delay(500);
-   turnCar(rDe, false);
-    i++;
-
-    }
-}
+     delay(500);
+     turnCar(rDe, false);
+     i++;
+     }
+   }
 
     int bagFilledProgress(){ //when car drive 1m, 1% bag filled
                      int traveledDistance=distanceInMeter();
                      if (traveledDistance>maxTraveledDistance){ //only vacuum when vehicle is moving forward
-                         maxTraveledDistance=traveledDistance;
-                         if (!bagFull){
+                          maxTraveledDistance=traveledDistance;
+                          if (!bagFull){
                           bagContents = traveledDistance%100;
                           Serial.println("Bag is " + (String)bagContents + "% full");
-                          if (bagContents >= bagCapacity){
-                            //stopVehicle();
-                            bagFull=true;
-                          }
+                             if (bagContents >= bagCapacity){
+                             //stopVehicle();
+                             bagFull=true;
+                              }
                           return bagContents;
                          }
                          else {
                           Serial.println("Bag is full, please change");
                          }
-
                      }
-
                 }
 
-            void emptyBag(){
+     void emptyBag(){
              bagFull=false;
              bagContents=0;
 

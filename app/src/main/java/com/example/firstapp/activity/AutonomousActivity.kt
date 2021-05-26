@@ -6,7 +6,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.firstapp.R
-import com.example.firstapp.MQTT.MqttHandler
+import com.example.firstapp.mqtt.MqttHandler
 
 
 
