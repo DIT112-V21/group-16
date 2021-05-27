@@ -10,15 +10,16 @@
 - The vehicle will be controlled through an android app connected through an mqtt broker. 
 
 ### Why we will make it. 
-- We will make it because it will keep streets tidy and neat while mitigating human labor.
-- We will make it so that it can improve/solve environmental problems.
+- We will create a trash disposing vehicle with the purpose of mitigating human labour and making cleaning commersial or outdoor areas easier to clean.
+- We want it to be a complementary to the many other traditional methods use which are often not as good for the environment.
 
 ### How we are going to make it. 
 - The vechicle will be able to clean an area based on a path. 
-- The vechicle will fill up a virtual bag, take object collision into respect and return to a designated area in the emulator when bag is full.
+- The vehicle will utilize a cleaning function to simulate picking up trash.
 - The bag will take distance into account when deciding it is filled up. 
-- The user will be able to control the vehicle which exists in an emulator through an external controller to fulfil its purpose. 
-- It will also be possible to take manual control of the vehicle.
+- The user will be able to control the vehicle through the SMCE emulator by using an android appplication designed for controlling the vehicle. 
+- It will also be possible to take manual control of the vehicle by using a joystick.'
+- The project uses c++, and kotlin as source code. 
 
 ### Demo Video
 
