@@ -85,7 +85,7 @@
         android:id="@+id/binProgress"
         android:layout_width="49dp"
         android:layout_height="30dp"
-        android:text="0  "
+        android:text=" "
         android:textColor="#787676"
         android:textSize="24sp"
         android:textStyle="bold"

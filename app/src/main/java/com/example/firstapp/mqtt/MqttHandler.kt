@@ -182,8 +182,8 @@ class MqttHandler : AppCompatActivity {
     }
 
     fun setBinView(message : MqttMessage){
-        val bagful = message.toString()
-        mBagCapacity?.text = "${bagful}% "
+        val capacity = message.toString()
+        mBagCapacity?.text = "${capacity}% "
     }
 
     fun subscriptions(){

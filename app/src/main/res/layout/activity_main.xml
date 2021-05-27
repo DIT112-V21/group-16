@@ -7,23 +7,12 @@
     android:background="#54FFFFFF"
     tools:context=".activity.MainActivity">
 
-    <ImageView
-        android:id="@+id/imageView13"
-        android:layout_width="541dp"
-        android:layout_height="945dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.373"
-        app:srcCompat="@drawable/drawing__6_" />
-
     <Button
         android:id="@+id/startCleaning"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="187dp"
         android:layout_height="57dp"
-        android:background="#3F51B5"
+        android:background="#626265"
         android:fontFamily="sans-serif-medium"
         android:shadowColor="#706D6D"
         android:text="@string/start"
@@ -32,7 +21,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         android:typeface="normal"
-        app:backgroundTint="#C9051675"
+        app:backgroundTint="#C9111112"
         app:backgroundTintMode="src_in"
         app:iconTint="#626A69"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -40,5 +29,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.836" />
+
+    <ImageView
+        android:id="@+id/imageView10"
+        android:layout_width="514dp"
+        android:layout_height="837dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.707"
+        app:srcCompat="@drawable/background" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
