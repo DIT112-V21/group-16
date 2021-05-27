@@ -24,11 +24,9 @@ TDM is a cleaning Smartcar controlled by an app. When using our product, the use
 
 ### Demo Video
 
-## Installation Guide for Open Source Developers
+## Get started
+### Installation Guide 
 
-### Smartcar
-
-### Android app 
 
 ## User Manual
 
@@ -39,6 +37,8 @@ TDM is a cleaning Smartcar controlled by an app. When using our product, the use
 - [Arduino IDE](https://www.arduino.cc/en/software)
 - [Smartcar shield library](https://www.arduinolibraries.info/libraries/smartcar-shield)
 - [GitHub](https://github.com/)
+- [Smartcar shield library documentation](https://platisd.github.io/smartcar_shield/index.html)
+- 
 
 ## Development Team 
 - [Eun Young Cho](https://github.com/Young799)
