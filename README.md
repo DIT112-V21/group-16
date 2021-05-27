@@ -4,10 +4,7 @@
 
 ## Contents
 
-## Description 
-
-TDM is a cleaning Smartcar controlled by an app. When using our product, the user can choose between two modes: Clean Manually or clean a certain area autonomously. In the manual cleaning mode, the user can drive around and area with the option to turn on/off the vacuum cleaner function. In the autonomous cleaning mode, the user can choose to clean any size of area from two set of pre-programmed patterns. TDM is a two-tier system that inlcudes an Android app and SmartCar, where request are sent to the Smartcar from the app through a MQTT broker. To see the software architecture of TDM, please refer to the [Class Diagram](https://github.com/DIT112-V21/group-16/wiki/Class-Diagram) Wiki page.
-
+## Product Description 
 ### What we are going to make.
 - What we are going to make is a vehicle which acts as a trash disposing machine. 
 
@@ -24,21 +21,24 @@ TDM is a cleaning Smartcar controlled by an app. When using our product, the use
 
 ### Demo Video
 
-## Get started
-### Installation Guide 
+## Technical information
+TDM is a cleaning Smartcar controlled by an app. When using our product, the user can choose between two modes: Clean Manually or clean a certain area autonomously. In the manual cleaning mode, the user can drive around and area with the option to turn on/off the vacuum cleaner function. In the autonomous cleaning mode, the user can choose to clean any size of area from two set of pre-programmed patterns. TDM is a two-tier system that inlcudes an Android app and SmartCar, where request are sent to the Smartcar from the app through a MQTT broker. To see the software architecture of TDM, please refer to the [Class Diagram](https://github.com/DIT112-V21/group-16/wiki/Class-Diagram) Wiki page.
 
-
-## User Manual
-
-## Resources
-### Software
+## Resources 
 - [SMCE](https://github.com/ItJustWorksTM/smce-gd)
 - [Android Studio](https://developer.android.com/studio)
 - [Arduino IDE](https://www.arduino.cc/en/software)
 - [Smartcar shield library](https://www.arduinolibraries.info/libraries/smartcar-shield)
 - [GitHub](https://github.com/)
 - [Smartcar shield library documentation](https://platisd.github.io/smartcar_shield/index.html)
-- 
+
+## Get started
+### Installation Guide 
+
+
+## User Manual
+
+
 
 ## Development Team 
 - [Eun Young Cho](https://github.com/Young799)
