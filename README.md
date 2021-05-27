@@ -22,7 +22,12 @@
 ### Demo Video
 
 ## Technical information
-TDM is a cleaning Smartcar controlled by an app. When using our product, the user can choose between two modes: Clean Manually or clean a certain area autonomously. In the manual cleaning mode, the user can drive around and area with the option to turn on/off the vacuum cleaner function. In the autonomous cleaning mode, the user can choose to clean any size of area from two set of pre-programmed patterns. TDM is a two-tier system that inlcudes an Android app and SmartCar, where request are sent to the Smartcar from the app through a MQTT broker. To see the software architecture of TDM, please refer to the [Class Diagram](https://github.com/DIT112-V21/group-16/wiki/Class-Diagram) Wiki page.
+### How TDM was constructed
+TDM is a cleaning smartcar which utilizes the available capabilities of the smartcar software library. It can be controlled through an android app. The user can choose between two existing modes: manual/automatic. In manual mode the user has the possibility of driving the vehicle around with the option of enabling/disabling the vacuum cleaning functionality, as well as observing the cleaning vehicle through a streaming service which is displayed on the android app. While the vehicle is ran autonomously, the user can chose to clean any size of area from a two set pre-programmed patterns.
+
+TDM is a two-tier system that inlcudes an Android app and SmartCar, where request are sent to the Smartcar from the app through a MQTT server. An arduino sketch holds all of the required functionalities of the Smartcar. Also, the camera provided by the SMCE emulator is being used in the implementation of the video streaming function in our android app.
+
+To see the software architecture of TDM, please refer to the [Class Diagram](https://github.com/DIT112-V21/group-16/wiki/Class-Diagram) Wiki page.
 
 ## Resources 
 - [SMCE](https://github.com/ItJustWorksTM/smce-gd)
@@ -31,6 +36,7 @@ TDM is a cleaning Smartcar controlled by an app. When using our product, the use
 - [Smartcar shield library](https://www.arduinolibraries.info/libraries/smartcar-shield)
 - [GitHub](https://github.com/)
 - [Smartcar shield library documentation](https://platisd.github.io/smartcar_shield/index.html)
+- [MQTT](https://mosquitto.org/download/) 
 
 ## Get started
 ### Installation Guide 
