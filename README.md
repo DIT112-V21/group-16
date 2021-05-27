@@ -24,10 +24,10 @@ TDM is a cleaning Smartcar controlled by an app. When using our product, the use
 
 ### Demo Video
 
+## Installation Guide for Open Source Developers
+
 ### Getting Started
 - More information about installation can be found [here](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide)
-
-## Installation Guide for Open Source Developers
 
 ### Smartcar
 
