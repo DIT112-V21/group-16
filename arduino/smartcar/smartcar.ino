@@ -156,16 +156,16 @@ void obstacleAvoidance(){
     else if (distance > 0 && distance < triggerDist && currentSpeed >= 0){ //if there is an obstacle in front of the car it will turn right.
         rotation(300, rDeg, rDe,distance,frontInfra);
     }
-    if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0){  //this method used for when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
+    if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0){  // when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
         rotation(300, rDeg, rDe,distance,frontInfra);                                           // so it turn more to avoid hitting the side obstacle
     }
-    else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0){  //this method used for when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
+    else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0){  // when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
         rotation(300, lDeg, lDe,distance,frontInfra);
     }
-    else if (rightInfra < 15 && rightInfra > 0 && distance == 0){   //this method used after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
+    else if (rightInfra < 15 && rightInfra > 0 && distance == 0){   //after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
         rotation(200, lDeg, lDe,distance,frontInfra);
     }
-    else if (leftInfra < 15 && leftInfra > 0 && distance == 0){     //this method used after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
+    else if (leftInfra < 15 && leftInfra > 0 && distance == 0){     //after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
         rotation(200, rDeg, rDe,distance,frontInfra);
     }
 }
@@ -358,11 +358,6 @@ int distanceInMeter(){
     return distance;
 }
 
-//change speed unit to integer
-int speedInPercentage(){
-    int speed=car.getSpeed();
-    return speed*10000;
-}
 
 //obstacle avoidance message
 int obstacleDetectionMessage(){
@@ -389,18 +384,11 @@ int bagFilledProgress(){ //when car drive 2m, 1% bag filled  //
             bagContents = (traveledDistance%100)/2;
             Serial.println("Bag is " + (String)bagContents + "% full");
             if (bagContents >= bagCapacity){
-                //stopVehicle();
                 bagFull=true;
             }
             return bagContents;
         }
-        else {
-            Serial.println("Bag is full, please change");
-        }
+
     }
 }
 
-void emptyBag(){
-    bagFull=false;
-    bagContents=0;
-}
