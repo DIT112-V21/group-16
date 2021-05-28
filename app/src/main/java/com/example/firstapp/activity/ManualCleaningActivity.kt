@@ -20,6 +20,7 @@ class ManualCleaningActivity : AppCompatActivity() {
     private var isStarted = false
     private var progressStatus = 0
     private var handler: Handler? = null
+    private var mSpeed : TextView? = null
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,13 +31,14 @@ class ManualCleaningActivity : AppCompatActivity() {
         actionBar!!.title = ""
 
         val  mTraveledDistance : TextView = findViewById(R.id.distance)
-        val  mSpeed: TextView = findViewById(R.id.speed)
         val  mFront : TextView = findViewById(R.id.front)
         val mStartBtn: Button = findViewById(R.id.start)
         val mEmptyBtn: Button = findViewById(R.id.empty_b)
 
+        mSpeed = findViewById(R.id.speed)
+
         //mqtt car handler
-         mMqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mSpeed, mFront)
+         mMqttHandler = MqttHandler(this.applicationContext, mTraveledDistance, mFront)
          mMqttHandler!!.connectToMqttBroker()
 
         // Transition to the popup window when clicking on the camera button
@@ -94,6 +96,7 @@ class ManualCleaningActivity : AppCompatActivity() {
                     sendMovement(newSpeed, newAngle)
                     currentAngle = newAngle
                     currentSpeed = newSpeed
+                    mSpeed?.text = "$currentSpeed %"
                 }
             }
         })

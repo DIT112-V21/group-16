@@ -27,7 +27,6 @@ class MqttHandler : AppCompatActivity {
     private val CAMERA_SUB = "/smartcar/group16/camera"
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
-    private val SPEED_SUB = "/smartcar/group16/speed"
     private val BIN_CAPACITY = "/smartcar/group16/bagfull"
 
     // Publishing topics
@@ -49,7 +48,6 @@ class MqttHandler : AppCompatActivity {
 
     private var mCameraView: ImageView? = null
     private var mTraveledDistance: TextView? = null
-    private var mSpeed: TextView? = null
     private var mFront: TextView? = null
     private var mBagCapacity: TextView? = null
 
@@ -60,11 +58,10 @@ class MqttHandler : AppCompatActivity {
         this.context = context
     }
 
-    constructor(context: Context?, mTraveledDistance: TextView?, mSpeed: TextView?, mFront: TextView?) {
+    constructor(context: Context?, mTraveledDistance: TextView?, mFront: TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
         this.mTraveledDistance = mTraveledDistance
-        this.mSpeed = mSpeed
         this.mFront = mFront
     }
 
@@ -116,9 +113,6 @@ class MqttHandler : AppCompatActivity {
                     }
                     if (topic == ULTRASOUND_SUB) {
                         setWarningView(message)
-                    }
-                    if (topic == SPEED_SUB) {
-                        setSpeedView(message)
                     }
                     if (topic == BIN_CAPACITY) {
                         setBinView(message)
@@ -176,11 +170,6 @@ class MqttHandler : AppCompatActivity {
         }
     }
 
-    fun setSpeedView(message: MqttMessage) {
-        val speed = message.toString()
-        mSpeed?.text = speed
-    }
-
     fun setBinView(message : MqttMessage){
         val capacity = message.toString()
         mBagCapacity?.text = "${capacity}% "
@@ -190,7 +179,6 @@ class MqttHandler : AppCompatActivity {
         mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
         mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
         mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
-        mMqttClient?.subscribe(SPEED_SUB, QOS, null)
         mMqttClient?.subscribe(BIN_CAPACITY, QOS, null)
     }
     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
