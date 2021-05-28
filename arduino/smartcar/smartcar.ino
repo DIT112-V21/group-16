@@ -10,20 +10,18 @@ WiFiClient net;
 #endif
 MQTTClient mqtt;
 
-// Variables for the car
+// Speed and angle variables
 const int fSpeed   = 25;  // 25% of the full speed forward
 const int bSpeed   = -40; // 40% of the full speed backward
 const int rotateSpeed = 70 ;  //speed for rotate on spot
 int currentSpeed = 0;
-
-const auto oneSecond = 1000UL;
-const auto pulsePerMeter = 600;
-
 const int lDe = -90; // degrees to turn left on spot
 const int rDe = 90; // degrees to turn right on spot
 const int lDeg= -40;  //Degree for rotate on spot
 const int rDeg = 40;  //Degree for rotate on spot
 
+const auto oneSecond = 1000UL;
+const auto pulsePerMeter = 600;
 
 //Variables for the vacuum bag
 float maxTraveledDistance=0.0;
@@ -37,7 +35,6 @@ int pattern = 0;
 double area = 0;
 int velocity = 0;
 const int sideDistance = 10;
-
 
 ArduinoRuntime arduinoRuntime;
 
@@ -69,7 +66,6 @@ SR04 sensor(arduinoRuntime, 6, 7);
 SmartCar car(arduinoRuntime, control, gyro, leftOdometer, rightOdometer);
 
 std::vector<char> frameBuffer;
-
 
 void setup() {
     Serial.begin(9600);
@@ -105,7 +101,6 @@ void setup() {
     });
   }
 }
-
 
 void loop() {
     obstacleAvoidance();
@@ -216,15 +211,11 @@ void rotateOnSpot(int targetDegrees, int speed){
             currentHeading += 360;                                          // initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed
         }                                                                    // displacement (+30)
         degreesTurnedSoFar = initialHeading - currentHeading;   // degrees turned so far is initial heading minus current
-    }                                                           // (initial heading is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360 to
-                                                                // currentHeading)
-
+    }                                                           // (initial heading is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360                                                       
     car.setSpeed(0); // we have reached the target, so stop the car
 }
 
-
-
-//used in loop
+//Swtich to execute the cleaning patterns
 void handlePatterns(){
     switch (pattern){
         case 1:
@@ -240,8 +231,7 @@ void handlePatterns(){
     }
 }
 
-
-// used in handlePatterns
+// Cleaning methods thats being called in handlePatters()
 void zigzagCleaning(){
     lengthToTravel = sqrt(area);
     if (lengthToTravel%2==0){
@@ -263,7 +253,6 @@ void zigzagCleaning(){
     }
 }
 
-//used in handlePatterns
 void inwardCleaning(){
     int y= (lengthToTravel / sideDistance)/2;
     int z=y-1;
@@ -284,8 +273,7 @@ void inwardCleaning(){
     }
 }
 
-
-//used in the two cleaning pattern methods
+//two methods thats used in the cleaning pattern methods
 void patternA(){
     go(lengthToTravel,velocity);
     delay(500);
@@ -296,7 +284,6 @@ void patternA(){
     turnCar(rDe, false);
 }
 
-//used in the two cleaning pattern methods
 void patternB(){
     patternA();
     delay(500);
@@ -349,14 +336,12 @@ void goAndRight3(){
     }
 }
 
-
 // Changing odometer measurement from cm to m
 int distanceInMeter(){
     int distance = car.getDistance();
     distance = distance/100;
     return distance;
 }
-
 
 //obstacle avoidance message
 int obstacleDetectionMessage(){
@@ -368,12 +353,10 @@ int obstacleDetectionMessage(){
     }
 }
 
-//stop the car
 void stopVehicle(){
     car.setSpeed(0);
     currentSpeed = 0;
 }
-
 
 int bagFilledProgress(){ //when car drive 2m, 1% bag filled  //
     int traveledDistance=distanceInMeter();
@@ -387,7 +370,5 @@ int bagFilledProgress(){ //when car drive 2m, 1% bag filled  //
             }
             return bagContents;
         }
-
     }
 }
-
