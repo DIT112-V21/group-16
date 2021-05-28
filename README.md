@@ -45,6 +45,7 @@ To see the software architecture of TDM, please refer to the [Class Diagram](htt
 
 ## User Manual
 
+Please check the User Manual [here.](https://github.com/DIT112-V21/group-16/wiki/User-Manual)
 
 
 ## Development Team 
