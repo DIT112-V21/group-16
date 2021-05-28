@@ -42,6 +42,9 @@ To see the software architecture of TDM, please refer to the [Class Diagram](htt
 ### Installation Guide 
 - For more information about installation [click here](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide)
 
+## Installation Guide for Open Source Developers
+
+- Please check the information [here](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide-for-Open-Source-Developers)
 
 ## User Manual
 
