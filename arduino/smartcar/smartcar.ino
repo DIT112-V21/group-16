@@ -254,7 +254,9 @@ void zigzagCleaning(){
 }
 
 void inwardCleaning(){
-    int y= (lengthToTravel / sideDistance)/2;
+	lengthToTravel = sqrt(area);
+    int x= (lengthToTravel / sideDistance);
+	int y= x/2;
     int z=y-1;
     int i =0;
     if (lengthToTravel%2 ==0){
@@ -270,7 +272,9 @@ void inwardCleaning(){
             i++;
         }
         go(sideDistance,fSpeed);
+		
     }
+	bagFilledProgress();
 }
 
 //two methods thats used in the cleaning pattern methods
@@ -278,20 +282,26 @@ void patternA(){
     go(lengthToTravel,velocity);
     delay(500);
     turnCar(rDe, false);
+	bagFilledProgress();
     delay(500);
     go(sideDistance ,fSpeed);
+	bagFilledProgress();
     delay(500);
     turnCar(rDe, false);
+	bagFilledProgress();
 }
 
 void patternB(){
     patternA();
     delay(500);
     go(lengthToTravel,velocity);
+	bagFilledProgress();
     delay(500);
     turnCar(lDe, false);
+	bagFilledProgress();
     delay(500);
     go(sideDistance,fSpeed);
+	bagFilledProgress();
     delay(500);
     turnCar(lDe, false);
 }
@@ -361,7 +371,7 @@ void stopVehicle(){
 int bagFilledProgress(){ //when car drive 2m, 1% bag filled  //
     int traveledDistance=distanceInMeter();
     if (traveledDistance>maxTraveledDistance){ //only vacuum when vehicle is moving forward
-        maxTraveledDistance=traveledDistance;
+        maxTraveledDistance==traveledDistance;
         if (!bagFull){
             bagContents = (traveledDistance%100)/2;
             Serial.println("Bag is " + (String)bagContents + "% full");
