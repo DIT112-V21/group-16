@@ -138,13 +138,13 @@
 
     <TextView
         android:id="@+id/speed"
-        android:layout_width="70dp"
-        android:layout_height="32dp"
+        android:layout_width="46dp"
+        android:layout_height="31dp"
         android:layout_marginTop="2dp"
         android:textColor="#020202"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.906"
+        app:layout_constraintHorizontal_bias="0.904"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView6"
         app:layout_constraintVertical_bias="0.0" />
