@@ -10,27 +10,31 @@ WiFiClient net;
 #endif
 MQTTClient mqtt;
 
+// Speed and angle variables
 const int fSpeed   = 25;  // 25% of the full speed forward
+const int bSpeed   = -40; // 40% of the full speed backward
+const int rotateSpeed = 70 ;  //speed for rotate on spot
+int currentSpeed = 0;
 const int lDe = -90; // degrees to turn left on spot
 const int rDe = 90; // degrees to turn right on spot
-const auto oneSecond = 1000UL;
-const auto pulsePerMeter = 600;
 const int lDeg= -40;  //Degree for rotate on spot
 const int rDeg = 40;  //Degree for rotate on spot
-const int rotateSpeed = 70 ;  //speed for rotate on spot
-const int bSpeed   = -40; // 40% of the full speed backward
+
+const auto oneSecond = 1000UL;
+const auto pulsePerMeter = 600;
+
+//Variables for the vacuum bag
 float maxTraveledDistance=0.0;
 int bagCapacity=99;
 bool bagFull=false;
+int bagContents=0;
 
-
-int currentSpeed = 0;
+//Variables for pattern methods
+int lengthToTravel = 0;
+int pattern = 0;
 double area = 0;
 int velocity = 0;
-int patter = 0;
-int sideDistance = 10;
-double distancee = sqrt(area);
-int isCompleted=0;
+const int sideDistance = 10;
 
 ArduinoRuntime arduinoRuntime;
 
@@ -63,39 +67,37 @@ SmartCar car(arduinoRuntime, control, gyro, leftOdometer, rightOdometer);
 
 std::vector<char> frameBuffer;
 
-
 void setup() {
-   Serial.begin(9600);
- #ifdef __SMCE__
- Camera.begin(QVGA, RGB888, 0); //qvga is a format 320 X 240, QVGA, RGB888, 0
-  frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
-  mqtt.begin("aerostun.dev", 1883, WiFi);
- #else
-  mqtt.begin(net);
-  #endif
-  if (mqtt.connect("arduino", "public", "public")) {
-    mqtt.subscribe("/smartcar/group16/#", 1);
-    mqtt.onMessage(+[](String& topic, String& message) {
-      if (topic == "/smartcar/group16/control/throttle") {
-        currentSpeed = message.toInt();
-        car.setSpeed(currentSpeed);
-      } else if (topic == "/smartcar/group16/control/steering") {
-        car.setAngle(message.toInt());
-      }
-      else if (topic == "/smartcar/group16/auto/size") {
-        area = message.toInt() * 100;
-      }
-      else if (topic=="/smartcar/group16/auto/speed"){
-        velocity = message.toInt();
-      }
-      else if (topic == "/smartcar/group16/auto/pattern"){
-         patter = message.toInt();
-      }
-
-      else  {
-        Serial.println(topic + " " + message);
-      }
-
+    Serial.begin(9600);
+    #ifdef __SMCE__
+    Camera.begin(QVGA, RGB888, 0); //qvga is a format 320 X 240, QVGA, RGB888, 0
+    frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+    mqtt.begin("aerostun.dev", 1883, WiFi);
+    #else
+    mqtt.begin(net);
+    #endif
+    if (mqtt.connect("arduino", "public", "public")) {
+        mqtt.subscribe("/smartcar/group16/#", 1);
+        mqtt.onMessage(+[](String& topic, String& message) {
+        if (topic == "/smartcar/group16/control/throttle") {
+            currentSpeed = message.toInt();
+            car.setSpeed(currentSpeed);
+        }
+        else if (topic == "/smartcar/group16/control/steering") {
+            car.setAngle(message.toInt());
+        }
+        else if (topic == "/smartcar/group16/auto/size") {
+            area = message.toInt() * 100;
+        }
+        else if (topic=="/smartcar/group16/auto/speed"){
+            velocity = message.toInt();
+        }
+        else if (topic == "/smartcar/group16/auto/pattern"){
+            pattern = message.toInt();
+        }
+        else {
+            Serial.println(topic + " " + message);
+        }
     });
   }
 }
@@ -103,170 +105,33 @@ void setup() {
 void loop() {
     obstacleAvoidance();
     handlePatterns();
-
     if (mqtt.connected()) {
-    mqtt.loop();
-
-     const auto currentTime = millis();
-#ifdef __SMCE__
-    static auto previousFrame = 0UL;
-    if (currentTime - previousFrame >= 65) {
-      previousFrame = currentTime;
-      Camera.readFrame(frameBuffer.data());
-      mqtt.publish("/smartcar/group16/camera", frameBuffer.data(), frameBuffer.size(),
-                   false, 0);
-    }
-#endif
-    static auto previousTransmission = 0UL;
-    if (currentTime - previousTransmission >= oneSecond)
-    {
-      previousTransmission = currentTime;
-      const auto distance = String(front.getDistance());
-      mqtt.publish("/smartcar/ultrasound/front", String(distance));
-      mqtt.publish("/smartcar/group16/speed", String(car.getSpeed()));
-      mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
-      mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-      mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
-      mqtt.publish("/smartcar/group16/completion", String(isCompleted));
-    }
-  }
-#ifdef __SMCE__
-  // Avoid over-using the CPU if we are running in the emulator
-  delay(35);
-#endif
-}
-
-void handlePatterns(){
-    switch (patter){
-    case 1:
-        pattern();
-        patter = 0;
-        isCompleted=1;
-        break;
-    case 2:
-        patternB();
-        patter = 0;
-        isCompleted=1;
-        break;
-         default:
-        break;
-            }
+        mqtt.loop();
+        const auto currentTime = millis();
+        #ifdef __SMCE__
+        static auto previousFrame = 0UL;
+        if (currentTime - previousFrame >= 65) {
+            previousFrame = currentTime;
+            Camera.readFrame(frameBuffer.data());
+            mqtt.publish("/smartcar/group16/camera", frameBuffer.data(), frameBuffer.size(),false, 0);
         }
-
-
-// Changing odometer measurement from cm to km
-int distanceInMeter(){
-int distance = car.getDistance();
-distance = distance/100;
-return distance;
-}
-
-//chage speed unit to integer
-int speedInPercentage(){
-  int speed=car.getSpeed();
-
-return speed;
-}
-//obstacle avoidance message
-int obstacleDetectionMessage(){
- unsigned int triggerDist = 200;
- unsigned int distance = front.getDistance();
-  if (distance > 0 && distance < triggerDist){
-    distance--;
-    return distance;
-     }
-  }
-
-  void stopVehicle(){
-  car.setSpeed(0);
-  currentSpeed = 0;
- }
-
- void turnLeftWhenStoped()  // when car doesn't move it will turn on spot to left
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(lDe);
-    delay(6000);
-    car.setAngle(0);
-    stopVehicle();
- }
-
-  void turnRightWhenStoped() // when car doesn't move it will turn on spot to right
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(rDe);
-    delay(6000);
-    car.setAngle(0);
-    stopVehicle();
- }
-
-  void autoTurnLeft()
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(lDe);
-   delay(6000);
-    car.setAngle(0);
- }
-
-  void autoTurnRight()
- {
-    car.setSpeed(fSpeed);
-    currentSpeed = fSpeed;
-    car.setAngle(rDe);
-    delay(6000);
-    car.setAngle(0);
- }
-
-  void rotateOnSpot(int targetDegrees, int speed)
-{
-    speed = smartcarlib::utils::getAbsolute(speed);
-    targetDegrees %= 360; // put it on a (-360,360) scale
-    if (!targetDegrees)
-        return; // if the target degrees is 0, don't bother doing anything
-    /* Let's set opposite speed on each side of the car, so it rotates on spot */
-    if (targetDegrees > 0)
-    { // positive value means we should rotate clockwise
-        car.overrideMotorSpeed(speed,
-                               -speed); // left motors spin forward, right motors spin backward
-    }
-    else
-    { // rotate counter clockwise
-        car.overrideMotorSpeed(-speed,
-                               speed); // left motors spin backward, right motors spin forward
-    }
-    const auto initialHeading = car.getHeading(); // the initial heading we'll use as offset to
-                                                  // calculate the absolute displacement
-    int degreesTurnedSoFar
-        = 0; // this variable will hold the absolute displacement from the beginning of the rotation
-    while (abs(degreesTurnedSoFar) < abs(targetDegrees))
-    { // while absolute displacement hasn't reached the (absolute) target, keep turning
-        car.update(); // update to integrate the latest heading sensor readings
-        auto currentHeading = car.getHeading(); // in the scale of 0 to 360
-        if ((targetDegrees < 0) && (currentHeading > initialHeading))
-        { // if we are turning left and the current heading is larger than the
-            // initial one (e.g. started at 10 degrees and now we are at 350), we need to substract
-            // 360, so to eventually get a signed
-            currentHeading -= 360; // displacement from the initial heading (-20)
+        #endif
+        static auto previousTransmission = 0UL;
+        if (currentTime - previousTransmission >= oneSecond){
+            previousTransmission = currentTime;
+            const auto distance = String(front.getDistance());
+            mqtt.publish("/smartcar/ultrasound/front", String(distance));  
+            mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
+            mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
+            mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
         }
-        else if ((targetDegrees > 0) && (currentHeading < initialHeading))
-        { // if we are turning right and the heading is smaller than the
-            // initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed
-            // displacement (+30)
-            currentHeading += 360;
-        }
-        degreesTurnedSoFar
-            = initialHeading - currentHeading; // degrees turned so far is initial heading minus
-                                               // current (initial heading
-        // is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360 to
-        // currentHeading)
     }
-    car.setSpeed(0); // we have reached the target, so stop the car
+    #ifdef __SMCE__
+    delay(35); // Avoid over-using the CPU if we are running in the emulator
+    #endif
 }
 
-//obstacle avoidance
+//obstacle avoidance, used in loop
 void obstacleAvoidance(){
     unsigned int distance = front.getDistance();
     unsigned int triggerDist = 100;
@@ -276,89 +141,162 @@ void obstacleAvoidance(){
     unsigned int rightInfra = rightSensor.getDistance();
     unsigned int backInfra = backSensor.getDistance();
 
-  if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist && leftInfra > 0 ){
-    //if there is an obstacle in front of the car and another one at the left side it will turn right.
-     rotateOnSpot(rDeg , rotateSpeed);
-     delay(300);
-     car.setSpeed(fSpeed);
-     if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
-     {
-       autoTurnRight();// after turning from an obstacle if we faced another obstacle exremely close to prevent hitting that while turning it would
-       //turn 90 degrees on spot to not hit it.
-     }
+    if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist && leftInfra > 0 ){ //if there is an obstacle in front of the car and another one at the left side it will turn right.
+        rotation(300, rDeg, rDe,distance,frontInfra);
+    }
+    else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist && rightInfra > 0 ){ //if there is an obstacle in front of the car and another one at the right side it will turn left.
+        rotation(300, lDeg, lDe,distance,frontInfra);
+    }
+    else if (distance > 0 && distance < triggerDist && currentSpeed >= 0){ //if there is an obstacle in front of the car it will turn right.
+        rotation(300, rDeg, rDe,distance,frontInfra);
+    }
+    if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0){  // when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
+        rotation(300, rDeg, rDe,distance,frontInfra);                                           // so it turn more to avoid hitting the side obstacle
+    }
+    else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0){  // when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
+        rotation(300, lDeg, lDe,distance,frontInfra);
+    }
+    else if (rightInfra < 15 && rightInfra > 0 && distance == 0){   //after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
+        rotation(200, lDeg, lDe,distance,frontInfra);
+    }
+    else if (leftInfra < 15 && leftInfra > 0 && distance == 0){     //after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
+        rotation(200, rDeg, rDe,distance,frontInfra);
+    }
+}
 
-     }
-else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist && rightInfra > 0 ){
-     //if there is an obstacle in front of the car and another one at the right side it will turn left.
-     rotateOnSpot(lDeg , rotateSpeed);
-          delay(300);
-     car.setSpeed(fSpeed);
-      if ((distance > 0 && distance < 40) || (frontInfra<30 && frontInfra >0) )
-     {
-       autoTurnLeft();
-     }
-     }
- else if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ) {
-      //if there is an obstacle in front of the car it will turn right.
-      rotateOnSpot(rDeg,rotateSpeed);
-           delay(300);
-     car.setSpeed(fSpeed);
-      if (distance > 0 && distance < 40 || (frontInfra<30 && frontInfra >0) )
-     {
-       autoTurnRight();
-     }
-  }
-    if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0)
-     {
-       //this method used for when the front obstacle is not close enought to the trigger amount but still we get close to the side obstacle,
-       // so it turn more to avoide hitting the side obstacle
-       rotateOnSpot(rDeg,rotateSpeed);
-       delay(300);
-       car.setSpeed(fSpeed);
-        if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
-     {
-       autoTurnRight();
-     }
-     }
-     else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0)
-     {
-     //this method used for when the front obstacle is not close enought to the trigger amount but still we get close to the side obstacle,
-       // so it turn more to avoide hitting the side obstacle.
-         rotateOnSpot(lDeg,rotateSpeed);
-        delay(300);
-        car.setSpeed(fSpeed);
-         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
-     {
-       autoTurnLeft();
-     }
+// used in obstacleAvoidance
+void rotation (int time, int tDeg, int rotDeg,int distance,int frontInfra){
+    rotateOnSpot(tDeg,fSpeed);                                  //to side obstacle to grab more trashes without hitting it.
+    delay(time);
+    car.setSpeed(fSpeed);
+    if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0)){
+        turnCar(rotDeg, true); // after turning from an obstacle if we faced another obstacle extremely close to prevent hitting that while turning it would turn 90 degrees on spot to not hit it.
+    }
+}
 
-      }
-      else if (rightInfra < 15 && rightInfra > 0 && distance == 0)
-     {
-     //this method used after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
-     //to side obstacle to grab more trashes without hitting it.
-         rotateOnSpot(lDeg,fSpeed);
-        delay(200);
-        car.setSpeed(fSpeed);
-         if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
-     {
-       autoTurnLeft();
-     }
-      }
-     else if (leftInfra < 15 && leftInfra > 0 && distance == 0)
-     {
-     //this method used after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
-     //to side obstacle to grab more trashes without hitting it.
-         rotateOnSpot(rDeg,rotateSpeed);
-       delay(200);
-       car.setSpeed(fSpeed);
-        if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0))
-     {
-       autoTurnRight();
-     }
-
+// turns the car, used in obstacleAvoidance, PatternA and PatternB
+void turnCar(int Angle, bool moving){
+     car.setSpeed(fSpeed);
+     currentSpeed = fSpeed;
+     car.setAngle(Angle);
+     delay(6000);
+     car.setAngle(0);
+     if (!moving){
+         stopVehicle();
      }
 }
+
+// Code guide from Dimitris, used in rotation
+void rotateOnSpot(int targetDegrees, int speed){
+    speed = smartcarlib::utils::getAbsolute(speed);
+    targetDegrees %= 360;                   // put it on a (-360,360) scale
+    if (!targetDegrees){                   // if the target degrees is 0, don't bother doing
+        return;                                 // anything
+    }
+    if (targetDegrees > 0){                     // positive value means we should rotate clockwise
+        car.overrideMotorSpeed(speed, -speed);
+    }
+    else{                                       // rotate counter clockwise
+        car.overrideMotorSpeed(-speed,speed);
+    }
+    const auto initialHeading = car.getHeading(); // the initial heading we'll use as offset to calculate the absolute displacement
+    int degreesTurnedSoFar= 0;                  // this variable will hold the absolute displacement from the beginning of the rotation
+    while (abs(degreesTurnedSoFar) < abs(targetDegrees)){ // while absolute displacement hasn't reached the (absolute) target, keep turning
+        car.update();                           // update to integrate the latest heading sensor readings
+        auto currentHeading = car.getHeading(); // in the scale of 0 to 360
+        if ((targetDegrees < 0) && (currentHeading > initialHeading)){    // if we are turning left and the current heading is larger than the
+            currentHeading -= 360;                                       // initial one (e.g. started at 10 degrees and now we are at 350), we need to substract
+        }                                                                // 360, so to eventually get a signed displacement from the initial heading (-20)
+        else if ((targetDegrees > 0) && (currentHeading < initialHeading)){ // if we are turning right and the heading is smaller than the
+            currentHeading += 360;                                          // initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed
+        }                                                                    // displacement (+30)
+        degreesTurnedSoFar = initialHeading - currentHeading;   // degrees turned so far is initial heading minus current
+    }                                                           // (initial heading is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360                                                       
+    car.setSpeed(0); // we have reached the target, so stop the car
+}
+
+//Swtich to execute the cleaning patterns
+void handlePatterns(){
+    switch (pattern){
+        case 1:
+            zigzagCleaning();
+            pattern = 0;
+            break;
+        case 2:
+            inwardCleaning();
+            pattern = 0;
+            break;
+        default:
+            break;
+    }
+}
+
+// Cleaning methods thats being called in handlePatters()
+void zigzagCleaning(){
+    lengthToTravel = sqrt(area);
+    if (lengthToTravel%2==0){
+        int nrOfIterations = (lengthToTravel/sideDistance)/2;
+        int i =0;
+        while (i < nrOfIterations){
+            patternB();
+            i += 1;
+        }
+    }
+    else {
+        int nrOfIterations = (lengthToTravel/sideDistance)/2;
+        int j =0;
+        while (j < nrOfIterations){
+            patternB();
+            j += 1;
+        }
+        patternA();
+    }
+}
+
+void inwardCleaning(){
+    int y= (lengthToTravel / sideDistance)/2;
+    int z=y-1;
+    int i =0;
+    if (lengthToTravel%2 ==0){
+        while (i<z){
+        complete();
+        i++;
+        }
+        goAndRight3();
+    }
+    else {
+        while (i<y){
+            complete();
+            i++;
+        }
+        go(sideDistance,fSpeed);
+    }
+}
+
+//two methods thats used in the cleaning pattern methods
+void patternA(){
+    go(lengthToTravel,velocity);
+    delay(500);
+    turnCar(rDe, false);
+    delay(500);
+    go(sideDistance ,fSpeed);
+    delay(500);
+    turnCar(rDe, false);
+}
+
+void patternB(){
+    patternA();
+    delay(500);
+    go(lengthToTravel,velocity);
+    delay(500);
+    turnCar(lDe, false);
+    delay(500);
+    go(sideDistance,fSpeed);
+    delay(500);
+    turnCar(lDe, false);
+}
+
+// used in patternA, patternB and goAndRight3
 void go(double centimeters, int speed){
     if (centimeters == 0){
         return;
@@ -367,134 +305,70 @@ void go(double centimeters, int speed){
     speed = smartcarlib::utils::getAbsolute(speed) * ((centimeters < 0) ? -1 : 1);
     car.setAngle(0);
     car.setSpeed(speed);
-
-    double initialDistance          = car.getDistance();
+    double initialDistance = car.getDistance();
     bool hasReachedTargetDistance = false;
-    while (!hasReachedTargetDistance)
-    {
+    while (!hasReachedTargetDistance){
         car.update();
         auto currentDistance   = car.getDistance();
         auto travelledDistance = initialDistance > currentDistance
                                      ? initialDistance - currentDistance
                                      : currentDistance - initialDistance;
-        hasReachedTargetDistance
-            = travelledDistance >= smartcarlib::utils::getAbsolute(centimeters);
+        hasReachedTargetDistance = travelledDistance >= smartcarlib::utils::getAbsolute(centimeters);
     }
     car.setSpeed(0);
-
 }
 
-void Apattern(){
-    go(distancee,velocity);
-delay(500);
-turnRightWhenStoped();
-delay(500);
-go(sideDistance ,25);
-delay(500);
-turnRightWhenStoped();
-
-}
-
-void Bpattern(){
-    Apattern();
-    delay(500);
-    go(distancee,velocity);
-    delay(500);
-    turnLeftWhenStoped();
-    delay(500);
-    go(sideDistance,25);
-    delay(500);
-    turnLeftWhenStoped();
-}
-
-void pattern(){
-isCompleted=0;
-double x = sqrt(area);
-int value = int (x);
-if (value%2==0)
-{
-    int times = value/sideDistance;
-    times /= 2;
-    int i =0;
-    while (i < times)
-    {
-        Bpattern();
-        i += 1;
-    }
-}
-else {
-    int times = value/sideDistance;
-    times /= 2;
-    int i =0;
-    while (i < times)
-    {
-        Bpattern();
-        i += 1;
-    }
-    Apattern();
-}
-}
-int toTravel = sqrt(area);
-
-void patternB(){
-isCompleted=0;
-int x= toTravel / 10;
-    int y= x/2;
-    int z=y-1;
-    int i =0;
-if (toTravel%2 ==0)
-{
-    while (i<z)
-    {
-        complete();
-        i++;
-    }
-    goAndRight3();
-}
-else {
-    while (i<y)
-    {
-        complete();
-        i++;
-    }
-    go(10,25);
-}
-}
-
+// used in inwardCleaning()
 void complete(){
     goAndRight3();
-   toTravel -=10;
-   go(toTravel,velocity);
-
+    lengthToTravel -=sideDistance;
+    go(lengthToTravel,velocity);
 }
 
+// used in complete and patternB
 void goAndRight3(){
     int i =0;
-    while (i<3)
-    {
-     go(toTravel,velocity);
-    delay(500);
-    turnRightWhenStoped();
-    i++;
-
+    while (i<3){
+        go(lengthToTravel,velocity);
+        delay(500);
+        turnCar(rDe, false);
+        i++;
     }
 }
-     int bagFilledProgress(){
-                 float traveledDistance=distanceInMeter();
-                 if (traveledDistance>maxTraveledDistance){
-                     maxTraveledDistance=traveledDistance;
-                     int bagContents = (int)((int)traveledDistance%1000)/10;
-                     if (bagContents == bagCapacity){
-                       //stopVehicle();
-                       bagFull=true;
-                       Serial.println("Bag is full. Please change");
-                     }
-                     Serial.println("Bag is " + (String)bagContents + "% full");
-                     return bagContents;
-                 }
-               }
 
-        void emptyBag(){
-         int  bagContent=0;
+// Changing odometer measurement from cm to m
+int distanceInMeter(){
+    int distance = car.getDistance();
+    distance = distance/100;
+    return distance;
+}
 
+//obstacle avoidance message
+int obstacleDetectionMessage(){
+    unsigned int triggerDist = 200;
+    unsigned int distance = front.getDistance();
+    if (distance > 0 && distance < triggerDist){
+        distance--;
+        return distance;
+    }
+}
+
+void stopVehicle(){
+    car.setSpeed(0);
+    currentSpeed = 0;
+}
+
+int bagFilledProgress(){ //when car drive 2m, 1% bag filled  //
+    int traveledDistance=distanceInMeter();
+    if (traveledDistance>maxTraveledDistance){ //only vacuum when vehicle is moving forward
+        maxTraveledDistance=traveledDistance;
+        if (!bagFull){
+            bagContents = (traveledDistance%100)/2;
+            Serial.println("Bag is " + (String)bagContents + "% full");
+            if (bagContents >= bagCapacity){
+                bagFull=true;
+            }
+            return bagContents;
         }
+    }
+}
