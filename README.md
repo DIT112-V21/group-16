@@ -7,20 +7,6 @@
 ## Product Description 
 TDM is an automated cleaning car controlled by an android app. The main idea to develop this product is to make cleaning issues automated and during tough times and sleeping hours run the cleaning process without struggling. By using our product the user can choose between two existing modes: manual/autonomous cleaning. In manual mode the user has the possibility of driving the vehicle around with the option of enabling/disabling the vacuum cleaning functionality, as well as observing the cleaning vehicle through a streaming service which is displayed on the android app. While the vehicle is ran autonomously, the user can set the speed and choose to clean any size of area from a two set pre-programmed patterns.
 
-### What we are going to make.
-- What we are going to make is a vehicle which acts as a trash disposing machine. 
-
-### Why we will make it. 
-- We will make it because it will keep streets tidy and neat while mitigating human labor.
-- We will make it so that it can improve/solve environmental problems.
-
-### How we are going to make it. 
-- The vechicle will be able to clean an area based on a path. 
-- The vechicle will fill up a virtual bag, take object collision into respect and return to a designated area in the emulator when bag is full.
-- The bag will take distance into account when deciding it is filled up. 
-- The user will be able to control the vehicle which exists in an emulator through an external controller to fulfil its purpose. 
-- It will also be possible to take manual control of the vehicle.
-
 ### Demo Video
 
 ## Technical information
@@ -50,6 +36,19 @@ To see the software architecture of TDM, please refer to the [Class Diagram](htt
 
 - Please check the User Manual [here.](https://github.com/DIT112-V21/group-16/wiki/User-Manual)
 
+## What we are going to make.
+- What we are going to make is a vehicle which acts as a trash disposing machine. 
+
+## Why we will make it. 
+- We will make it because it will keep streets tidy and neat while mitigating human labor.
+- We will make it so that it can improve/solve environmental problems.
+
+## How we are going to make it. 
+- The vechicle will be able to clean an area based on a path. 
+- The vechicle will fill up a virtual bag, take object collision into respect and return to a designated area in the emulator when bag is full.
+- The bag will take distance into account when deciding it is filled up. 
+- The user will be able to control the vehicle which exists in an emulator through an external controller to fulfil its purpose. 
+- It will also be possible to take manual control of the vehicle.
 
 ## Development Team 
 - [Eun Young Cho](https://github.com/Young799)
