@@ -18,8 +18,8 @@ class MqttHandler : AppCompatActivity {
     private var mMqttClient: MqttClient? = null
     private val TAG = "app"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
-    private val LOCALHOST = "127.0.0.1"
-    private val MQTT_SERVER = "tcp://$EXTERNAL_MQTT_BROKER:1883"
+    private val LOCALHOST = "10.0.2.2"
+    private val MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"
     private val QOS = 1
     private var isConnected = false
     private var context: Context? = null
