@@ -18,7 +18,6 @@ TDM is an automated cleaning car controlled by an android app. The main idea to 
 
 For more a detailed product description, follow the link [Product Description](https://github.com/DIT112-V21/group-16/wiki/Product-Description) to our wiki page. 
 
- Update_readme
 ### Features 
 * [Manual Cleaning](https://github.com/DIT112-V21/group-16/wiki/Manual-cleaning)
 * [Car "Cleaning" Movements](https://github.com/DIT112-V21/group-16/wiki/Car-Cleaning-Movement)
@@ -70,7 +69,6 @@ To see the software architecture of TDM, please refer to the [Class Diagram](htt
 ## Installation
 ###  Get started 
 - For information about how to install and use TDM, follow the link [Get Started](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide) to our wiki page.
-
 
 ### Guide for Open Source Developers
 - For information about how to install TDM as an Open Source Developer, follow the link  [Installation  Guide for developers](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide-for-Open-Source-Developers) to our wiki page. 
