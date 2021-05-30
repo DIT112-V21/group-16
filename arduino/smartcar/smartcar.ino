@@ -69,72 +69,20 @@ std::vector<char> frameBuffer;
 
 void setup() {
     Serial.begin(9600);
-   cameraStream();
-   connectMqtt();
-   handleMqttMessages();
-  }
-
-void loop() {
-        obstacleAvoidance();
-        handlePatterns();
-         if (mqtt.connected()) {
-        mqtt.loop();
-        publishData();
-        publishCameraData();
-    }
-          #ifdef __SMCE__
-    delay(35); // Avoid over-using the CPU if we are running in the emulator
-    #endif
-        car.update();
-    }
-
-void publishCameraData(){
-  const auto currentTime = millis();
-        #ifdef __SMCE__
-        static auto previousFrame = 0UL;
-        if (currentTime - previousFrame >= 65) {
-            previousFrame = currentTime;
-            Camera.readFrame(frameBuffer.data());
-            mqtt.publish("/smartcar/group16/camera", frameBuffer.data(), frameBuffer.size(),false, 0);
-           }
-        #endif
-       }
-
-void connectMqtt(){
- #ifdef __SMCE__
- //mqtt.begin("aerostun.dev", 1883, WiFi);
- mqtt.begin(WiFi);
+    #ifdef __SMCE__
+    Camera.begin(QVGA, RGB888, 0); //qvga is a format 320 X 240, QVGA, RGB888, 0
+    frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+    mqtt.begin(WiFi);
     #else
     mqtt.begin(net);
     #endif
-}
-
-void publishData(){
-  const auto currentTime = millis();
-  static auto previousTransmission = 0UL;
-        if (currentTime - previousTransmission >= oneSecond){
-            previousTransmission = currentTime;
-            mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
-            mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-            mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
-        }
-    }
-
-void cameraStream(){
-  #ifdef __SMCE__
-    Camera.begin(QVGA, RGB888, 0); //qvga is a format 320 X 240, QVGA, RGB888, 0
-    frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
-    #endif
-}
-
-void handleMqttMessages(){
-if (mqtt.connect("arduino", "public", "public")) {
+    if (mqtt.connect("arduino", "public", "public")) {
         mqtt.subscribe("/smartcar/group16/#", 1);
         mqtt.onMessage(+[](String& topic, String& message) {
         if (topic == "/smartcar/group16/control/throttle") {
-            int msg = message.toInt();
-            car.setSpeed(msg);
-            currentSpeed = msg;
+
+            car.setSpeed(message.toInt());
+			currentSpeed = message.toInt();
         }
         else if (topic == "/smartcar/group16/control/steering") {
             car.setAngle(message.toInt());
@@ -149,10 +97,41 @@ if (mqtt.connect("arduino", "public", "public")) {
             pattern = message.toInt();
         }
         else {
-            Serial.println(topic + " " + message);
+            //Serial.println(topic + " " + message);
         }
     });
+  }
+}
+
+void loop() {
+handlePatterns();
+obstacleAvoidance();
+  if (mqtt.connected()) {
+    mqtt.loop();
+    const auto currentTime = millis();
+#ifdef __SMCE__
+    static auto previousFrame = 0UL;
+    if (currentTime - previousFrame >= 65) {
+      previousFrame = currentTime;
+      Camera.readFrame(frameBuffer.data());
+      mqtt.publish("/smartcar/group16/camera", frameBuffer.data(), frameBuffer.size(),false, 0);
     }
+#endif
+    static auto previousTransmission = 0UL;
+    if (currentTime - previousTransmission >= oneSecond) {
+      previousTransmission = currentTime;
+	  mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
+	        mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
+            mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
+
+    }
+    car.update();
+
+  }
+#ifdef __SMCE__
+  // Avoid over-using the CPU if we are running in the emulator
+  delay(35);
+#endif
 }
 
 //obstacle avoidance, used in loop
@@ -165,37 +144,10 @@ void obstacleAvoidance(){
     unsigned int rightInfra = rightSensor.getDistance();
     unsigned int backInfra = backSensor.getDistance();
 
-    if (distance > 0 && distance < triggerDist && currentSpeed >= 0 && leftInfra < sideTriggerDist && leftInfra > 0 ){ //if there is an obstacle in front of the car and another one at the left side it will turn right.
-        rotation(300, rDeg, rDe,distance,frontInfra);
+	if (distance > 0 && distance < triggerDist && currentSpeed >= 0 ||   leftInfra < sideTriggerDist && leftInfra > 0 || rightInfra < sideTriggerDist && rightInfra > 0 || backInfra < sideTriggerDist && backInfra > 0  ){ //if there is an obstacle in front of the car and another one at the left side it will turn right.
+        car.setSpeed(0);
     }
-    else if(distance > 0 && distance < triggerDist && currentSpeed >= 0 && rightInfra < sideTriggerDist && rightInfra > 0 ){ //if there is an obstacle in front of the car and another one at the right side it will turn left.
-        rotation(300, lDeg, lDe,distance,frontInfra);
-    }
-    else if (distance > 0 && distance < triggerDist && currentSpeed >= 0){ //if there is an obstacle in front of the car it will turn right.
-        rotation(300, rDeg, rDe,distance,frontInfra);
-    }
-    if (leftInfra < 25 && leftInfra > 0 && distance < 200 && distance >0){  // when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
-        rotation(300, rDeg, rDe,distance,frontInfra);                                           // so it turn more to avoid hitting the side obstacle
-    }
-    else if (rightInfra < 25 && rightInfra > 0 && distance < 200 && distance > 0){  // when the front obstacle is not close enough to the trigger amount but still we get close to the side obstacle,
-        rotation(300, lDeg, lDe,distance,frontInfra);
-    }
-    else if (rightInfra < 15 && rightInfra > 0 && distance == 0){   //after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
-        rotation(200, lDeg, lDe,distance,frontInfra);
-    }
-    else if (leftInfra < 15 && leftInfra > 0 && distance == 0){     //after turning to avoid front obstacle but still we are close to the side obstacle but we want to get as close as possible
-        rotation(200, rDeg, rDe,distance,frontInfra);
-    }
-}
 
-// used in obstacleAvoidance
-void rotation (int time, int tDeg, int rotDeg,int distance,int frontInfra){
-    rotateOnSpot(tDeg,fSpeed);                                  //to side obstacle to grab more trashes without hitting it.
-    delay(time);
-    car.setSpeed(fSpeed);
-    if (distance > 0 && distance < 40  || (frontInfra<30 && frontInfra >0)){
-        turnCar(rotDeg, true); // after turning from an obstacle if we faced another obstacle extremely close to prevent hitting that while turning it would turn 90 degrees on spot to not hit it.
-    }
 }
 
 // turns the car, used in obstacleAvoidance, PatternA and PatternB
@@ -304,29 +256,22 @@ void inwardCleaning(){
 //two methods thats used in the cleaning pattern methods
 void patternA(){
     go(lengthToTravel,velocity);
-    delay(500);
     turnCar(rDe, false);
   bagFilledProgress();
-    delay(500);
     go(sideDistance ,fSpeed);
   bagFilledProgress();
-    delay(500);
     turnCar(rDe, false);
   bagFilledProgress();
 }
 
 void patternB(){
     patternA();
-    delay(500);
     go(lengthToTravel,velocity);
   bagFilledProgress();
-    delay(500);
     turnCar(lDe, false);
   bagFilledProgress();
-    delay(500);
     go(sideDistance,fSpeed);
   bagFilledProgress();
-    delay(500);
     turnCar(lDe, false);
 }
 
@@ -377,7 +322,6 @@ int distanceInMeter(){
     return distance;
 }
 
-//obstacle avoidance message
 String obstacleDetectionMessage(){
     String msg = "obstacle";
     unsigned int triggerDist = 200;
@@ -388,6 +332,7 @@ String obstacleDetectionMessage(){
       return "";
     }
    }
+
 
 void stopVehicle(){
     car.setSpeed(0);
