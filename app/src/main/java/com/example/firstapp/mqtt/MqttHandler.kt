@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Color.RED
+import android.graphics.Color.BLACK
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,8 +18,8 @@ class MqttHandler : AppCompatActivity {
     private var mMqttClient: MqttClient? = null
     private val TAG = "app"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
-    private val LOCALHOST = "10.0.2.2"
-    private val MQTT_SERVER = "tcp://" + EXTERNAL_MQTT_BROKER + ":1883"
+    private val LOCALHOST = "127.0.0.1"
+    private val MQTT_SERVER = "tcp://$EXTERNAL_MQTT_BROKER:1883"
     private val QOS = 1
     private var isConnected = false
     private var context: Context? = null
@@ -162,11 +163,12 @@ class MqttHandler : AppCompatActivity {
 
     fun setWarningView(message: MqttMessage){
         val ultraSound = message.toString()
-        if (ultraSound > 1.toString()) {
+        if (ultraSound == "obstacle") {
             mFront?.text = "WARNING"
             mFront?.setTextColor(RED)
         } else {
-            mFront?.text = ""
+            mFront?.text = "No Obstacle"
+            mFront?.setTextColor(BLACK)
         }
     }
 
@@ -184,8 +186,8 @@ class MqttHandler : AppCompatActivity {
     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
         notConnected()
         Log.i(TAG, actionDescription!!)
-        mMqttClient?.publish(THROTTLE_CONTROL, Integer.toString(throttleSpeed), QOS, null)
-        mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
+        mMqttClient?.publish(THROTTLE_CONTROL, throttleSpeed.toString(), QOS, null)
+        mMqttClient?.publish(STEERING_CONTROL, steeringAngle.toString(), QOS, null)
     }
 
     fun driveAuto(size : Int, speed : Int, pattern: Int, actionDescription: String?) {
