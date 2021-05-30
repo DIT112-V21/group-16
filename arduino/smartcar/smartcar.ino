@@ -102,7 +102,8 @@ void publishCameraData(){
 
 void connectMqtt(){
  #ifdef __SMCE__
- mqtt.begin("aerostun.dev", 1883, WiFi);
+ //mqtt.begin("aerostun.dev", 1883, WiFi);
+ mqtt.begin(WiFi);
     #else
     mqtt.begin(net);
     #endif
