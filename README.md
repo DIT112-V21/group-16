@@ -7,6 +7,8 @@
 ## Product Description 
 TDM is an automated cleaning car controlled by an android app. The main idea to develop this product is to make cleaning issues automated and during tough times and sleeping hours run the cleaning process without struggling. By using our product the user can choose between two existing modes: manual/autonomous cleaning. In manual mode the user has the possibility of driving the vehicle around with the option of enabling/disabling the vacuum cleaning functionality, as well as observing the cleaning vehicle through a streaming service which is displayed on the android app. While the vehicle is ran autonomously, the user can set the speed and choose to clean any size of area from a two set pre-programmed patterns.
 
+For more a detailed product description, follow the link [Product Description](https://github.com/DIT112-V21/group-16/wiki/Product-Description) to our wiki page. 
+
 ### Demo Video
 
 ## Technical information
@@ -24,31 +26,16 @@ To see the software architecture of TDM, please refer to the [Class Diagram](htt
 - [Smartcar shield library documentation](https://platisd.github.io/smartcar_shield/index.html)
 - [MQTT](https://mosquitto.org/download/) 
 
-## Get started
-### Installation Guide 
-- For more information about installation [click here](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide)
+## Installation
+###  Get started 
+- For information about how to install and use TDM, follow the link [Get Started](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide) to our wiki page.
 
-## Installation Guide for Open Source Developers
 
-- Please check the information [here](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide-for-Open-Source-Developers)
+### Guide for Open Source Developers
+- For information about how to install TDM as an Open Source Developer, follow the link  [Installation  Guide for developers](https://github.com/DIT112-V21/group-16/wiki/Installation-Guide-for-Open-Source-Developers) to our wiki page. 
 
 ## User Manual
-
-- Please check the User Manual [here.](https://github.com/DIT112-V21/group-16/wiki/User-Manual)
-
-## What we are going to make.
-- What we are going to make is a vehicle which acts as a trash disposing machine. 
-
-## Why we will make it. 
-- We will make it because it will keep streets tidy and neat while mitigating human labor.
-- We will make it so that it can improve/solve environmental problems.
-
-## How we are going to make it. 
-- The vechicle will be able to clean an area based on a path. 
-- The vechicle will fill up a virtual bag, take object collision into respect and return to a designated area in the emulator when bag is full.
-- The bag will take distance into account when deciding it is filled up. 
-- The user will be able to control the vehicle which exists in an emulator through an external controller to fulfil its purpose. 
-- It will also be possible to take manual control of the vehicle.
+- For information about how to use and navigate the app, follow the link  [User Manual](https://github.com/DIT112-V21/group-16/wiki/User-Manual) to our wiki page. 
 
 ## Development Team 
 - [Eun Young Cho](https://github.com/Young799)
