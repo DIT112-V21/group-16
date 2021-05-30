@@ -18,7 +18,19 @@ TDM is an automated cleaning car controlled by an android app. The main idea to 
 
 For more a detailed product description, follow the link [Product Description](https://github.com/DIT112-V21/group-16/wiki/Product-Description) to our wiki page. 
 
+### Features 
+* [Manual Cleaning](https://github.com/DIT112-V21/group-16/wiki/Manual-cleaning)
+* [Car "Cleaning" Movements](https://github.com/DIT112-V21/group-16/wiki/Car-Cleaning-Movement)
+* [TDM App](https://github.com/DIT112-V21/group-16/wiki/TDM-App)
+* [Obstacle avoidance](https://github.com/DIT112-V21/group-16/wiki/Obstacle-avoidance-feature)
+* [App Connectivity](https://github.com/DIT112-V21/group-16/wiki/TDM-Connectivity-app-feature)
+* [Finalize project](https://github.com/DIT112-V21/group-16/wiki/Finalize-Project)
+* [Continuous integration](https://github.com/DIT112-V21/group-16/wiki/Continuous-integration)
+
 ### Demo Video
+<img width="502" alt="yh" src="https://user-images.githubusercontent.com/72136631/120119441-ff288480-c197-11eb-8410-c96368fb4771.png">
+
+Click on the following link to view the [Demo](https://www.youtube.com/watch?v=Qwjv83w49fE)
 
 ## Technical information
 TDM is a cleaning smartcar which utilizes the available capabilities of the smartcar software library, and is controlled by an Android app. 
@@ -34,6 +46,8 @@ To see the software architecture of TDM, please refer to the [Class Diagram](htt
 - [GitHub](https://github.com/)
 - [Smartcar shield library documentation](https://platisd.github.io/smartcar_shield/index.html)
 - [MQTT](https://mosquitto.org/download/) 
+- [Virtual joystick](https://github.com/controlwear/virtual-joystick-android)
+- [MQTT Implementation](https://github.com/DIT112-V21/smartcar-mqtt-controller)
 
 ## Installation
 ###  Get started 
