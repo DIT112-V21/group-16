@@ -18,6 +18,7 @@ TDM is an automated cleaning car controlled by an android app. The main idea to 
 
 For more a detailed product description, follow the link [Product Description](https://github.com/DIT112-V21/group-16/wiki/Product-Description) to our wiki page. 
 
+ Update_readme
 ### Features 
 * [Manual Cleaning](https://github.com/DIT112-V21/group-16/wiki/Manual-cleaning)
 * [Car "Cleaning" Movements](https://github.com/DIT112-V21/group-16/wiki/Car-Cleaning-Movement)
@@ -26,6 +27,23 @@ For more a detailed product description, follow the link [Product Description](h
 * [App Connectivity](https://github.com/DIT112-V21/group-16/wiki/TDM-Connectivity-app-feature)
 * [Finalize project](https://github.com/DIT112-V21/group-16/wiki/Finalize-Project)
 * [Continuous integration](https://github.com/DIT112-V21/group-16/wiki/Continuous-integration)
+
+### What we are going to make.
+- We are going to make an autonomous driven vehichle witht the purpose of cleaning in dorr areas. The vehicle will have a manual controlled option that implements obstacle avoidance and a joystick to manouver with. The automated controll function will feature 2 "Cleaning Pattern" they are a zig zag type pattern and a square pattern allowing the user to adapt the automation to what is best suited for their envoirnement. Furthermore the user can input the size field of the area they wish to clean as well as the velocity. 
+- The vehicle will be controlled through an android app connected through an mqtt broker. 
+
+### Why we will make it. 
+- We will create a trash disposing vehicle with the purpose of mitigating human labour and making cleaning commersial or outdoor areas easier to clean.
+- We want it to be a complementary to the many other traditional methods use which are often not as good for the environment.
+
+### How we are going to make it. 
+- The vechicle will be able to clean an area based on a path. 
+- The vehicle will utilize a cleaning function to simulate picking up trash.
+- The bag will take distance into account when deciding it is filled up. 
+- The user will be able to control the vehicle through the SMCE emulator by using an android appplication designed for controlling the vehicle. 
+- It will also be possible to take manual control of the vehicle by using a joystick.'
+- The project uses c++, and kotlin as source code. 
+ master
 
 ### Demo Video
 <img width="502" alt="yh" src="https://user-images.githubusercontent.com/72136631/120119441-ff288480-c197-11eb-8410-c96368fb4771.png">

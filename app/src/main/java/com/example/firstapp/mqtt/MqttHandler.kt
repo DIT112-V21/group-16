@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Color.RED
+import android.graphics.Color.BLACK
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,8 +18,8 @@ class MqttHandler : AppCompatActivity {
     private var mMqttClient: MqttClient? = null
     private val TAG = "app"
     private val EXTERNAL_MQTT_BROKER = "aerostun.dev"
-    private val LOCALHOST = "10.0.2.2"
-    private val MQTT_SERVER = "tcp://" + EXTERNAL_MQTT_BROKER + ":1883"
+    private val LOCALHOST = "127.0.0.1"
+    private val MQTT_SERVER = "tcp://$EXTERNAL_MQTT_BROKER:1883"
     private val QOS = 1
     private var isConnected = false
     private var context: Context? = null
@@ -27,7 +28,6 @@ class MqttHandler : AppCompatActivity {
     private val CAMERA_SUB = "/smartcar/group16/camera"
     private val ULTRASOUND_SUB = "/smartcar/group16/obstacleMsg"
     private val TRAVELED_DIS = "/smartcar/group16/distance"
-    private val SPEED_SUB = "/smartcar/group16/speed"
     private val BIN_CAPACITY = "/smartcar/group16/bagfull"
 
     // Publishing topics
@@ -49,7 +49,6 @@ class MqttHandler : AppCompatActivity {
 
     private var mCameraView: ImageView? = null
     private var mTraveledDistance: TextView? = null
-    private var mSpeed: TextView? = null
     private var mFront: TextView? = null
     private var mBagCapacity: TextView? = null
 
@@ -60,11 +59,10 @@ class MqttHandler : AppCompatActivity {
         this.context = context
     }
 
-    constructor(context: Context?, mTraveledDistance: TextView?, mSpeed: TextView?, mFront: TextView?) {
+    constructor(context: Context?, mTraveledDistance: TextView?, mFront: TextView?) {
         mMqttClient = MqttClient(context, MQTT_SERVER, TAG)
         this.context = context
         this.mTraveledDistance = mTraveledDistance
-        this.mSpeed = mSpeed
         this.mFront = mFront
     }
 
@@ -117,9 +115,6 @@ class MqttHandler : AppCompatActivity {
                     if (topic == ULTRASOUND_SUB) {
                         setWarningView(message)
                     }
-                    if (topic == SPEED_SUB) {
-                        setSpeedView(message)
-                    }
                     if (topic == BIN_CAPACITY) {
                         setBinView(message)
                     } else {
@@ -168,36 +163,31 @@ class MqttHandler : AppCompatActivity {
 
     fun setWarningView(message: MqttMessage){
         val ultraSound = message.toString()
-        if (ultraSound > 1.toString()) {
+        if (ultraSound == "obstacle") {
             mFront?.text = "WARNING"
             mFront?.setTextColor(RED)
         } else {
-            mFront?.text = ""
+            mFront?.text = "No Obstacle"
+            mFront?.setTextColor(BLACK)
         }
     }
 
-    fun setSpeedView(message: MqttMessage) {
-        val speed = message.toString()
-        mSpeed?.text = speed
-    }
-
     fun setBinView(message : MqttMessage){
-        val bagful = message.toString()
-        mBagCapacity?.text = "${bagful}% "
+        val capacity = message.toString()
+        mBagCapacity?.text = "${capacity}% "
     }
 
     fun subscriptions(){
         mMqttClient?.subscribe(ULTRASOUND_SUB, QOS, null)
         mMqttClient?.subscribe(CAMERA_SUB, QOS, null)
         mMqttClient?.subscribe(TRAVELED_DIS, QOS, null)
-        mMqttClient?.subscribe(SPEED_SUB, QOS, null)
         mMqttClient?.subscribe(BIN_CAPACITY, QOS, null)
     }
     fun drive(throttleSpeed: Int, steeringAngle: Int, actionDescription: String?) {
         notConnected()
         Log.i(TAG, actionDescription!!)
-        mMqttClient?.publish(THROTTLE_CONTROL, Integer.toString(throttleSpeed), QOS, null)
-        mMqttClient?.publish(STEERING_CONTROL, Integer.toString(steeringAngle), QOS, null)
+        mMqttClient?.publish(THROTTLE_CONTROL, throttleSpeed.toString(), QOS, null)
+        mMqttClient?.publish(STEERING_CONTROL, steeringAngle.toString(), QOS, null)
     }
 
     fun driveAuto(size : Int, speed : Int, pattern: Int, actionDescription: String?) {
