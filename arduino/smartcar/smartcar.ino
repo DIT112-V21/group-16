@@ -69,19 +69,71 @@ std::vector<char> frameBuffer;
 
 void setup() {
     Serial.begin(9600);
-    #ifdef __SMCE__
-    Camera.begin(QVGA, RGB888, 0); //qvga is a format 320 X 240, QVGA, RGB888, 0
-    frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
-    mqtt.begin("aerostun.dev", 1883, WiFi);
+   cameraStream();
+   connectMqtt();
+   handleMqttMessages();
+  }
+
+void loop() {
+        obstacleAvoidance();
+        handlePatterns();
+         if (mqtt.connected()) {
+        mqtt.loop();
+        publishData();
+        publishCameraData();
+    }
+          #ifdef __SMCE__
+    delay(35); // Avoid over-using the CPU if we are running in the emulator
+    #endif
+        car.update();
+    }
+
+void publishCameraData(){
+  const auto currentTime = millis();
+        #ifdef __SMCE__
+        static auto previousFrame = 0UL;
+        if (currentTime - previousFrame >= 65) {
+            previousFrame = currentTime;
+            Camera.readFrame(frameBuffer.data());
+            mqtt.publish("/smartcar/group16/camera", frameBuffer.data(), frameBuffer.size(),false, 0);
+           }
+        #endif
+       }
+
+void connectMqtt(){
+ #ifdef __SMCE__
+ mqtt.begin("aerostun.dev", 1883, WiFi);
     #else
     mqtt.begin(net);
     #endif
-    if (mqtt.connect("arduino", "public", "public")) {
+}
+
+void publishData(){
+  const auto currentTime = millis();
+  static auto previousTransmission = 0UL;
+        if (currentTime - previousTransmission >= oneSecond){
+            previousTransmission = currentTime;
+            mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
+            mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
+            mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
+        }
+    }
+
+void cameraStream(){
+  #ifdef __SMCE__
+    Camera.begin(QVGA, RGB888, 0); //qvga is a format 320 X 240, QVGA, RGB888, 0
+    frameBuffer.resize(Camera.width() * Camera.height() * Camera.bytesPerPixel());
+    #endif
+}
+
+void handleMqttMessages(){
+if (mqtt.connect("arduino", "public", "public")) {
         mqtt.subscribe("/smartcar/group16/#", 1);
         mqtt.onMessage(+[](String& topic, String& message) {
         if (topic == "/smartcar/group16/control/throttle") {
-            currentSpeed = message.toInt();
-            car.setSpeed(currentSpeed);
+            int msg = message.toInt();
+            car.setSpeed(msg);
+            currentSpeed = msg;
         }
         else if (topic == "/smartcar/group16/control/steering") {
             car.setAngle(message.toInt());
@@ -99,36 +151,7 @@ void setup() {
             Serial.println(topic + " " + message);
         }
     });
-  }
-}
-
-void loop() {
-    obstacleAvoidance();
-    handlePatterns();
-    if (mqtt.connected()) {
-        mqtt.loop();
-        const auto currentTime = millis();
-        #ifdef __SMCE__
-        static auto previousFrame = 0UL;
-        if (currentTime - previousFrame >= 65) {
-            previousFrame = currentTime;
-            Camera.readFrame(frameBuffer.data());
-            mqtt.publish("/smartcar/group16/camera", frameBuffer.data(), frameBuffer.size(),false, 0);
-        }
-        #endif
-        static auto previousTransmission = 0UL;
-        if (currentTime - previousTransmission >= oneSecond){
-            previousTransmission = currentTime;
-            const auto distance = String(front.getDistance());
-            mqtt.publish("/smartcar/ultrasound/front", String(distance));  
-            mqtt.publish("/smartcar/group16/distance", String(distanceInMeter()));
-            mqtt.publish("/smartcar/group16/obstacleMsg", String(obstacleDetectionMessage()));
-            mqtt.publish("/smartcar/group16/bagfull",String(bagFilledProgress()));
-        }
     }
-    #ifdef __SMCE__
-    delay(35); // Avoid over-using the CPU if we are running in the emulator
-    #endif
 }
 
 //obstacle avoidance, used in loop
@@ -211,7 +234,7 @@ void rotateOnSpot(int targetDegrees, int speed){
             currentHeading += 360;                                          // initial one (e.g. started at 350 degrees and now we are at 20), so to get a signed
         }                                                                    // displacement (+30)
         degreesTurnedSoFar = initialHeading - currentHeading;   // degrees turned so far is initial heading minus current
-    }                                                           // (initial heading is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360                                                       
+    }                                                           // (initial heading is at least 0 and at most 360. To handle the "edge" cases we substracted or added 360
     car.setSpeed(0); // we have reached the target, so stop the car
 }
 
@@ -254,9 +277,9 @@ void zigzagCleaning(){
 }
 
 void inwardCleaning(){
-	lengthToTravel = sqrt(area);
+  lengthToTravel = sqrt(area);
     int x= (lengthToTravel / sideDistance);
-	int y= x/2;
+  int y= x/2;
     int z=y-1;
     int i =0;
     if (lengthToTravel%2 ==0){
@@ -272,9 +295,9 @@ void inwardCleaning(){
             i++;
         }
         go(sideDistance,fSpeed);
-		
+
     }
-	bagFilledProgress();
+  bagFilledProgress();
 }
 
 //two methods thats used in the cleaning pattern methods
@@ -282,26 +305,26 @@ void patternA(){
     go(lengthToTravel,velocity);
     delay(500);
     turnCar(rDe, false);
-	bagFilledProgress();
+  bagFilledProgress();
     delay(500);
     go(sideDistance ,fSpeed);
-	bagFilledProgress();
+  bagFilledProgress();
     delay(500);
     turnCar(rDe, false);
-	bagFilledProgress();
+  bagFilledProgress();
 }
 
 void patternB(){
     patternA();
     delay(500);
     go(lengthToTravel,velocity);
-	bagFilledProgress();
+  bagFilledProgress();
     delay(500);
     turnCar(lDe, false);
-	bagFilledProgress();
+  bagFilledProgress();
     delay(500);
     go(sideDistance,fSpeed);
-	bagFilledProgress();
+  bagFilledProgress();
     delay(500);
     turnCar(lDe, false);
 }
@@ -354,14 +377,16 @@ int distanceInMeter(){
 }
 
 //obstacle avoidance message
-int obstacleDetectionMessage(){
+String obstacleDetectionMessage(){
+    String msg = "obstacle";
     unsigned int triggerDist = 200;
     unsigned int distance = front.getDistance();
-    if (distance > 0 && distance < triggerDist){
-        distance--;
-        return distance;
+    if (distance > 0 && distance < triggerDist && currentSpeed > 0){
+        return msg;
+    }else{
+      return "";
     }
-}
+   }
 
 void stopVehicle(){
     car.setSpeed(0);
@@ -382,4 +407,3 @@ int bagFilledProgress(){ //when car drive 2m, 1% bag filled  //
         }
     }
 }
-
