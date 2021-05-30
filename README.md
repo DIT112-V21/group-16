@@ -3,6 +3,15 @@
 ![0266c5f1-654f-4bfe-bc7d-9fc117f1bda3 sketchpad (7)](https://user-images.githubusercontent.com/72136631/119741302-ba45da80-be85-11eb-8c90-73dac9fc8040.png)
 
 ## Contents
+* [Product Description](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#product-description)
+* [Demo Video](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#demo-video)
+* [Technical Information](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#technical-information)
+* [Resources](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#resources)
+* [Installation](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#installation)
+* [Get Started](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#get-started)
+* [Guide for Developers](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#guide-for-open-source-developers)
+* [User Manual](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#user-manual)
+* [Development Team](https://github.com/DIT112-V21/group-16/blob/Update_readme/README.md#development-team)
 
 ## Product Description 
 TDM is an automated cleaning car controlled by an android app. The main idea to develop this product is to make cleaning issues automated and during tough times and sleeping hours run the cleaning process without struggling. By using our product the user can choose between two existing modes: manual/autonomous cleaning. In manual mode the user has the possibility of driving the vehicle around with the option of enabling/disabling the vacuum cleaning functionality, as well as observing the cleaning vehicle through a streaming service which is displayed on the android app. While the vehicle is ran autonomously, the user can set the speed and choose to clean any size of area from a two set pre-programmed patterns.
